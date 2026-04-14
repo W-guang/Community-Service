@@ -3,5 +3,6 @@
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
     Weixin
+    zhangyu
   </view>
 </scroll-view>
