@@ -3,6 +3,6 @@
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
     Weixin
-    666
+    1234567
   </view>
 </scroll-view>
