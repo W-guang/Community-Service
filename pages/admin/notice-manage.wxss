@@ -1,0 +1,54 @@
+.wrap {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.label {
+  color: #111827;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+.picker {
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+  color: #111827;
+}
+input,
+textarea {
+  width: 100%;
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+  box-sizing: border-box;
+}
+textarea {
+  min-height: 220rpx;
+}
+.submit {
+  border-radius: 16rpx;
+}
+.item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+.title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #111827;
+}
+

@@ -1,0 +1,31 @@
+<navigation-bar title="用户/网格员管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="section-title">设置网格员/管理员（仅超级管理员）</view>
+      <view class="muted mt">说明：目标账号需要先登录过一次，系统才会在 `users` 里生成记录。</view>
+    </view>
+
+    <view class="card form">
+      <view class="field">
+        <view class="label">目标 openid</view>
+        <input placeholder="从“我的”页复制 openid" value="{{form.openid}}" bindinput="onInput" data-k="openid" />
+      </view>
+      <view class="field">
+        <view class="label">角色</view>
+        <picker mode="selector" range="{{roles}}" value="{{roleIndex}}" bindchange="onPickRole">
+          <view class="picker">{{roles[roleIndex]}}</view>
+        </picker>
+      </view>
+
+      <view class="field" wx:if="{{roles[roleIndex]==='staff'}}">
+        <view class="label">管辖小区（逗号分隔）</view>
+        <input placeholder="例如：学府小区,锦绣花园" value="{{form.managedCommunities}}" bindinput="onInput" data-k="managedCommunities" />
+        <view class="muted">网格员只能看到自己管辖小区的房屋核验请求。</view>
+      </view>
+
+      <button class="btn-primary submit" loading="{{saving}}" bindtap="save">保存</button>
+    </view>
+  </view>
+</view>
+

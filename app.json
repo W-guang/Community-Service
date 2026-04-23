@@ -1,10 +1,54 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/house/bind",
+    "pages/house/list",
+    "pages/repair/list",
+    "pages/repair/create",
+    "pages/repair/detail",
+    "pages/help/list",
+    "pages/help/create",
+    "pages/help/detail",
+    "pages/notices/list",
+    "pages/notices/detail",
+    "pages/mine/index",
+    "pages/admin/todo",
+    "pages/admin/notice-manage",
+    "pages/admin/dashboard",
+    "pages/admin/house-verify"
+    ,"pages/admin/user-manage"
   ],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#1677FF",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/repair/list",
+        "text": "报修"
+      },
+      {
+        "pagePath": "pages/help/list",
+        "text": "互助"
+      },
+      {
+        "pagePath": "pages/notices/list",
+        "text": "公告"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的"
+      }
+    ]
   },
   "style": "v2",
   "renderer": "skyline",

@@ -1,0 +1,23 @@
+.wrap {
+  padding: 24rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.grid {
+  margin-top: 16rpx;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12rpx;
+}
+.kpi {
+  background: #f3f4f6;
+  border-radius: 16rpx;
+  padding: 16rpx;
+}
+.k {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #111827;
+}
+

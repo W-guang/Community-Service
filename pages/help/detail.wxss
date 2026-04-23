@@ -1,0 +1,37 @@
+.wrap {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.content {
+  color: #111827;
+  font-size: 28rpx;
+  white-space: pre-wrap;
+}
+.actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  flex-wrap: wrap;
+}
+.progress {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+.composer {
+  margin-top: 14rpx;
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+.composer input {
+  flex: 1;
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+}
+

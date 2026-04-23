@@ -91,12 +91,19 @@ Component({
     },
     back() {
       const data = this.data
-      if (data.delta) {
-        wx.navigateBack({
-          delta: data.delta
-        })
-      }
-      this.triggerEvent('back', { delta: data.delta }, {})
+      const delta = data.delta || 1
+      // navigateBack 在页面栈不足时会失败（如从 tab 进入或 redirectTo 替换栈）
+      wx.navigateBack({
+        delta,
+        fail: () => {
+          // 兜底回到首页 tab
+          wx.switchTab({ url: '/pages/index/index' })
+        },
+      })
+      this.triggerEvent('back', { delta }, {})
+    },
+    home() {
+      wx.switchTab({ url: '/pages/index/index' })
     }
   },
 })

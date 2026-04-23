@@ -1,0 +1,59 @@
+.wrap {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.label {
+  color: #111827;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+input {
+  width: 100%;
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+  box-sizing: border-box;
+}
+.submit {
+  border-radius: 16rpx;
+}
+.roles {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 14rpx;
+}
+.menu {
+  margin-top: 14rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.menu-item {
+  padding: 20rpx 18rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+  color: #111827;
+}
+.sos {
+  margin-top: 14rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 18rpx;
+  font-size: 34rpx;
+}
+

@@ -1,0 +1,26 @@
+<navigation-bar title="我的房屋" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="row">
+      <view class="muted">已绑定 {{boundCount}} 套</view>
+      <button size="mini" class="btn" bindtap="goBind">继续绑定</button>
+    </view>
+
+    <view class="card" wx:if="{{!items.length}}">
+      <view class="muted">暂无绑定记录</view>
+    </view>
+
+    <view class="card" wx:else>
+      <view wx:for="{{items}}" wx:key="_id" class="item">
+        <view class="row">
+          <view class="col">
+            <view class="title">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</view>
+            <view class="muted">姓名：{{item.name}} <text wx:if="{{item.phone}}">· {{item.phone}}</text></view>
+          </view>
+          <view class="tag">{{statusText(item.status)}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

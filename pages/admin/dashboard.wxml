@@ -1,0 +1,40 @@
+<navigation-bar title="治理数据看板" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="row">
+        <view class="section-title">概览</view>
+        <button size="mini" bindtap="load" loading="{{loading}}">刷新</button>
+      </view>
+      <view class="muted mt" wx:if="{{!stats}}">加载中...</view>
+      <view wx:if="{{stats}}" class="grid">
+        <view class="kpi">
+          <view class="k">{{stats.repairs.total}}</view>
+          <view class="muted">报修总数</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.repairs.pending}}</view>
+          <view class="muted">待受理</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.repairs.done}}</view>
+          <view class="muted">已完成</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.helps.total}}</view>
+          <view class="muted">互助总数</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.helps.open}}</view>
+          <view class="muted">待接单</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.sos.pending}}</view>
+          <view class="muted">紧急求助待处理</view>
+        </view>
+      </view>
+      <view class="muted mt" wx:if="{{stats}}">更新时间：{{format(stats.generatedAt)}}</view>
+    </view>
+  </view>
+</view>
+

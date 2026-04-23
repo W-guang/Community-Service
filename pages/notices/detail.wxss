@@ -1,0 +1,15 @@
+.wrap {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.content {
+  color: #111827;
+  font-size: 28rpx;
+  white-space: pre-wrap;
+}
+

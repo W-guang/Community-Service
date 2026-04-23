@@ -1,0 +1,20 @@
+.wrap {
+  padding: 24rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.item {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+.title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #111827;
+}
+.actions {
+  display: flex;
+  gap: 10rpx;
+}
+

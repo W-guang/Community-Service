@@ -1,0 +1,32 @@
+<navigation-bar title="发布互助任务" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card form">
+      <view class="field">
+        <view class="label">类型</view>
+        <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="onPickType">
+          <view class="picker">{{types[typeIndex]}}</view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <view class="label">标题</view>
+        <input placeholder="例如：代取快递" value="{{title}}" bindinput="onTitle" />
+      </view>
+
+      <view class="field">
+        <view class="label">描述</view>
+        <textarea placeholder="请补充任务说明、时间地点等" value="{{content}}" bindinput="onContent" />
+      </view>
+
+      <view class="field">
+        <view class="label">悬赏积分</view>
+        <input type="number" placeholder="0-999" value="{{rewardPoints}}" bindinput="onReward" />
+        <view class="muted">演示版：仅记录积分数值，兑换规则可后续完善</view>
+      </view>
+
+      <button class="btn-primary submit" loading="{{submitting}}" bindtap="submit">发布</button>
+    </view>
+  </view>
+</view>
+

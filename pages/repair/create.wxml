@@ -1,0 +1,45 @@
+<navigation-bar title="新建报修" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card form">
+      <view class="field">
+        <view class="label">分类</view>
+        <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onPickCategory">
+          <view class="picker">{{categories[categoryIndex]}}</view>
+        </picker>
+      </view>
+
+      <view class="field">
+        <view class="label">标题</view>
+        <input placeholder="例如：楼道灯不亮" value="{{title}}" bindinput="onTitle" />
+      </view>
+
+      <view class="field">
+        <view class="label">描述</view>
+        <textarea placeholder="请补充问题描述（可选）" value="{{content}}" bindinput="onContent" />
+      </view>
+
+      <view class="field">
+        <view class="label">定位</view>
+        <view class="row">
+          <view class="muted">{{locationText}}</view>
+          <button size="mini" bindtap="pickLocation">选择</button>
+        </view>
+      </view>
+
+      <view class="field">
+        <view class="label">图片（最多 6 张）</view>
+        <view class="imgs">
+          <view wx:for="{{images}}" wx:key="*this" class="img-wrap">
+            <image class="img" mode="aspectFill" src="{{item}}" />
+            <view class="del" bindtap="removeImage" data-idx="{{index}}">×</view>
+          </view>
+          <view wx:if="{{images.length < 6}}" class="img-add" bindtap="addImage">+</view>
+        </view>
+      </view>
+
+      <button class="btn-primary submit" loading="{{submitting}}" bindtap="submit">提交报修</button>
+    </view>
+  </view>
+</view>
+

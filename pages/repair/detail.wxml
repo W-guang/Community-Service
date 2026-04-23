@@ -1,0 +1,47 @@
+<navigation-bar title="报修详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap" wx:if="{{repair}}">
+    <view class="card">
+      <view class="row">
+        <view class="section-title">{{repair.title || repair.category}}</view>
+        <view class="tag">{{statusText(repair.status)}}</view>
+      </view>
+      <view class="muted">{{format(repair.createdAt)}}</view>
+      <view class="muted mt">{{repair.content}}</view>
+
+      <view wx:if="{{repair.images && repair.images.length}}" class="imgs">
+        <image wx:for="{{repair.images}}" wx:key="*this" class="img" mode="aspectFill" src="{{item}}" bindtap="preview" data-src="{{item}}" />
+      </view>
+
+      <view wx:if="{{repair.location}}" class="muted mt">定位：{{repair.location.latitude}}, {{repair.location.longitude}}</view>
+
+      <view wx:if="{{isStaff}}" class="actions">
+        <button size="mini" bindtap="setStatus" data-status="processing">接单/处理中</button>
+        <button size="mini" bindtap="setStatus" data-status="waiting_confirm">转待确认</button>
+        <button size="mini" class="btn-primary" bindtap="setStatus" data-status="done">完成</button>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">沟通记录</view>
+      <view wx:if="{{!comments.length}}" class="muted mt">暂无留言</view>
+      <view wx:for="{{comments}}" wx:key="_id" class="comment">
+        <view class="row">
+          <view class="name">{{item.fromName}}</view>
+          <view class="muted">{{format(item.createdAt)}}</view>
+        </view>
+        <view class="content">{{item.content}}</view>
+      </view>
+
+      <view class="composer">
+        <input placeholder="输入留言..." value="{{comment}}" bindinput="onComment" />
+        <button size="mini" class="btn-primary" loading="{{sending}}" bindtap="send">发送</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="wrap" wx:else>
+    <view class="card"><view class="muted">加载中...</view></view>
+  </view>
+</view>
+

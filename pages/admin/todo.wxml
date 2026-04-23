@@ -1,0 +1,42 @@
+<navigation-bar title="待办处理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="row">
+        <view class="section-title">报修待办</view>
+        <button size="mini" bindtap="load">刷新</button>
+      </view>
+      <view wx:if="{{!repairTodos.length}}" class="muted mt">暂无待办</view>
+      <view wx:for="{{repairTodos}}" wx:key="_id" class="todo" bindtap="goRepair" data-id="{{item._id}}">
+        <view class="row">
+          <view class="col">
+            <view class="title">{{item.title || item.category}}</view>
+            <view class="muted">{{statusText(item.status)}} · {{format(item.createdAt)}}</view>
+          </view>
+          <view class="tag">{{item.category}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="row">
+        <view class="section-title">求助待办</view>
+        <button size="mini" bindtap="load">刷新</button>
+      </view>
+      <view wx:if="{{!sosTodos.length}}" class="muted mt">暂无待办</view>
+      <view wx:for="{{sosTodos}}" wx:key="_id" class="todo">
+        <view class="row">
+          <view class="col">
+            <view class="title">{{item.fromName}}</view>
+            <view class="muted">{{item.note || '紧急求助'}} · {{format(item.createdAt)}}</view>
+          </view>
+          <view class="row">
+            <button size="mini" bindtap="setSos" data-id="{{item._id}}" data-status="processing">受理</button>
+            <button size="mini" class="btn-primary" bindtap="setSos" data-id="{{item._id}}" data-status="done">完成</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

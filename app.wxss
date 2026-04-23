@@ -1,10 +1,87 @@
 /**app.wxss**/
-.container {
-  height: 100%;
+.page {
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #111827;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 26rpx;
+}
+
+.btn-primary {
+  background: #1677ff;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.btn {
+  border-radius: 16rpx;
+  background: #ffffff;
+  color: #111827;
+  border: 1rpx solid #e5e7eb;
+}
+
+button.btn,
+button.btn-primary,
+button.btn-danger {
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+button::after {
+  border: none;
+}
+
+.shadow-sm {
+  box-shadow: 0 8rpx 24rpx rgba(17, 24, 39, 0.06);
+}
+
+.list-item {
+  padding: 24rpx;
+  background: #ffffff;
+  border-radius: 16rpx;
+}
+
+.list-item + .list-item {
+  margin-top: 16rpx;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.row {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
-  box-sizing: border-box;
-} 
+  gap: 16rpx;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}

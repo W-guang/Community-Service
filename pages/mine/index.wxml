@@ -1,0 +1,49 @@
+<navigation-bar title="我的" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="row">
+        <view class="section-title">{{user.nickname || '未设置昵称'}}</view>
+        <view class="tag">{{roleText}}</view>
+      </view>
+      <view class="muted mt">OpenID：{{user.openid}}</view>
+      <view class="row mt">
+        <button class="btn" size="mini" bindtap="wxLogin">微信授权更新昵称头像</button>
+        <button class="btn" size="mini" bindtap="goHouses">我的房屋</button>
+      </view>
+    </view>
+
+    <view class="card form">
+      <view class="field">
+        <view class="label">昵称</view>
+        <input placeholder="用于显示在沟通记录里" value="{{form.nickname}}" bindinput="onNick" />
+      </view>
+      <view class="field">
+        <view class="label">手机号</view>
+        <input placeholder="求助时可用（可选）" value="{{form.phone}}" bindinput="onPhone" />
+      </view>
+      <view class="row">
+        <view class="label">老人模式</view>
+        <switch checked="{{form.elderMode}}" bindchange="onElder" />
+      </view>
+      <button class="btn-primary submit" loading="{{saving}}" bindtap="save">保存</button>
+    </view>
+
+    <view class="card" wx:if="{{isStaff}}">
+      <view class="section-title">管理入口</view>
+      <view class="menu">
+        <view class="menu-item" bindtap="go" data-url="/pages/admin/todo">待办处理（报修/求助）</view>
+        <view class="menu-item" bindtap="go" data-url="/pages/admin/notice-manage">公告发布/管理</view>
+        <view class="menu-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage">用户/网格员管理</view>
+        <view class="menu-item" bindtap="go" data-url="/pages/admin/house-verify">房屋核验</view>
+        <view class="menu-item" bindtap="go" data-url="/pages/admin/dashboard">数据看板（简版）</view>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{form.elderMode}}">
+      <view class="section-title">老人模式 · 一键求助</view>
+      <button class="btn-danger sos" bindtap="sos">紧急求助</button>
+    </view>
+  </view>
+</view>
+

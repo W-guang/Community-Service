@@ -1,0 +1,53 @@
+.wrap {
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+.mt {
+  margin-top: 12rpx;
+}
+.imgs {
+  margin-top: 16rpx;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.img {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 16rpx;
+  background: #e5e7eb;
+}
+.actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 18rpx;
+}
+.comment {
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+.name {
+  font-weight: 600;
+  color: #111827;
+}
+.content {
+  margin-top: 8rpx;
+  color: #111827;
+  font-size: 28rpx;
+  white-space: pre-wrap;
+}
+.composer {
+  margin-top: 14rpx;
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+.composer input {
+  flex: 1;
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+}
+

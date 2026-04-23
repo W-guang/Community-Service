@@ -1,0 +1,25 @@
+<navigation-bar title="报修" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="row">
+      <view class="muted">共 {{items.length}} 条</view>
+      <button class="btn btn-primary" size="mini" bindtap="goCreate">新建报修</button>
+    </view>
+
+    <view wx:if="{{!items.length}}" class="card">
+      <view class="muted">暂无报修记录</view>
+    </view>
+
+    <view wx:for="{{items}}" wx:key="_id" class="list-item" bindtap="goDetail" data-id="{{item._id}}">
+      <view class="row">
+        <view class="col">
+          <view class="title">{{item.title || item.category}}</view>
+          <view class="muted">{{item.content}}</view>
+        </view>
+        <view class="tag">{{statusText(item.status)}}</view>
+      </view>
+      <view class="meta muted">{{format(item.createdAt)}}</view>
+    </view>
+  </view>
+</view>
+

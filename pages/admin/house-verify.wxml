@@ -1,0 +1,25 @@
+<navigation-bar title="房屋核验" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="row">
+        <view class="section-title">待核验</view>
+        <button size="mini" bindtap="load">刷新</button>
+      </view>
+      <view wx:if="{{!items.length}}" class="muted mt">暂无待核验请求</view>
+      <view wx:for="{{items}}" wx:key="_id" class="item">
+        <view class="row">
+          <view class="col">
+            <view class="title">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</view>
+            <view class="muted">姓名：{{item.name}} <text wx:if="{{item.phone}}">· {{item.phone}}</text></view>
+          </view>
+          <view class="actions">
+            <button size="mini" class="btn-primary" bindtap="approve" data-id="{{item._id}}">通过</button>
+            <button size="mini" bindtap="reject" data-id="{{item._id}}">驳回</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

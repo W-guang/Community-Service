@@ -1,0 +1,40 @@
+<navigation-bar title="互助详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+  <view class="wrap" wx:if="{{help}}">
+    <view class="card">
+      <view class="row">
+        <view class="section-title">{{help.title}}</view>
+        <view class="tag">{{statusText(help.status)}}</view>
+      </view>
+      <view class="muted">{{format(help.createdAt)}} · {{help.type}} · 悬赏 {{help.rewardPoints}} 积分</view>
+      <view class="content mt">{{help.content}}</view>
+
+      <view class="mt muted" wx:if="{{help.takerOpenid}}">接单人：{{help.takerName || '已接单'}}</view>
+
+      <view class="actions" wx:if="{{canOperate}}">
+        <button wx:if="{{canTake}}" class="btn-primary" bindtap="take">接单</button>
+        <button wx:if="{{canWaitingConfirm}}" bindtap="setStatus" data-status="waiting_confirm">我已完成，待对方确认</button>
+        <button wx:if="{{canDone}}" class="btn-primary" bindtap="setStatus" data-status="done">确认完成</button>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">进度</view>
+      <view wx:if="{{!progress.length}}" class="muted mt">暂无进度</view>
+      <view wx:for="{{progress}}" wx:key="_id" class="progress">
+        <view class="muted">{{format(item.createdAt)}}</view>
+        <view class="content">{{item.content}}</view>
+      </view>
+
+      <view class="composer" wx:if="{{canChat}}">
+        <input placeholder="更新进度..." value="{{msg}}" bindinput="onMsg" />
+        <button size="mini" class="btn-primary" loading="{{sending}}" bindtap="send">发送</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="wrap" wx:else>
+    <view class="card"><view class="muted">加载中...</view></view>
+  </view>
+</view>
+
