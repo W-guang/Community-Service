@@ -1,28 +1,84 @@
 /**index.wxss**/
-page {
-  background: #f6f7fb;
+
+/* 主体内容区域 */
+.main-content {
+  padding: 0 30rpx;
+  margin-top: -30rpx;
 }
-.wrap {
-  padding: 24rpx;
+
+.service-grid {
+  margin-bottom: 30rpx;
+}
+
+/* 卡片整体样式 */
+.card {
   display: flex;
-  flex-direction: column;
-  gap: 18rpx;
+  align-items: center;
+  background-color: white;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
+  transition: all 0.2s;
 }
-.hero {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
+
+/* 特殊的 SOS 卡片样式 */
+.sos-card {
+  border: 2rpx solid #ffe3e3;
+  background: linear-gradient(to right, #fff, #fffcfc);
 }
-.hero-actions .btn {
+
+.card-icon {
+  font-size: 60rpx;
+  margin-right: 30rpx;
+}
+
+.card-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.auth {
-  margin-top: 10rpx;
-  border-radius: 16rpx;
+
+.card-name {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
 }
-.quick .btn-danger {
-  height: 84rpx;
-  line-height: 84rpx;
-  padding: 0 32rpx;
-  border-radius: 16rpx;
+
+.sos-card .card-name {
+  color: #e74c3c;
+}
+
+.card-desc {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.arrow {
+  color: #ccc;
+  font-weight: bold;
+  font-size: 32rpx;
+}
+
+/* 特殊卡片样式 */
+.login-card .card-icon {
+  font-size: 50rpx;
+}
+
+.bind-card .card-icon {
+  font-size: 50rpx;
+}
+
+.user-card .card-icon {
+  font-size: 50rpx;
+}
+
+/* 卡片内的按钮 */
+.card .btn {
+  min-width: 120rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 26rpx;
+  padding: 0 20rpx;
 }

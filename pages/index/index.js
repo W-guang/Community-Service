@@ -13,6 +13,23 @@ Page({
     roleText: '居民',
     authed: false,
     boundCount: 0,
+    noticeList: [
+      {
+        id: 1,
+        title: '社区物业服务中心搬迁通知',
+        isUrgent: false
+      },
+      {
+        id: 2,
+        title: '停水通知：明日9:00-18:00管道维护',
+        isUrgent: true
+      },
+      {
+        id: 3,
+        title: '社区健康体检活动报名开始',
+        isUrgent: false
+      }
+    ]
   },
   async onShow() {
     await this.ensureAuth()
@@ -53,9 +70,17 @@ Page({
         authed: true,
         boundCount: (res.bindings && res.bindings.boundCount) || 0,
       })
+      wx.showToast({ title: '登录成功', icon: 'success' })
     } catch (e) {
-      wx.showToast({ title: '已取消授权', icon: 'none' })
+      wx.showToast({ title: e.message || '登录失败', icon: 'none' })
     }
+  },
+  // 公告点击事件
+  goToNotice(e) {
+    const id = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/pages/notices/detail?id=${id}`
+    })
   },
   goRepair() {
     wx.switchTab({ url: '/pages/repair/list' })

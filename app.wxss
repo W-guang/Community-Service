@@ -1,20 +1,36 @@
 /**app.wxss**/
+/* 页面容器 */
 .page {
   min-height: 100vh;
-  background: #f6f7fb;
+  background-color: #F4F6F9;
 }
 
+.page-container {
+  min-height: 100vh;
+  background-color: #F4F6F9;
+  padding-bottom: 50rpx;
+}
+
+/* 卡片样式 */
 .card {
   background: #ffffff;
-  border-radius: 20rpx;
-  padding: 24rpx;
+  border-radius: 24rpx;
+  padding: 30rpx;
   box-sizing: border-box;
+  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
+  transition: all 0.2s;
 }
 
+.card-hover {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.02);
+}
+
+/* 文本样式 */
 .section-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #111827;
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
 }
 
 .muted {
@@ -22,32 +38,156 @@
   font-size: 26rpx;
 }
 
+/* 按钮样式 */
 .btn-primary {
-  background: #1677ff;
+  background: linear-gradient(145deg, #1296db, #0b7bc1);
   color: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 16rpx rgba(18, 150, 219, 0.2);
 }
 
 .btn-danger {
-  background: #ef4444;
+  background: linear-gradient(145deg, #ff6b81, #ff4757);
   color: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 16rpx rgba(255, 71, 87, 0.4);
 }
 
 .btn {
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   background: #ffffff;
   color: #111827;
   border: 1rpx solid #e5e7eb;
+  box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.04);
 }
 
 button.btn,
 button.btn-primary,
 button.btn-danger {
-  border-radius: 16rpx;
+  border-radius: 24rpx;
   overflow: hidden;
+  transition: all 0.2s;
 }
 
 button::after {
   border: none;
+}
+
+/* 布局辅助 */
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.col {
+  flex: 1;
+}
+
+.wrap {
+  padding: 0 30rpx;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  background: #f0f9ff;
+  color: #0369a1;
+}
+
+/* 表单样式 */
+.field {
+  margin-bottom: 30rpx;
+}
+
+.label {
+  font-size: 30rpx;
+  color: #333;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  height: 88rpx;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #1296db;
+  box-shadow: 0 0 0 4rpx rgba(18, 150, 219, 0.1);
+}
+
+/* 头部样式 */
+.header-section {
+  background: linear-gradient(135deg, #1296db, #0b7bc1);
+  padding: 100rpx 40rpx 60rpx 40rpx;
+  color: white;
+  border-bottom-left-radius: 40rpx;
+  border-bottom-right-radius: 40rpx;
+  box-shadow: 0 10rpx 20rpx rgba(18, 150, 219, 0.2);
+}
+
+.greeting {
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.date-tips {
+  font-size: 28rpx;
+  opacity: 0.8;
+}
+
+/* 公告栏样式 */
+.notice-bar {
+  background-color: #fff;
+  margin: -30rpx 30rpx 20rpx 30rpx;
+  padding: 0 20rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.05);
+  position: relative;
+  z-index: 10;
+}
+
+.horn-icon {
+  font-size: 36rpx;
+  margin-right: 15rpx;
+}
+
+.notice-swiper {
+  flex: 1;
+  height: 100%;
+}
+
+.notice-text {
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 28rpx;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.urgent-tag {
+  background-color: #ffe3e3;
+  color: #e74c3c;
+  font-size: 20rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 8rpx;
+  margin-right: 10rpx;
+  font-weight: bold;
 }
 
 .shadow-sm {

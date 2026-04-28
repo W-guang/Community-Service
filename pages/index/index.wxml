@@ -1,36 +1,99 @@
 <!-- pages/index/index.wxml -->
-<navigation-bar title="邻智灵" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<view class="page">
-  <view class="wrap">
-    <view class="card hero">
-      <view class="section-title">社区便民服务</view>
-      <view class="muted">报修闭环 · 邻里互助 · 一键求助 · 公告触达</view>
-      <view class="row hero-actions" wx:if="{{authed}}">
-        <button class="btn btn-primary" size="mini" bindtap="goRepair">去报修</button>
-        <button class="btn" size="mini" bindtap="goHelp">去互助</button>
-        <button class="btn" size="mini" bindtap="goNotices">看公告</button>
-      </view>
-      <button wx:if="{{!authed}}" class="btn-primary auth" bindtap="wxLogin">微信一键授权登录</button>
-    </view>
+<view class="page-container">
+  <!-- 头部欢迎区域 -->
+  <view class="header-section">
+    <view class="greeting">您好，{{user.nickname || '社区居民'}}</view>
+    <view class="date-tips">今天是个好日子，祝您生活愉快！</view>
+  </view>
 
-    <view class="card quick">
-      <view class="row">
-        <view class="col">
-          <view class="section-title">一键紧急求助</view>
-          <view class="muted">会记录定位并通知物业/网格员</view>
+  <!-- 滚动公告栏 -->
+  <view class="notice-bar">
+    <text class="horn-icon">📢</text>
+    <swiper class="notice-swiper" vertical="true" autoplay="true" circular="true" interval="3000">
+      <swiper-item wx:for="{{noticeList}}" wx:key="id" bindtap="goToNotice" data-id="{{item.id}}">
+        <view class="notice-text">
+          <text class="urgent-tag" wx:if="{{item.isUrgent}}">紧急</text>
+          {{item.title}}
         </view>
-        <button class="btn btn-danger" bindtap="sos">求助</button>
-      </view>
-    </view>
+      </swiper-item>
+    </swiper>
+  </view>
 
-    <view class="card">
-      <view class="row">
-        <view class="section-title">我的身份</view>
-        <view class="tag">{{roleText}}</view>
+  <!-- 功能卡片区域 -->
+  <view class="main-content">
+    <view class="section-title">社区服务</view>
+    
+    <view class="service-grid">
+      <!-- 老人专属：SOS急救卡片 -->
+      <view class="card sos-card" bindtap="sos" hover-class="card-hover">
+        <view class="card-icon">🆘</view>
+        <view class="card-info">
+          <text class="card-name">一键求助</text>
+          <text class="card-desc">紧急呼叫网格员</text>
+        </view>
+        <view class="arrow">></view>
       </view>
-      <view class="muted" wx:if="{{boundCount>0}}">已绑定 {{boundCount}} 套房屋</view>
-      <view class="muted" wx:else>未绑定房屋，将无法使用报修/公告/互助等功能</view>
-      <button class="btn" size="mini" bindtap="goBind">去绑定房屋</button>
+
+      <!-- 物业报修卡片 -->
+      <view class="card normal-card" wx:if="{{authed && boundCount>0}}" bindtap="goRepair" hover-class="card-hover">
+        <view class="card-icon">🔧</view>
+        <view class="card-info">
+          <text class="card-name">物业报修</text>
+          <text class="card-desc">水单管网一键报修</text>
+        </view>
+        <view class="arrow">></view>
+      </view>
+
+      <!-- 邻里互助卡片 -->
+      <view class="card normal-card" wx:if="{{authed && boundCount>0}}" bindtap="goHelp" hover-class="card-hover">
+        <view class="card-icon">🤝</view>
+        <view class="card-info">
+          <text class="card-name">邻里互助</text>
+          <text class="card-desc">互帮互助共建社区</text>
+        </view>
+        <view class="arrow">></view>
+      </view>
+
+      <!-- 社区公告卡片 -->
+      <view class="card normal-card" wx:if="{{authed && boundCount>0}}" bindtap="goNotices" hover-class="card-hover">
+        <view class="card-icon">📢</view>
+        <view class="card-info">
+          <text class="card-name">社区公告</text>
+          <text class="card-desc">重要通知及时查看</text>
+        </view>
+        <view class="arrow">></view>
+      </view>
+
+      <!-- 登录提示卡片 -->
+      <view class="card login-card" wx:if="{{!authed}}">
+        <view class="card-icon">👤</view>
+        <view class="card-info">
+          <text class="card-name">微信登录</text>
+          <text class="card-desc">授权登录使用完整功能</text>
+        </view>
+        <button class="btn btn-primary" bindtap="wxLogin">立即登录</button>
+      </view>
+
+      <!-- 房屋绑定卡片 -->
+      <view class="card bind-card" wx:if="{{authed && boundCount==0}}">
+        <view class="card-icon">🏠</view>
+        <view class="card-info">
+          <text class="card-name">绑定房屋</text>
+          <text class="card-desc">绑定后使用报修公告等功能</text>
+        </view>
+        <button class="btn btn-primary" bindtap="goBind">去绑定</button>
+      </view>
+
+      <!-- 用户信息卡片 -->
+      <view class="card user-card" wx:if="{{authed}}">
+        <view class="card-icon">{{roleText === '管理员' ? '👨‍💼' : roleText === '物业/网格员' ? '👷' : '👤'}}</view>
+        <view class="card-info">
+          <text class="card-name">我的身份：{{roleText}}</text>
+          <text class="card-desc" wx:if="{{boundCount>0}}">已绑定 {{boundCount}} 套房屋</text>
+          <text class="card-desc" wx:else>未绑定房屋</text>
+        </view>
+        <view class="arrow">></view>
+      </view>
     </view>
   </view>
 </view>
