@@ -12,6 +12,7 @@ const STATUS_TEXT = {
 Page({
   data: {
     items: [],
+    loading: true,
   },
   async onShow() {
     const ok = await ensureBoundOrRedirect()
@@ -25,10 +26,12 @@ Page({
     return STATUS_TEXT[s] || s
   },
   async load() {
+    this.setData({ loading: true })
     try {
       const res = await callApi('repair.list', {})
-      this.setData({ items: res.items || [] })
+      this.setData({ items: res.items || [], loading: false })
     } catch (e) {
+      this.setData({ loading: false })
       wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }
   },
@@ -40,4 +43,3 @@ Page({
     wx.navigateTo({ url: `/pages/repair/detail?_id=${id}` })
   },
 })
-

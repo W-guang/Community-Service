@@ -1,5 +1,6 @@
 const { callApi } = require('../../utils/api')
 const { ensureBoundOrRedirect } = require('../../utils/guard')
+const { rules, validateForm } = require('../../utils/validate')
 
 Page({
   async onShow() {
@@ -67,10 +68,20 @@ Page({
     if (this.data.submitting) return
     const category = this.data.categories[this.data.categoryIndex] || '其他'
     const title = (this.data.title || '').trim()
-    if (!title) {
-      wx.showToast({ title: '请填写标题', icon: 'none' })
+    const content = (this.data.content || '').trim()
+
+    const { valid, first } = validateForm(
+      { title, content },
+      {
+        title: [rules.required, rules.maxLength(50)],
+        content: [rules.required, rules.maxLength(500)],
+      },
+    )
+    if (!valid) {
+      wx.showToast({ title: first, icon: 'none' })
       return
     }
+
     this.setData({ submitting: true })
     try {
       wx.showLoading({ title: '提交中' })
@@ -78,7 +89,7 @@ Page({
       const res = await callApi('repair.create', {
         category,
         title,
-        content: (this.data.content || '').trim(),
+        content,
         images,
         location: this.data.location,
       })
@@ -95,4 +106,3 @@ Page({
     }
   },
 })
-

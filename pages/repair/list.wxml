@@ -6,20 +6,30 @@
       <button class="btn btn-primary" size="mini" bindtap="goCreate">新建报修</button>
     </view>
 
-    <view wx:if="{{!items.length}}" class="card">
-      <view class="muted">暂无报修记录</view>
+    <!-- 骨架屏 -->
+    <view wx:if="{{loading}}" class="card skeleton-card">
+      <view class="skeleton-line short"></view>
+      <view class="skeleton-line"></view>
+      <view class="skeleton-line medium"></view>
     </view>
 
+    <!-- 空状态 -->
+    <view wx:elif="{{!items.length}}" class="card empty-state">
+      <text class="empty-icon">🔧</text>
+      <text class="muted">暂无报修记录</text>
+      <button class="btn btn-primary" size="mini" bindtap="goCreate" style="margin-top:16rpx">新建报修</button>
+    </view>
+
+    <!-- 列表 -->
     <view wx:for="{{items}}" wx:key="_id" class="list-item" bindtap="goDetail" data-id="{{item._id}}">
       <view class="row">
         <view class="col">
           <view class="title">{{item.title || item.category}}</view>
           <view class="muted">{{item.content}}</view>
         </view>
-        <view class="tag">{{statusText(item.status)}}</view>
+        <view class="tag status-{{item.status}}">{{statusText(item.status)}}</view>
       </view>
       <view class="meta muted">{{format(item.createdAt)}}</view>
     </view>
   </view>
 </view>
-

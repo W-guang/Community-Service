@@ -1,15 +1,53 @@
 <navigation-bar title="互助详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
   <view class="wrap" wx:if="{{help}}">
+    <!-- 状态时间线 -->
+    <view class="card timeline-card">
+      <view class="section-title">任务进度</view>
+      <view class="timeline">
+        <view class="tl-item active">
+          <view class="tl-dot"></view>
+          <view class="tl-content">
+            <view class="tl-title">已发布</view>
+            <view class="tl-time">{{format(help.createdAt)}}</view>
+          </view>
+        </view>
+        <view class="tl-item {{help.status === 'taken' || help.status === 'waiting_confirm' || help.status === 'done' ? 'active' : ''}}">
+          <view class="tl-dot"></view>
+          <view class="tl-content">
+            <view class="tl-title">已承接</view>
+            <view class="tl-time" wx:if="{{help.takerOpenid}}">接单人：{{help.takerName || '已接单'}}</view>
+          </view>
+        </view>
+        <view class="tl-item {{help.status === 'waiting_confirm' || help.status === 'done' ? 'active' : ''}}">
+          <view class="tl-dot"></view>
+          <view class="tl-content">
+            <view class="tl-title">待确认</view>
+            <view class="tl-time" wx:if="{{help.status === 'waiting_confirm' || help.status === 'done'}}">等待发布者确认</view>
+          </view>
+        </view>
+        <view class="tl-item {{help.status === 'done' ? 'active' : ''}}">
+          <view class="tl-dot"></view>
+          <view class="tl-content">
+            <view class="tl-title">已完成</view>
+            <view class="tl-time" wx:if="{{help.status === 'done'}}">任务已关闭</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 任务信息 -->
     <view class="card">
       <view class="row">
         <view class="section-title">{{help.title}}</view>
-        <view class="tag">{{statusText(help.status)}}</view>
+        <view class="tag status-{{help.status}}">{{statusText(help.status)}}</view>
       </view>
       <view class="muted">{{format(help.createdAt)}} · {{help.type}} · 悬赏 {{help.rewardPoints}} 积分</view>
       <view class="content mt">{{help.content}}</view>
 
-      <view class="mt muted" wx:if="{{help.takerOpenid}}">接单人：{{help.takerName || '已接单'}}</view>
+      <view class="mt muted" wx:if="{{help.takerOpenid}}">
+        <text>接单人：{{help.takerName || '已接单'}}</text>
+      </view>
 
       <view class="actions" wx:if="{{canOperate}}">
         <button wx:if="{{canTake}}" class="btn-primary" bindtap="take">接单</button>
@@ -18,12 +56,19 @@
       </view>
     </view>
 
+    <!-- 进度记录 -->
     <view class="card">
-      <view class="section-title">进度</view>
-      <view wx:if="{{!progress.length}}" class="muted mt">暂无进度</view>
-      <view wx:for="{{progress}}" wx:key="_id" class="progress">
-        <view class="muted">{{format(item.createdAt)}}</view>
-        <view class="content">{{item.content}}</view>
+      <view class="section-title">进度记录</view>
+      <view wx:if="{{!progress.length}}" class="empty-state">
+        <text class="empty-icon">📋</text>
+        <text class="muted">暂无进度</text>
+      </view>
+      <view wx:for="{{progress}}" wx:key="_id" class="progress-item">
+        <view class="progress-dot"></view>
+        <view class="progress-content">
+          <view class="muted">{{format(item.createdAt)}}</view>
+          <view class="content">{{item.content}}</view>
+        </view>
       </view>
 
       <view class="composer" wx:if="{{canChat}}">
@@ -34,7 +79,10 @@
   </view>
 
   <view class="wrap" wx:else>
-    <view class="card"><view class="muted">加载中...</view></view>
+    <view class="card skeleton-card">
+      <view class="skeleton-line short"></view>
+      <view class="skeleton-line"></view>
+      <view class="skeleton-line medium"></view>
+    </view>
   </view>
 </view>
-

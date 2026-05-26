@@ -6,6 +6,7 @@ Page({
   data: {
     items: [],
     isStaff: false,
+    loading: true,
   },
   async onShow() {
     const ok = await ensureBoundOrRedirect()
@@ -27,10 +28,12 @@ Page({
     }
   },
   async load() {
+    this.setData({ loading: true })
     try {
       const res = await callApi('notice.list', {})
-      this.setData({ items: res.items || [] })
+      this.setData({ items: res.items || [], loading: false })
     } catch (e) {
+      this.setData({ loading: false })
       wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }
   },
@@ -42,4 +45,3 @@ Page({
     wx.navigateTo({ url: '/pages/admin/notice-manage' })
   },
 })
-

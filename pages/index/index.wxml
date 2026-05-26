@@ -6,8 +6,8 @@
     <view class="date-tips">今天是个好日子，祝您生活愉快！</view>
   </view>
 
-  <!-- 滚动公告栏 -->
-  <view class="notice-bar">
+  <!-- 滚动公告栏（真实数据） -->
+  <view class="notice-bar" wx:if="{{noticeList.length > 0}}">
     <text class="horn-icon">📢</text>
     <swiper class="notice-swiper" vertical="true" autoplay="true" circular="true" interval="3000">
       <swiper-item wx:for="{{noticeList}}" wx:key="id" bindtap="goToNotice" data-id="{{item.id}}">
@@ -19,10 +19,17 @@
     </swiper>
   </view>
 
+  <!-- 骨架屏（加载中） -->
+  <view class="skeleton-card" wx:if="{{loading}}">
+    <view class="skeleton-line short"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line medium"></view>
+  </view>
+
   <!-- 功能卡片区域 -->
   <view class="main-content">
     <view class="section-title">社区服务</view>
-    
+
     <view class="service-grid">
       <!-- 老人专属：SOS急救卡片 -->
       <view class="card sos-card" bindtap="sos" hover-class="card-hover">
@@ -39,7 +46,7 @@
         <view class="card-icon">🔧</view>
         <view class="card-info">
           <text class="card-name">物业报修</text>
-          <text class="card-desc">水单管网一键报修</text>
+          <text class="card-desc">水电管网一键报修</text>
         </view>
         <view class="arrow">></view>
       </view>
@@ -96,4 +103,9 @@
       </view>
     </view>
   </view>
+</view>
+
+<!-- 浮动SOS按钮（老人模式常驻） -->
+<view class="float-sos {{elderMode ? 'show' : ''}}" wx:if="{{authed && elderMode}}" bindtap="sos">
+  <text class="float-sos-icon">🆘</text>
 </view>

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "openapi": []
+  },
+  "triggers": [
+    {
+      "name": "checkTimeout",
+      "type": "timer",
+      "config": "0 */30 * * * * *"
+    }
+  ]
+}

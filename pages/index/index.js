@@ -13,26 +13,13 @@ Page({
     roleText: '居民',
     authed: false,
     boundCount: 0,
-    noticeList: [
-      {
-        id: 1,
-        title: '社区物业服务中心搬迁通知',
-        isUrgent: false
-      },
-      {
-        id: 2,
-        title: '停水通知：明日9:00-18:00管道维护',
-        isUrgent: true
-      },
-      {
-        id: 3,
-        title: '社区健康体检活动报名开始',
-        isUrgent: false
-      }
-    ]
+    noticeList: [],
+    loading: true,
+    elderMode: false,
   },
   async onShow() {
     await this.ensureAuth()
+    await this.loadNotices()
   },
   async ensureAuth() {
     try {
@@ -40,10 +27,33 @@ Page({
       const app = getApp()
       app.globalData.user = res.user
       app.globalData.bindings = res.bindings || { boundCount: 0, houses: [] }
-      this.setData({ user: res.user, roleText: roleText(res.user.role) })
-      this.setData({ authed: !!res.user, boundCount: (res.bindings && res.bindings.boundCount) || 0 })
+      this.setData({
+        user: res.user,
+        roleText: roleText(res.user.role),
+        authed: !!res.user,
+        boundCount: (res.bindings && res.bindings.boundCount) || 0,
+        elderMode: !!(res.user && res.user.elderMode),
+      })
     } catch (e) {
+      this.setData({ loading: false })
       wx.showToast({ title: e.message || '初始化失败', icon: 'none' })
+    }
+  },
+  async loadNotices() {
+    try {
+      if (!this.data.authed || this.data.boundCount === 0) {
+        this.setData({ loading: false })
+        return
+      }
+      const res = await callApi('notice.list', { pageSize: 5 })
+      const notices = (res.items || []).map((n) => ({
+        id: n._id,
+        title: n.title,
+        isUrgent: !!n.important,
+      }))
+      this.setData({ noticeList: notices, loading: false })
+    } catch (e) {
+      this.setData({ loading: false })
     }
   },
   async wxLogin() {

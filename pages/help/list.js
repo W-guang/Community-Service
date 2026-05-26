@@ -13,6 +13,7 @@ Page({
   data: {
     tab: 'hall',
     items: [],
+    loading: true,
   },
   async onShow() {
     const ok = await ensureBoundOrRedirect()
@@ -22,7 +23,7 @@ Page({
   setTab(e) {
     const tab = e.currentTarget.dataset.tab
     if (tab === this.data.tab) return
-    this.setData({ tab, items: [] })
+    this.setData({ tab, items: [], loading: true })
     this.load()
   },
   format(ts) {
@@ -36,8 +37,9 @@ Page({
       const mine = this.data.tab === 'mine'
       const takenByMe = this.data.tab === 'taken'
       const res = await callApi('help.list', { mine, takenByMe })
-      this.setData({ items: res.items || [] })
+      this.setData({ items: res.items || [], loading: false })
     } catch (e) {
+      this.setData({ loading: false })
       wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }
   },
@@ -49,4 +51,3 @@ Page({
     wx.navigateTo({ url: `/pages/help/detail?_id=${id}` })
   },
 })
-

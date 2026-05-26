@@ -1,5 +1,6 @@
 const { callApi } = require('../../utils/api')
 const { ensureBoundOrRedirect } = require('../../utils/guard')
+const { rules, validateForm } = require('../../utils/validate')
 
 Page({
   async onShow() {
@@ -30,14 +31,21 @@ Page({
     if (this.data.submitting) return
     const title = (this.data.title || '').trim()
     const content = (this.data.content || '').trim()
-    if (!title) {
-      wx.showToast({ title: '请填写标题', icon: 'none' })
+    const rewardPoints = Number(this.data.rewardPoints || 0)
+
+    const { valid, first } = validateForm(
+      { title, content, rewardPoints },
+      {
+        title: [rules.required, rules.maxLength(50)],
+        content: [rules.required, rules.maxLength(500)],
+        rewardPoints: [rules.range(0, 999)],
+      },
+    )
+    if (!valid) {
+      wx.showToast({ title: first, icon: 'none' })
       return
     }
-    if (!content) {
-      wx.showToast({ title: '请填写描述', icon: 'none' })
-      return
-    }
+
     this.setData({ submitting: true })
     try {
       wx.showLoading({ title: '发布中' })
@@ -45,7 +53,7 @@ Page({
         type: this.data.types[this.data.typeIndex] || '其他',
         title,
         content,
-        rewardPoints: Number(this.data.rewardPoints || 0),
+        rewardPoints,
       })
       wx.hideLoading()
       wx.showToast({ title: '发布成功' })
@@ -58,4 +66,3 @@ Page({
     }
   },
 })
-

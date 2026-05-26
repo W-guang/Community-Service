@@ -1,4 +1,5 @@
 const { callApi } = require('../../utils/api')
+const { rules, validateForm } = require('../../utils/validate')
 
 const STATUS_TEXT = {
   bound: '已绑定',
@@ -33,10 +34,33 @@ Page({
   },
   async submit() {
     if (this.data.submitting) return
+    const f = this.data.form
+    const data = {
+      community: (f.community || '').trim(),
+      building: (f.building || '').trim(),
+      unit: (f.unit || '').trim(),
+      room: (f.room || '').trim(),
+      name: (f.name || '').trim(),
+      phone: (f.phone || '').trim(),
+    }
+
+    const { valid, first } = validateForm(data, {
+      community: [rules.required],
+      building: [rules.required],
+      unit: [rules.required],
+      room: [rules.required],
+      name: [rules.required],
+      phone: [rules.phone],
+    })
+    if (!valid) {
+      wx.showToast({ title: first, icon: 'none' })
+      return
+    }
+
     this.setData({ submitting: true })
     try {
       wx.showLoading({ title: '提交中' })
-      const res = await callApi('house.bind', { ...this.data.form })
+      const res = await callApi('house.bind', data)
       wx.hideLoading()
       const app = getApp()
       if (res.bindings) app.globalData.bindings = res.bindings
@@ -57,4 +81,3 @@ Page({
     wx.navigateTo({ url: '/pages/house/list' })
   },
 })
-

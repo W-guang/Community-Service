@@ -51,3 +51,58 @@
   background: #f3f4f6;
 }
 
+/* 状态时间线 */
+.timeline { padding: 10rpx 0; }
+.tl-item { display: flex; align-items: flex-start; padding: 12rpx 0; position: relative; }
+.tl-item:not(:last-child) { padding-bottom: 20rpx; }
+.tl-item:not(:last-child)::before {
+  content: ''; position: absolute; left: 9rpx; top: 30rpx; bottom: 0;
+  width: 2rpx; background: #e5e7eb;
+}
+.tl-item.active:not(:last-child)::before { background: #1296db; }
+.tl-dot {
+  width: 20rpx; height: 20rpx; border-radius: 50%; background: #e5e7eb;
+  flex-shrink: 0; margin-right: 16rpx; margin-top: 4rpx; transition: all 0.3s;
+}
+.tl-item.active .tl-dot { background: #1296db; box-shadow: 0 0 0 6rpx rgba(18,150,219,0.15); }
+.tl-content { flex: 1; }
+.tl-title { font-size: 28rpx; font-weight: 600; color: #9ca3af; }
+.tl-item.active .tl-title { color: #111827; }
+.tl-time { font-size: 24rpx; color: #9ca3af; margin-top: 4rpx; }
+
+/* 状态标签颜色 */
+.tag.status-pending { background: #fff3cd; color: #856404; }
+.tag.status-processing { background: #cce5ff; color: #004085; }
+.tag.status-waiting_confirm { background: #e8daef; color: #6c3483; }
+.tag.status-done { background: #d4edda; color: #155724; }
+
+/* 空状态 */
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 40rpx 0; }
+.empty-icon { font-size: 60rpx; margin-bottom: 12rpx; }
+
+/* 定位信息 */
+.location-info { display: flex; align-items: center; gap: 8rpx; }
+.loc-icon { font-size: 28rpx; }
+
+/* 聊天气泡 */
+.comment-left { display: flex; justify-content: flex-start; }
+.comment-right { display: flex; justify-content: flex-end; }
+.comment { padding: 12rpx 0; border-bottom: none; }
+.comment-bubble { max-width: 80%; border-radius: 20rpx; padding: 16rpx 20rpx; }
+.bubble-resident { background: #e3f2fd; border-bottom-left-radius: 4rpx; }
+.bubble-staff { background: #e8f5e9; border-bottom-right-radius: 4rpx; }
+.comment-name { font-size: 24rpx; font-weight: 600; color: #6b7280; margin-bottom: 4rpx; }
+.comment-text { font-size: 28rpx; color: #111827; line-height: 1.5; }
+.comment-time { font-size: 22rpx; color: #9ca3af; margin-top: 6rpx; text-align: right; }
+
+/* 骨架屏 */
+.skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; }
+.skeleton-line { height: 28rpx; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8rpx; margin-bottom: 16rpx; }
+.skeleton-line.short { width: 40%; }
+.skeleton-line.medium { width: 75%; }
+.skeleton-line:last-child { margin-bottom: 0; }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+

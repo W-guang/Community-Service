@@ -6,8 +6,20 @@
       <button class="btn btn-primary" size="mini" bindtap="goManage">管理</button>
     </view>
 
-    <view wx:if="{{!items.length}}" class="card"><view class="muted">暂无公告</view></view>
+    <!-- 骨架屏 -->
+    <view wx:if="{{loading}}" class="card skeleton-card">
+      <view class="skeleton-line short"></view>
+      <view class="skeleton-line"></view>
+      <view class="skeleton-line medium"></view>
+    </view>
 
+    <!-- 空状态 -->
+    <view wx:elif="{{!items.length}}" class="card empty-state">
+      <text class="empty-icon">📢</text>
+      <text class="muted">暂无公告</text>
+    </view>
+
+    <!-- 列表 -->
     <view wx:for="{{items}}" wx:key="_id" class="list-item" bindtap="goDetail" data-id="{{item._id}}">
       <view class="row">
         <view class="col">
@@ -16,9 +28,8 @@
           </view>
           <view class="muted">{{item.type}} · {{format(item.createdAt)}}</view>
         </view>
-        <view class="tag" wx:if="{{item.important}}">重要</view>
+        <view class="tag tag-important" wx:if="{{item.important}}">重要</view>
       </view>
     </view>
   </view>
 </view>
-

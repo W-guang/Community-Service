@@ -82,3 +82,54 @@
   font-size: 26rpx;
   padding: 0 20rpx;
 }
+
+/* 骨架屏加载动画 */
+.skeleton-card {
+  margin: 0 30rpx 20rpx 30rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
+}
+.skeleton-line {
+  height: 28rpx;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8rpx;
+  margin-bottom: 16rpx;
+}
+.skeleton-line.short { width: 40%; }
+.skeleton-line.medium { width: 75%; }
+.skeleton-line:last-child { margin-bottom: 0; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 浮动SOS按钮（老人模式） */
+.float-sos {
+  position: fixed;
+  right: 30rpx;
+  bottom: 200rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b81, #ff4757);
+  box-shadow: 0 8rpx 24rpx rgba(255,71,87,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.3s ease;
+}
+.float-sos.show {
+  opacity: 1;
+  transform: scale(1);
+}
+.float-sos-icon {
+  font-size: 50rpx;
+}
