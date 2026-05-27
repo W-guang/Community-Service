@@ -1,5 +1,6 @@
 <navigation-bar title="我的房屋" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="row">
       <view class="muted">已绑定 {{boundCount}} 套</view>
@@ -22,5 +23,7 @@
       </view>
     </view>
   </view>
+
+</scroll-view>
 </view>
 

@@ -1,5 +1,6 @@
 <navigation-bar title="公告管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="card form">
       <view class="section-title">发布公告</view>
@@ -45,5 +46,7 @@
       </view>
     </view>
   </view>
+
+</scroll-view>
 </view>
 

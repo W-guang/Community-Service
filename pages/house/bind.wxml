@@ -1,5 +1,6 @@
 <navigation-bar title="房屋绑定" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
 
     <view class="card tip-card">
@@ -63,4 +64,6 @@
     </view>
 
   </view>
+
+</scroll-view>
 </view>

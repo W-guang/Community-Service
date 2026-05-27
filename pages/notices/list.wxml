@@ -1,5 +1,6 @@
 <navigation-bar title="社区公告" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="row" wx:if="{{isStaff}}">
       <view class="muted">物业/管理员可发布公告</view>
@@ -32,4 +33,6 @@
       </view>
     </view>
   </view>
+
+</scroll-view>
 </view>

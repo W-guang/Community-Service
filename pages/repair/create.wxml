@@ -1,5 +1,6 @@
 <navigation-bar title="新建报修" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="card form">
       <view class="field">
@@ -41,5 +42,7 @@
       <button class="btn-primary submit" loading="{{submitting}}" bindtap="submit">提交报修</button>
     </view>
   </view>
+
+</scroll-view>
 </view>
 

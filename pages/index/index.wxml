@@ -1,6 +1,7 @@
 <!-- pages/index/index.wxml -->
 <navigation-bar title="{{adminMode ? '管理模式' : '邻智灵'}}" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
 
     <!-- ==================== 管理员模式：快捷工作台 ==================== -->
@@ -162,9 +163,12 @@
     </block>
 
   </view>
-</view>
 
-<!-- 浮动SOS按钮（老人模式常驻，管理员模式也显示） -->
+</scroll-view>
+
+<!-- 浮动SOS按钮 -->
 <view class="float-sos {{elderMode || adminMode ? 'show' : ''}}" wx:if="{{authed && (elderMode || adminMode)}}" bindtap="sos">
   <text class="float-sos-icon">🆘</text>
+</view>
+
 </view>

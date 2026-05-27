@@ -1,5 +1,6 @@
 <navigation-bar title="邻里互助" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="row">
       <view class="seg">
@@ -38,4 +39,6 @@
       </view>
     </view>
   </view>
+
+</scroll-view>
 </view>

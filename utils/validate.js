@@ -24,7 +24,9 @@ const rules = {
     }
   },
   phone(value, msg) {
-    if (value && !/^1[3-9]\d{9}$/.test(String(value))) return msg || '手机号格式不正确'
+    if (!value) return '' // 可选字段
+    const digits = String(value).replace(/\D/g, '')
+    if (digits.length > 0 && !/^1[3-9]\d{9}$/.test(digits)) return msg || '手机号格式不正确（需11位）'
     return ''
   },
 }

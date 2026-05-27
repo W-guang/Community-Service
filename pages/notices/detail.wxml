@@ -1,5 +1,6 @@
 <navigation-bar title="公告详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap" wx:if="{{notice}}">
     <view class="card">
       <view class="section-title">{{notice.title}}</view>
@@ -19,5 +20,7 @@
   <view class="wrap" wx:else>
     <view class="card"><view class="muted">加载中...</view></view>
   </view>
+
+</scroll-view>
 </view>
 

@@ -1,5 +1,6 @@
 <navigation-bar title="用户管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
 
     <!-- ========== 用户列表 ========== -->
@@ -78,4 +79,6 @@
     </view>
 
   </view>
+
+</scroll-view>
 </view>

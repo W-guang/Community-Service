@@ -1,5 +1,6 @@
 <navigation-bar title="报修" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="row">
       <view class="muted">{{adminMode ? '全部工单' : '我的报修'}} · {{items.length}} 条</view>
@@ -32,4 +33,6 @@
       <view class="meta muted">{{format(item.createdAt)}}</view>
     </view>
   </view>
+
+</scroll-view>
 </view>

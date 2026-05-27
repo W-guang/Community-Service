@@ -4,18 +4,24 @@
    页面容器 — 含Skyline滚动修复
    ============================================================ */
 .page {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   background-color: #F4F6F9;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 
 .page-container {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   background-color: #F4F6F9;
-  padding-bottom: 50rpx;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+}
+
+.scroll-content {
+  flex: 1;
+  height: 0;
 }
 
 /* ============================================================

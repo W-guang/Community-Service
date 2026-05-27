@@ -1,5 +1,6 @@
 <navigation-bar title="治理数据看板" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="card">
       <view class="row">
@@ -63,4 +64,6 @@
       </view>
     </view>
   </view>
+
+</scroll-view>
 </view>

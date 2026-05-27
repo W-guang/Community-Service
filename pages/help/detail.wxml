@@ -1,5 +1,6 @@
 <navigation-bar title="互助详情" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap" wx:if="{{help}}">
     <!-- 状态时间线 -->
     <view class="card timeline-card">
@@ -98,4 +99,6 @@
       <view class="skeleton-line medium"></view>
     </view>
   </view>
+
+</scroll-view>
 </view>

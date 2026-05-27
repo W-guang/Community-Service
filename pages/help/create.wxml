@@ -1,5 +1,6 @@
 <navigation-bar title="发布互助任务" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <view class="card form">
       <view class="field">
@@ -28,5 +29,7 @@
       <button class="btn-primary submit" loading="{{submitting}}" bindtap="submit">发布</button>
     </view>
   </view>
+
+</scroll-view>
 </view>
 

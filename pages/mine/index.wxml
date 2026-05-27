@@ -1,5 +1,6 @@
 <navigation-bar title="我的" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
     <!-- ========== 用户信息卡片 ========== -->
     <view class="card">
@@ -144,4 +145,6 @@
       </view>
     </block>
   </view>
+
+</scroll-view>
 </view>
