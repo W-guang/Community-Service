@@ -82,7 +82,11 @@ Page({
       })
       wx.showToast({ title: '登录成功', icon: 'success' })
     } catch (e) {
-      wx.showToast({ title: e.message || '登录失败', icon: 'none' })
+      if (e && e.errMsg && e.errMsg.includes('cancel')) {
+        wx.showToast({ title: '已取消', icon: 'none' })
+      } else {
+        wx.showToast({ title: e.message || '登录失败，请重试', icon: 'none' })
+      }
     }
   },
   // 公告点击事件

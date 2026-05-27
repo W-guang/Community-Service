@@ -50,9 +50,13 @@ async function actionHelpTake({ openid, data }) {
   const help = h.data
   if (help.status !== 'open') throw new Error('任务不可接单')
   if (help.openid === openid) throw new Error('不能接自己的任务')
-  await db.collection(COL.helps).doc(data._id).update({
-    data: { status: 'taken', takerOpenid: openid, takerName: user.nickname || '接单人', updatedAt: now() },
-  })
+  // 原子更新：where条件确保不会并发重复接单
+  const updateRes = await db.collection(COL.helps)
+    .where({ _id: data._id, status: 'open' })
+    .update({
+      data: { status: 'taken', takerOpenid: openid, takerName: user.nickname || '接单人', updatedAt: now() },
+    })
+  if (!updateRes.stats || updateRes.stats.updated === 0) throw new Error('任务已被他人接单')
   await db.collection(COL.helpProgress).add({
     data: { helpId: data._id, fromOpenid: openid, content: '已接单', createdAt: now() },
   })
@@ -74,13 +78,27 @@ async function actionHelpAddProgress({ openid, data }) {
   return ok({ helpId: data.helpId })
 }
 
+const HELP_TRANSITIONS = {
+  open: ['taken'],
+  taken: ['waiting_confirm'],
+  waiting_confirm: ['done'],
+  done: [],
+}
+
 async function actionHelpUpdateStatus({ openid, data }) {
   await requireBoundHouse(openid)
   await getOrCreateUser(openid)
   const h = await db.collection(COL.helps).doc(data._id).get()
   const help = h.data
+  const current = help.status
   const next = data.status
-  if (!['open', 'taken', 'waiting_confirm', 'done'].includes(next)) throw new Error('非法状态')
+
+  // 验证状态转换合法性
+  const allowed = HELP_TRANSITIONS[current]
+  if (!allowed || !allowed.includes(next)) {
+    throw new Error(`非法状态转换：${current} → ${next}`)
+  }
+
   const isOwner = help.openid === openid
   const isTaker = help.takerOpenid === openid
   if (!isOwner && !isTaker) throw new Error('无权限')
@@ -92,35 +110,39 @@ async function actionHelpUpdateStatus({ openid, data }) {
     data: { helpId: data._id, fromOpenid: openid, content: `状态更新：${next}`, createdAt: now() },
   })
 
-  // 任务完成时发放积分给接单者
+  // 任务完成时发放积分给接单者（仅从waiting_confirm→done时触发）
   if (next === 'done' && help.takerOpenid) {
-    const points = help.rewardPoints || 0
-    if (points > 0) {
-      const takerUser = await db.collection(COL.users).where({ openid: help.takerOpenid }).limit(1).get()
-      if (takerUser.data && takerUser.data[0]) {
-        const tu = takerUser.data[0]
-        const newTotal = (tu.totalPoints || 0) + points
-        await db.collection(COL.users).doc(tu._id).update({
-          data: { totalPoints: newTotal, updatedAt: now() },
-        })
-        // 积分流水
-        await db.collection(COL.pointLogs).add({
-          data: { openid: help.takerOpenid, amount: points, type: 'earn',
-            source: `完成互助任务#${data._id}`, balance: newTotal, createdAt: now() },
-        })
+    // 幂等保护：检查是否已发放过积分流水
+    const alreadyRewarded = await db.collection(COL.pointLogs)
+      .where({ openid: help.takerOpenid, source: `完成互助任务#${data._id}` }).limit(1).get()
+    if (!alreadyRewarded.data || !alreadyRewarded.data[0]) {
+      const points = help.rewardPoints || 0
+      if (points > 0) {
+        const takerUser = await db.collection(COL.users).where({ openid: help.takerOpenid }).limit(1).get()
+        if (takerUser.data && takerUser.data[0]) {
+          const tu = takerUser.data[0]
+          const newTotal = (tu.totalPoints || 0) + points
+          await db.collection(COL.users).doc(tu._id).update({
+            data: { totalPoints: newTotal, updatedAt: now() },
+          })
+          await db.collection(COL.pointLogs).add({
+            data: { openid: help.takerOpenid, amount: points, type: 'earn',
+              source: `完成互助任务#${data._id}`, balance: newTotal, createdAt: now() },
+          })
+        }
       }
-    }
-    // 双方信誉分+1
-    for (const uid of [help.openid, help.takerOpenid]) {
-      const u = await db.collection(COL.users).where({ openid: uid }).limit(1).get()
-      if (u.data && u.data[0]) {
-        const newCredit = (u.data[0].creditScore || 100) + 1
-        await db.collection(COL.users).doc(u.data[0]._id).update({
-          data: { creditScore: newCredit, updatedAt: now() },
-        })
-        await db.collection(COL.creditLogs).add({
-          data: { openid: uid, change: 1, reason: `互助任务完成#${data._id}`, balance: newCredit, createdAt: now() },
-        })
+      // 双方信誉分+1
+      for (const uid of [help.openid, help.takerOpenid]) {
+        const u = await db.collection(COL.users).where({ openid: uid }).limit(1).get()
+        if (u.data && u.data[0]) {
+          const newCredit = (u.data[0].creditScore || 100) + 1
+          await db.collection(COL.users).doc(u.data[0]._id).update({
+            data: { creditScore: newCredit, updatedAt: now() },
+          })
+          await db.collection(COL.creditLogs).add({
+            data: { openid: uid, change: 1, reason: `互助任务完成#${data._id}`, balance: newCredit, createdAt: now() },
+          })
+        }
       }
     }
   }

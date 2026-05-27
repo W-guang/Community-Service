@@ -65,6 +65,15 @@ async function actionHouseApprove({ openid, data }) {
   const r = req.data
   if (!r || r.status !== 'pending_verify') throw new Error('记录不存在或状态不可审核')
 
+  // staff 管辖范围校验
+  if (user.role === 'staff') {
+    const mc = Array.isArray(user.managedCommunities) ? user.managedCommunities : []
+    if (mc.length && !mc.includes(r.community)) {
+      throw new Error('无权审核该小区的房屋绑定')
+    }
+    if (!mc.length) throw new Error('您未配置管辖小区')
+  }
+
   const { community, building, unit, room } = r
   const houseRes = await db.collection(COL.houses).where({ community, building, unit, room }).limit(1).get()
   let houseId = houseRes.data && houseRes.data[0] ? houseRes.data[0]._id : ''
@@ -84,6 +93,16 @@ async function actionHouseApprove({ openid, data }) {
 async function actionHouseReject({ openid, data }) {
   const user = await getOrCreateUser(openid)
   requireRole(user, ['staff', 'admin'])
+
+  // staff 管辖范围校验
+  const existing = await db.collection(COL.userHouses).doc(data._id).get()
+  if (existing.data && user.role === 'staff') {
+    const mc = Array.isArray(user.managedCommunities) ? user.managedCommunities : []
+    if (mc.length && !mc.includes(existing.data.community)) {
+      throw new Error('无权审核该小区的房屋绑定')
+    }
+  }
+
   await db.collection(COL.userHouses).doc(data._id).update({
     data: { status: 'rejected', rejectedAt: now(), rejectedBy: openid,
       rejectReason: (data.reason || '').slice(0, 100) },

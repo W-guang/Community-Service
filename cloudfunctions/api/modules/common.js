@@ -25,8 +25,6 @@ const COL = {
   adminConfigs: 'admin_configs',
 }
 
-const ADMIN_OPENIDS_FALLBACK = ['o29xy3Rln6lXvj3Y60m-EJhQ4SVY']
-
 let cachedAdminOpenids = null
 let cacheExpireAt = 0
 
@@ -34,19 +32,23 @@ async function getAdminOpenids() {
   if (cachedAdminOpenids && Date.now() < cacheExpireAt) return cachedAdminOpenids
   try {
     const { data } = await db.collection(COL.adminConfigs).where({ role: 'admin' }).limit(50).get()
-    if (data && data.length) {
-      cachedAdminOpenids = [...new Set(data.map((d) => d.openid))]
-      cacheExpireAt = Date.now() + 300000 // 5分钟缓存
+    cachedAdminOpenids = data && data.length ? [...new Set(data.map((d) => d.openid))] : []
+    cacheExpireAt = Date.now() + 300000 // 5分钟缓存
+    return cachedAdminOpenids
+  } catch (e) {
+    // 仅在集合不存在时返回空列表，其他错误向上抛
+    const msg = (e && e.message) || ''
+    if (msg.includes('COLLECTION_NOT_EXIST') || msg.includes('collection') || msg.includes('Db or Table not exist')) {
+      cachedAdminOpenids = []
+      cacheExpireAt = Date.now() + 300000
       return cachedAdminOpenids
     }
-  } catch (_) { /* 集合可能尚不存在 */ }
-  cachedAdminOpenids = ADMIN_OPENIDS_FALLBACK
-  cacheExpireAt = Date.now() + 300000
-  return cachedAdminOpenids
+    throw e
+  }
 }
 
 function isAdmin(openid) {
-  return ADMIN_OPENIDS_FALLBACK.includes(openid)
+  return false // 必须查询数据库；不再使用硬编码
 }
 
 function now() {
@@ -64,6 +66,7 @@ function fail(error) {
 async function getOrCreateUser(openid) {
   const existing = await db.collection(COL.users).where({ openid }).limit(1).get()
   if (existing.data && existing.data[0]) return existing.data[0]
+
   const adminList = await getAdminOpenids()
   const user = {
     openid,
@@ -77,8 +80,15 @@ async function getOrCreateUser(openid) {
     createdAt: now(),
     updatedAt: now(),
   }
-  const addRes = await db.collection(COL.users).add({ data: user })
-  return { ...user, _id: addRes._id }
+  try {
+    const addRes = await db.collection(COL.users).add({ data: user })
+    return { ...user, _id: addRes._id }
+  } catch (e) {
+    // 并发创建导致的重复：重新查询返回已存在的记录
+    const retry = await db.collection(COL.users).where({ openid }).limit(1).get()
+    if (retry.data && retry.data[0]) return retry.data[0]
+    throw e
+  }
 }
 
 async function getBindings(openid) {

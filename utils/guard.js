@@ -12,6 +12,10 @@ async function ensureAuthed() {
 async function ensureBoundOrRedirect(opts = {}) {
   const { redirectUrl = '/pages/house/bind' } = opts
   const app = getApp()
+
+  // 管理员模式：跳过房屋绑定检查
+  if (app.isAdminMode && app.isAdminMode()) return true
+
   if (!app.globalData.user || !app.globalData.bindings) {
     await ensureAuthed()
   }
@@ -37,4 +41,3 @@ module.exports = {
   ensureAuthed,
   ensureBoundOrRedirect,
 }
-

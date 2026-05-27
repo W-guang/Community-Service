@@ -11,9 +11,10 @@ async function actionAuth({ openid }) {
 
 async function actionUserUpdate({ openid, data }) {
   const user = await getOrCreateUser(openid)
+  const ALLOWED_KEYS = ['nickname', 'avatarUrl', 'phone', 'elderMode']
   const patch = {}
-  ;['nickname', 'avatarUrl', 'phone', 'elderMode'].forEach((k) => {
-    if (k in data) patch[k] = data[k]
+  ALLOWED_KEYS.forEach((k) => {
+    if (Object.prototype.hasOwnProperty.call(data, k)) patch[k] = data[k]
   })
   patch.updatedAt = now()
   await db.collection(COL.users).doc(user._id).update({ data: patch })

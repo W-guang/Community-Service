@@ -51,20 +51,32 @@ async function actionRepairDetail({ openid, data }) {
   return ok({ repair, comments: comments.data })
 }
 
+const REPAIR_TRANSITIONS = {
+  pending: ['processing'],
+  processing: ['waiting_confirm', 'done'],
+  waiting_confirm: ['done'],
+  done: [],
+}
+
 async function actionRepairUpdateStatus({ openid, data }) {
   const user = await getOrCreateUser(openid)
   await requireBoundHouse(openid)
   const r = await db.collection(COL.repairs).doc(data._id).get()
   const repair = r.data
+  const current = repair.status
   const next = data.status
 
-  const allowed = ['pending', 'processing', 'waiting_confirm', 'done']
-  if (!allowed.includes(next)) throw new Error('非法状态')
+  // 验证状态转换合法性
+  const allowed = REPAIR_TRANSITIONS[current]
+  if (!allowed || !allowed.includes(next)) {
+    throw new Error(`非法状态转换：${current} → ${next}`)
+  }
 
   if (user.role === 'resident') {
     if (repair.openid !== openid) throw new Error('无权限')
-    if (next === 'done') throw new Error('居民不能直接完成工单')
-    if (next === 'waiting_confirm') throw new Error('居民不能发起待确认')
+    // 居民只能从pending→processing（催单），或从waiting_confirm→done（确认完成）
+  } else {
+    // staff/admin: processing→waiting_confirm 或 processing→done
   }
 
   const patch = { status: next, updatedAt: now() }

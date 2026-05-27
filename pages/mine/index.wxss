@@ -7,6 +7,10 @@
 .mt {
   margin-top: 12rpx;
 }
+.column {
+  display: flex;
+  flex-direction: column;
+}
 .form {
   display: flex;
   flex-direction: column;
@@ -57,3 +61,97 @@ input {
   font-size: 34rpx;
 }
 
+/* 管理员模式切换卡片 */
+.admin-switch-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2rpx dashed #adb5bd;
+}
+.admin-switch-card:active {
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+}
+.mode-indicator {
+  font-size: 48rpx;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.mode-indicator.on {
+  background: #e3f2fd;
+}
+.mode-indicator.off {
+  background: #f5f5f5;
+}
+
+/* 数据看板网格 */
+.stats-grid {
+  margin-top: 16rpx;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+}
+.stat-item {
+  padding: 18rpx 12rpx;
+  border-radius: 14rpx;
+  background: #f8f9fa;
+  text-align: center;
+}
+.stat-item.warn {
+  background: #fff3cd;
+}
+.stat-item.danger {
+  background: #ffe3e3;
+}
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.stat-label {
+  font-size: 22rpx;
+  color: #6b7280;
+  margin-top: 4rpx;
+}
+
+/* 管理功能菜单 */
+.admin-menu {
+  margin-top: 14rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.admin-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 18rpx;
+  border-radius: 14rpx;
+  background: #f8f9fa;
+}
+.admin-menu-item:active {
+  background: #e9ecef;
+}
+.menu-icon {
+  font-size: 36rpx;
+  width: 56rpx;
+  text-align: center;
+}
+.menu-info {
+  flex: 1;
+}
+.menu-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #111827;
+}
+.menu-desc {
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-top: 2rpx;
+}
+.arrow {
+  color: #ccc;
+  font-size: 28rpx;
+}

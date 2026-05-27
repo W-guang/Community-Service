@@ -11,8 +11,10 @@ Page({
     user: { openid: '', role: 'resident', nickname: '', phone: '', elderMode: false },
     roleText: '居民',
     isStaff: false,
+    adminMode: false,
     form: { nickname: '', phone: '', elderMode: false },
     saving: false,
+    stats: null,
   },
   async onShow() {
     await this.load()
@@ -23,7 +25,10 @@ Page({
       const app = getApp()
       app.globalData.user = res.user
       app.globalData.bindings = res.bindings || { boundCount: 0, houses: [] }
+      const adminMode = app.isAdminMode ? app.isAdminMode() : false
       this.setUser(res.user)
+      this.setData({ adminMode })
+      if (adminMode) await this.loadStats()
     } catch (e) {
       wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }
@@ -35,6 +40,22 @@ Page({
       isStaff: u.role === 'staff' || u.role === 'admin',
       form: { nickname: u.nickname || '', phone: u.phone || '', elderMode: !!u.elderMode },
     })
+  },
+  toggleAdminMode() {
+    const app = getApp()
+    const next = app.toggleAdminMode()
+    this.setData({ adminMode: next })
+    if (next) {
+      this.loadStats()
+    }
+  },
+  async loadStats() {
+    try {
+      const res = await callApi('dashboard.stats')
+      this.setData({ stats: res })
+    } catch (_) {
+      this.setData({ stats: null })
+    }
   },
   onNick(e) {
     this.setData({ 'form.nickname': e.detail.value })
@@ -80,7 +101,11 @@ Page({
       this.setUser(res.user)
       wx.showToast({ title: '已更新' })
     } catch (e) {
-      wx.showToast({ title: '已取消授权', icon: 'none' })
+      if (e && e.errMsg && e.errMsg.includes('cancel')) {
+        wx.showToast({ title: '已取消', icon: 'none' })
+      } else {
+        wx.showToast({ title: e.message || '授权失败', icon: 'none' })
+      }
     }
   },
   goHouses() {
@@ -113,4 +138,3 @@ Page({
     })
   },
 })
-
