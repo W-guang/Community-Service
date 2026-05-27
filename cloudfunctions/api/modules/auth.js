@@ -73,10 +73,29 @@ async function actionAdminRemove({ openid, data }) {
   return ok({ openid: targetOpenid })
 }
 
+async function actionAdminUserList({ openid, data }) {
+  const me = await getOrCreateUser(openid)
+  requireRole(me, ['admin'])
+  const pageSize = Math.min(Number(data.pageSize || 30), 100)
+  const skip = Math.max(Number(data.skip || 0), 0)
+  const where = {}
+  if (data.role) where.role = data.role
+  if (data.keyword) {
+    const kw = data.keyword.trim()
+    where.openid = db.RegExp({ regexp: kw, options: 'i' })
+  }
+  const [res, countRes] = await Promise.all([
+    db.collection(COL.users).where(where).orderBy('createdAt', 'desc').skip(skip).limit(pageSize).get(),
+    db.collection(COL.users).where(where).count(),
+  ])
+  return ok({ items: res.data || [], total: countRes.total })
+}
+
 module.exports = {
   actionAuth,
   actionUserUpdate,
   actionAdminUserSetRole,
   actionAdminAdd,
   actionAdminRemove,
+  actionAdminUserList,
 }

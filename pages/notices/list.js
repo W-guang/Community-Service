@@ -7,16 +7,20 @@ Page({
     items: [],
     isStaff: false,
     loading: true,
+    adminMode: false,
   },
   async onShow() {
-    const ok = await ensureBoundOrRedirect()
-    if (!ok) return
+    const app = getApp()
+    const adminMode = app.isAdminMode ? app.isAdminMode() : false
+    this.setData({ adminMode })
+    if (!adminMode) {
+      const ok = await ensureBoundOrRedirect()
+      if (!ok) return
+    }
     await this.ensureAuth()
     await this.load()
   },
-  format(ts) {
-    return formatDateTime(ts)
-  },
+  format(ts) { return formatDateTime(ts) },
   async ensureAuth() {
     try {
       const app = getApp()
@@ -34,12 +38,10 @@ Page({
       this.setData({ items: res.items || [], loading: false })
     } catch (e) {
       this.setData({ loading: false })
-      wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }
   },
   goDetail(e) {
-    const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/notices/detail?_id=${id}` })
+    wx.navigateTo({ url: `/pages/notices/detail?_id=${e.currentTarget.dataset.id}` })
   },
   goManage() {
     wx.navigateTo({ url: '/pages/admin/notice-manage' })

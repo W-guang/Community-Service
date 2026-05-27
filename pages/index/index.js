@@ -16,10 +16,20 @@ Page({
     noticeList: [],
     loading: true,
     elderMode: false,
+    adminMode: false,
+    adminStats: null,
   },
   async onShow() {
     await this.ensureAuth()
-    await this.loadNotices()
+    const app = getApp()
+    const adminMode = app.isAdminMode ? app.isAdminMode() : false
+    this.setData({ adminMode })
+    if (!adminMode) {
+      await this.loadNotices()
+    } else {
+      this.setData({ loading: false })
+      this.loadAdminStats()
+    }
   },
   async ensureAuth() {
     try {
@@ -36,8 +46,13 @@ Page({
       })
     } catch (e) {
       this.setData({ loading: false })
-      wx.showToast({ title: e.message || '初始化失败', icon: 'none' })
     }
+  },
+  async loadAdminStats() {
+    try {
+      const res = await callApi('dashboard.stats')
+      this.setData({ adminStats: res })
+    } catch (_) {}
   },
   async loadNotices() {
     try {
@@ -89,24 +104,17 @@ Page({
       }
     }
   },
-  // 公告点击事件
   goToNotice(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: `/pages/notices/detail?id=${id}`
-    })
+    wx.navigateTo({ url: `/pages/notices/detail?_id=${id}` })
   },
-  goRepair() {
-    wx.switchTab({ url: '/pages/repair/list' })
-  },
-  goHelp() {
-    wx.switchTab({ url: '/pages/help/list' })
-  },
-  goNotices() {
-    wx.switchTab({ url: '/pages/notices/list' })
-  },
-  goBind() {
-    wx.navigateTo({ url: '/pages/house/bind' })
+  goRepair() { wx.switchTab({ url: '/pages/repair/list' }) },
+  goHelp() { wx.switchTab({ url: '/pages/help/list' }) },
+  goNotices() { wx.switchTab({ url: '/pages/notices/list' }) },
+  goBind() { wx.navigateTo({ url: '/pages/house/bind' }) },
+  go(e) {
+    const url = e.currentTarget.dataset.url
+    wx.navigateTo({ url })
   },
   async sos() {
     try {
@@ -122,7 +130,7 @@ Page({
     }
   },
   pickLocation() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       wx.getLocation({
         type: 'gcj02',
         success: (r) => resolve({ latitude: r.latitude, longitude: r.longitude }),

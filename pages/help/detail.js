@@ -22,6 +22,12 @@ Page({
     canWaitingConfirm: false,
     canDone: false,
     canChat: false,
+    // 评价
+    showRate: false,
+    myRating: 0,
+    myRatingDone: false,
+    rateComment: '',
+    ratingTarget: '',
   },
   async onLoad(query) {
     this.setData({ _id: query._id || '' })
@@ -67,6 +73,7 @@ Page({
       const res = await callApi('help.detail', { _id: this.data._id })
       this.setData({ help: res.help, progress: res.progress || [] })
       this.computePerms(res.help)
+      this.computeRatePerms(res.help)
     } catch (e) {
       wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }
@@ -110,6 +117,48 @@ Page({
       wx.showToast({ title: e.message || '发送失败', icon: 'none' })
     } finally {
       this.setData({ sending: false })
+    }
+  },
+  // ---- 评价功能 ----
+  computeRatePerms(help) {
+    const openid = this.data.user && this.data.user.openid
+    const isOwner = help.openid === openid
+    const isTaker = help.takerOpenid === openid
+    const canRate = help.status === 'done' && (isOwner || isTaker)
+    const targetName = isOwner ? (help.takerName || '接单人') : (help.ownerName || '发布者')
+    this.setData({
+      showRate: canRate && !this.data.myRatingDone,
+      ratingTarget: targetName,
+    })
+    // 检查是否已经评价过
+    if (canRate) {
+      callApi('help.detail', { _id: this.data._id }).then((res) => {
+        // 简单判断：如果进度中有评价记录则认为已评价
+        const hasRated = (res.progress || []).some((p) => p.content && p.content.includes('评价'))
+        if (hasRated) this.setData({ myRatingDone: true, showRate: false })
+      }).catch(() => {})
+    }
+  },
+  onRateStar(e) {
+    this.setData({ myRating: Number(e.currentTarget.dataset.star) })
+  },
+  onRateComment(e) {
+    this.setData({ rateComment: e.detail.value })
+  },
+  async submitRate() {
+    if (this.data.myRating < 1) {
+      return wx.showToast({ title: '请选择评分', icon: 'none' })
+    }
+    try {
+      wx.showLoading({ title: '提交评价' })
+      await callApi('help.rate', { helpId: this.data._id, score: this.data.myRating, comment: this.data.rateComment })
+      wx.hideLoading()
+      wx.showToast({ title: '评价成功' })
+      this.setData({ myRatingDone: true, showRate: false })
+      await this.load()
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: e.message || '评价失败', icon: 'none' })
     }
   },
 })

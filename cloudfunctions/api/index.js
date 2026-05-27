@@ -21,6 +21,7 @@ const ROUTES = {
   'admin.userSetRole': auth.actionAdminUserSetRole,
   'admin.add': auth.actionAdminAdd,
   'admin.remove': auth.actionAdminRemove,
+  'admin.userList': auth.actionAdminUserList,
 
   'house.bind': house.actionHouseBind,
   'house.myList': house.actionHouseMyList,

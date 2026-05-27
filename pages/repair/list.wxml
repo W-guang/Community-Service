@@ -2,7 +2,7 @@
 <view class="page">
   <view class="wrap">
     <view class="row">
-      <view class="muted">共 {{items.length}} 条</view>
+      <view class="muted">{{adminMode ? '全部工单' : '我的报修'}} · {{items.length}} 条</view>
       <button class="btn btn-primary" size="mini" bindtap="goCreate">新建报修</button>
     </view>
 

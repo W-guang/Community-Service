@@ -14,10 +14,16 @@ Page({
     tab: 'hall',
     items: [],
     loading: true,
+    adminMode: false,
   },
   async onShow() {
-    const ok = await ensureBoundOrRedirect()
-    if (!ok) return
+    const app = getApp()
+    const adminMode = app.isAdminMode ? app.isAdminMode() : false
+    this.setData({ adminMode })
+    if (!adminMode) {
+      const ok = await ensureBoundOrRedirect()
+      if (!ok) return
+    }
     await this.load()
   },
   setTab(e) {

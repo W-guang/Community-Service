@@ -7,7 +7,7 @@ async function actionDashboardStats({ openid }) {
   const user = await getOrCreateUser(openid)
   requireRole(user, ['staff', 'admin'])
 
-  const [repairsTotal, repairsPending, repairsDone, helpsTotal, helpsOpen, helpsDone, noticesTotal, sosPending] =
+  const [repairsTotal, repairsPending, repairsDone, helpsTotal, helpsOpen, helpsDone, noticesTotal, sosPending, usersTotal, housesTotal] =
     await Promise.all([
       db.collection(COL.repairs).count(),
       db.collection(COL.repairs).where({ status: 'pending' }).count(),
@@ -17,6 +17,8 @@ async function actionDashboardStats({ openid }) {
       db.collection(COL.helps).where({ status: 'done' }).count(),
       db.collection(COL.notices).count(),
       db.collection(COL.sos).where({ status: 'pending' }).count(),
+      db.collection(COL.users).count(),
+      db.collection(COL.userHouses).where({ status: 'bound' }).count(),
     ])
 
   return ok({
@@ -24,6 +26,8 @@ async function actionDashboardStats({ openid }) {
     helps: { total: helpsTotal.total, open: helpsOpen.total, done: helpsDone.total },
     notices: { total: noticesTotal.total },
     sos: { pending: sosPending.total },
+    users: { total: usersTotal.total },
+    houses: { bound: housesTotal.total },
     generatedAt: now(),
   })
 }

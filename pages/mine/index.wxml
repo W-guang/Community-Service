@@ -33,20 +33,20 @@
         <view class="section-title">📊 数据概览</view>
         <view class="stats-grid">
           <view class="stat-item">
-            <view class="stat-num">{{stats.repairs.total || 0}}</view>
-            <view class="stat-label">报修总数</view>
+            <view class="stat-num">{{stats.users.total || 0}}</view>
+            <view class="stat-label">注册用户</view>
+          </view>
+          <view class="stat-item">
+            <view class="stat-num">{{stats.houses.bound || 0}}</view>
+            <view class="stat-label">已绑定房屋</view>
           </view>
           <view class="stat-item warn">
             <view class="stat-num">{{stats.repairs.pending || 0}}</view>
-            <view class="stat-label">待受理</view>
-          </view>
-          <view class="stat-item">
-            <view class="stat-num">{{stats.helps.total || 0}}</view>
-            <view class="stat-label">互助总数</view>
+            <view class="stat-label">待受理报修</view>
           </view>
           <view class="stat-item warn">
             <view class="stat-num">{{stats.helps.open || 0}}</view>
-            <view class="stat-label">待接单</view>
+            <view class="stat-label">待接单互助</view>
           </view>
           <view class="stat-item danger">
             <view class="stat-num">{{stats.sos.pending || 0}}</view>

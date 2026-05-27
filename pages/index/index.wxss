@@ -1,53 +1,10 @@
 /**index.wxss**/
 
-/* 主体内容区域 */
-.main-content {
-  padding: 0 30rpx;
-  margin-top: -30rpx;
-}
-
-.service-grid {
-  margin-bottom: 30rpx;
-}
-
-/* 卡片整体样式 */
-.card {
-  display: flex;
-  align-items: center;
-  background-color: white;
-  border-radius: 24rpx;
-  padding: 30rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
-  transition: all 0.2s;
-}
-
-/* 特殊的 SOS 卡片样式 */
-.sos-card {
-  border: 2rpx solid #ffe3e3;
-  background: linear-gradient(to right, #fff, #fffcfc);
-}
-
-.card-icon {
-  font-size: 60rpx;
-  margin-right: 30rpx;
-}
-
-.card-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
 .card-name {
   font-size: 34rpx;
   font-weight: bold;
-  color: #333;
+  color: #111827;
   margin-bottom: 8rpx;
-}
-
-.sos-card .card-name {
-  color: #e74c3c;
 }
 
 .card-desc {
@@ -55,60 +12,11 @@
   color: #999;
 }
 
-.arrow {
-  color: #ccc;
-  font-weight: bold;
-  font-size: 32rpx;
+.sos-card .card-name {
+  color: #e74c3c;
 }
 
-/* 特殊卡片样式 */
-.login-card .card-icon {
-  font-size: 50rpx;
-}
-
-.bind-card .card-icon {
-  font-size: 50rpx;
-}
-
-.user-card .card-icon {
-  font-size: 50rpx;
-}
-
-/* 卡片内的按钮 */
-.card .btn {
-  min-width: 120rpx;
-  height: 60rpx;
-  line-height: 60rpx;
-  font-size: 26rpx;
-  padding: 0 20rpx;
-}
-
-/* 骨架屏加载动画 */
-.skeleton-card {
-  margin: 0 30rpx 20rpx 30rpx;
-  background: #fff;
-  border-radius: 24rpx;
-  padding: 30rpx;
-  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
-}
-.skeleton-line {
-  height: 28rpx;
-  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 8rpx;
-  margin-bottom: 16rpx;
-}
-.skeleton-line.short { width: 40%; }
-.skeleton-line.medium { width: 75%; }
-.skeleton-line:last-child { margin-bottom: 0; }
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* 浮动SOS按钮（老人模式） */
+/* 浮动SOS按钮 */
 .float-sos {
   position: fixed;
   right: 30rpx;
@@ -132,4 +40,62 @@
 }
 .float-sos-icon {
   font-size: 50rpx;
+}
+
+/* 管理模式 - 快捷工作台 */
+.admin-quick-grid {
+  margin-top: 16rpx;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 24rpx 12rpx;
+  border-radius: 16rpx;
+  background: #f8f9fa;
+}
+.quick-item:active {
+  background: #e9ecef;
+}
+.quick-icon {
+  font-size: 40rpx;
+}
+.quick-label {
+  font-size: 24rpx;
+  color: #111827;
+  font-weight: 500;
+}
+
+/* 管理模式 - 统计网格 */
+.stats-grid {
+  margin-top: 16rpx;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+}
+.stat-item {
+  padding: 18rpx 12rpx;
+  border-radius: 14rpx;
+  background: #f8f9fa;
+  text-align: center;
+}
+.stat-item.warn {
+  background: #fff3cd;
+}
+.stat-item.danger {
+  background: #ffe3e3;
+}
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #111827;
+}
+.stat-label {
+  font-size: 22rpx;
+  color: #6b7280;
+  margin-top: 4rpx;
 }

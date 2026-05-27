@@ -1,41 +1,96 @@
-.wrap {
-  padding: 24rpx;
+/* 筛选行 */
+.filter-row {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+.filter-tag {
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.filter-tag.on {
+  background: #1296db;
+  color: #fff;
+}
+
+/* 搜索行 */
+.search-row {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+.search-row input {
+  flex: 1;
+}
+
+/* 用户列表 */
+.user-list {
   display: flex;
   flex-direction: column;
-  gap: 18rpx;
+  gap: 8rpx;
 }
-.mt {
-  margin-top: 12rpx;
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 12rpx;
+  border-radius: 14rpx;
+  background: #f8f9fa;
 }
+.user-item:active {
+  background: #e9ecef;
+}
+.user-info {
+  flex: 1;
+  overflow: hidden;
+}
+.user-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #111827;
+}
+.user-id {
+  font-size: 22rpx;
+  color: #9ca3af;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-time {
+  font-size: 20rpx;
+  color: #ccc;
+  margin-top: 2rpx;
+}
+
+/* 角色标签 */
+.user-role {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+.role-admin {
+  background: #e8daef;
+  color: #6c3483;
+}
+.role-staff {
+  background: #cce5ff;
+  color: #004085;
+}
+.role-resident {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* 表单 */
 .form {
   display: flex;
   flex-direction: column;
   gap: 18rpx;
 }
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
-}
-.label {
-  color: #111827;
-  font-size: 28rpx;
-  font-weight: 600;
-}
-.picker {
-  padding: 18rpx 16rpx;
-  border-radius: 14rpx;
-  background: #f3f4f6;
-  color: #111827;
-}
-input {
-  width: 100%;
-  padding: 18rpx 16rpx;
-  border-radius: 14rpx;
-  background: #f3f4f6;
-  box-sizing: border-box;
-}
 .submit {
-  border-radius: 16rpx;
+  border-radius: 24rpx;
 }
-

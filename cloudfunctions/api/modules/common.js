@@ -68,9 +68,24 @@ async function getOrCreateUser(openid) {
   if (existing.data && existing.data[0]) return existing.data[0]
 
   const adminList = await getAdminOpenids()
+  let isAdmin = adminList.includes(openid)
+
+  // 首位管理员初始化：系统无任何用户时，第一个登录者自动成为管理员
+  if (!isAdmin && adminList.length === 0) {
+    const usersCount = await db.collection(COL.users).count()
+    if (usersCount.total === 0) {
+      isAdmin = true
+      try {
+        await db.collection(COL.adminConfigs).add({
+          data: { openid, role: 'admin', addedBy: '__system__', createdAt: now() },
+        })
+      } catch (_) { /* admin_configs写入失败不影响用户创建 */ }
+    }
+  }
+
   const user = {
     openid,
-    role: adminList.includes(openid) ? 'admin' : 'resident',
+    role: isAdmin ? 'admin' : 'resident',
     nickname: '',
     avatarUrl: '',
     phone: '',

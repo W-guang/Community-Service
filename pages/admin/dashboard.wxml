@@ -9,10 +9,18 @@
       <view class="muted mt" wx:if="{{!stats}}">加载中...</view>
       <view wx:if="{{stats}}" class="grid">
         <view class="kpi">
+          <view class="k">{{stats.users.total}}</view>
+          <view class="muted">注册用户</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.houses.bound}}</view>
+          <view class="muted">已绑定房屋</view>
+        </view>
+        <view class="kpi">
           <view class="k">{{stats.repairs.total}}</view>
           <view class="muted">报修总数</view>
         </view>
-        <view class="kpi">
+        <view class="kpi warn">
           <view class="k">{{stats.repairs.pending}}</view>
           <view class="muted">待受理</view>
         </view>
@@ -24,17 +32,35 @@
           <view class="k">{{stats.helps.total}}</view>
           <view class="muted">互助总数</view>
         </view>
-        <view class="kpi">
+        <view class="kpi warn">
           <view class="k">{{stats.helps.open}}</view>
           <view class="muted">待接单</view>
         </view>
-        <view class="kpi">
+        <view class="kpi danger">
           <view class="k">{{stats.sos.pending}}</view>
           <view class="muted">紧急求助待处理</view>
+        </view>
+        <view class="kpi">
+          <view class="k">{{stats.notices.total}}</view>
+          <view class="muted">公告总数</view>
         </view>
       </view>
       <view class="muted mt" wx:if="{{stats}}">更新时间：{{format(stats.generatedAt)}}</view>
     </view>
+
+    <!-- 报表导出 -->
+    <view class="card">
+      <view class="section-title">报表导出</view>
+      <view class="muted">导出数据为 JSON 格式，可复制后用于分析</view>
+      <view class="row mt">
+        <button size="mini" class="btn" bindtap="exportData" data-type="all" loading="{{exporting}}">导出全部</button>
+        <button size="mini" class="btn" bindtap="exportData" data-type="repairs">导出报修</button>
+        <button size="mini" class="btn" bindtap="exportData" data-type="helps">导出互助</button>
+        <button size="mini" class="btn" bindtap="exportData" data-type="sos">导出SOS</button>
+      </view>
+      <view wx:if="{{exportResult}}" class="export-result mt">
+        <text>{{exportResult}}</text>
+      </view>
+    </view>
   </view>
 </view>
-

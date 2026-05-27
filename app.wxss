@@ -1,24 +1,32 @@
 /**app.wxss**/
-/* 页面容器 */
+
+/* ============================================================
+   页面容器 — 含Skyline滚动修复
+   ============================================================ */
 .page {
   min-height: 100vh;
   background-color: #F4F6F9;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .page-container {
   min-height: 100vh;
   background-color: #F4F6F9;
   padding-bottom: 50rpx;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* 卡片样式 */
+/* ============================================================
+   卡片
+   ============================================================ */
 .card {
   background: #ffffff;
   border-radius: 24rpx;
   padding: 30rpx;
   box-sizing: border-box;
   box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
-  transition: all 0.2s;
 }
 
 .card-hover {
@@ -26,11 +34,13 @@
   box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.02);
 }
 
-/* 文本样式 */
+/* ============================================================
+   文本
+   ============================================================ */
 .section-title {
   font-size: 34rpx;
   font-weight: bold;
-  color: #333;
+  color: #111827;
 }
 
 .muted {
@@ -38,7 +48,15 @@
   font-size: 26rpx;
 }
 
-/* 按钮样式 */
+.content {
+  color: #111827;
+  font-size: 28rpx;
+  white-space: pre-wrap;
+}
+
+/* ============================================================
+   按钮 — 统一24rpx圆角
+   ============================================================ */
 .btn-primary {
   background: linear-gradient(145deg, #1296db, #0b7bc1);
   color: #ffffff;
@@ -58,7 +76,6 @@
   background: #ffffff;
   color: #111827;
   border: 1rpx solid #e5e7eb;
-  box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.04);
 }
 
 button.btn,
@@ -73,59 +90,92 @@ button::after {
   border: none;
 }
 
-/* 布局辅助 */
+/* ============================================================
+   布局工具 — 全局唯一版本
+   ============================================================ */
 .row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
 }
 
 .col {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
   flex: 1;
 }
 
 .wrap {
-  padding: 0 30rpx;
+  padding: 24rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
 }
 
-/* 标签样式 */
+.mt {
+  margin-top: 12rpx;
+}
+
+/* ============================================================
+   标签 — Pill形状
+   ============================================================ */
 .tag {
-  display: inline-block;
-  padding: 6rpx 16rpx;
-  border-radius: 16rpx;
-  font-size: 24rpx;
-  background: #f0f9ff;
-  color: #0369a1;
+  display: inline-flex;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  background: #eef2ff;
+  color: #3730a3;
 }
 
-/* 表单样式 */
+/* 状态标签颜色 — 全局统一 */
+.tag.status-open       { background: #d4edda; color: #155724; }
+.tag.status-taken      { background: #cce5ff; color: #004085; }
+.tag.status-waiting_confirm { background: #e8daef; color: #6c3483; }
+.tag.status-done       { background: #d4edda; color: #155724; }
+.tag.status-pending    { background: #fff3cd; color: #856404; }
+.tag.status-processing { background: #cce5ff; color: #004085; }
+
+/* 重要标签 */
+.tag-important { background: #ffe3e3; color: #e74c3c; }
+
+/* ============================================================
+   表单元素
+   ============================================================ */
 .field {
   margin-bottom: 30rpx;
 }
 
 .label {
   font-size: 30rpx;
-  color: #333;
+  color: #111827;
   margin-bottom: 12rpx;
   font-weight: 500;
 }
 
+/* 统一input: borderless gray (大多数页面使用) */
 input {
   width: 100%;
-  height: 88rpx;
-  border: 1rpx solid #e5e7eb;
-  border-radius: 16rpx;
-  padding: 0 24rpx;
-  font-size: 30rpx;
-  background: #ffffff;
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
   box-sizing: border-box;
+  font-size: 28rpx;
 }
 
-input:focus {
-  border-color: #1296db;
-  box-shadow: 0 0 0 4rpx rgba(18, 150, 219, 0.1);
+/* picker统一外观 */
+.picker {
+  padding: 18rpx 16rpx;
+  border-radius: 14rpx;
+  background: #f3f4f6;
+  color: #111827;
 }
 
-/* 头部样式 */
+/* ============================================================
+   头部
+   ============================================================ */
 .header-section {
   background: linear-gradient(135deg, #1296db, #0b7bc1);
   padding: 100rpx 40rpx 60rpx 40rpx;
@@ -146,7 +196,9 @@ input:focus {
   opacity: 0.8;
 }
 
-/* 公告栏样式 */
+/* ============================================================
+   公告栏
+   ============================================================ */
 .notice-bar {
   background-color: #fff;
   margin: -30rpx 30rpx 20rpx 30rpx;
@@ -174,7 +226,7 @@ input:focus {
   height: 80rpx;
   line-height: 80rpx;
   font-size: 28rpx;
-  color: #333;
+  color: #111827;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -190,10 +242,9 @@ input:focus {
   font-weight: bold;
 }
 
-.shadow-sm {
-  box-shadow: 0 8rpx 24rpx rgba(17, 24, 39, 0.06);
-}
-
+/* ============================================================
+   列表项
+   ============================================================ */
 .list-item {
   padding: 24rpx;
   background: #ffffff;
@@ -204,24 +255,148 @@ input:focus {
   margin-top: 16rpx;
 }
 
-.tag {
-  display: inline-flex;
-  padding: 6rpx 14rpx;
-  border-radius: 999rpx;
-  font-size: 22rpx;
-  background: #eef2ff;
-  color: #3730a3;
+/* ============================================================
+   骨架屏 — 全局统一定义
+   ============================================================ */
+.skeleton-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 30rpx;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16rpx;
+.skeleton-line {
+  height: 28rpx;
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8rpx;
+  margin-bottom: 16rpx;
 }
 
-.col {
+.skeleton-line.short  { width: 40%; }
+.skeleton-line.medium { width: 75%; }
+.skeleton-line:last-child { margin-bottom: 0; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+   空状态 — 全局统一定义
+   ============================================================ */
+.empty-state {
   display: flex;
   flex-direction: column;
-  gap: 10rpx;
+  align-items: center;
+  padding: 40rpx 0;
+}
+
+.empty-icon {
+  font-size: 60rpx;
+  margin-bottom: 12rpx;
+}
+
+/* ============================================================
+   时间线 — 全局统一定义
+   ============================================================ */
+.timeline { padding: 10rpx 0; }
+
+.tl-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12rpx 0;
+  position: relative;
+}
+
+.tl-item:not(:last-child) {
+  padding-bottom: 20rpx;
+}
+
+.tl-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 9rpx;
+  top: 30rpx;
+  bottom: 0;
+  width: 2rpx;
+  background: #e5e7eb;
+}
+
+.tl-item.active:not(:last-child)::before {
+  background: #1296db;
+}
+
+.tl-dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: #e5e7eb;
+  flex-shrink: 0;
+  margin-right: 16rpx;
+  margin-top: 4rpx;
+  transition: all 0.3s;
+}
+
+.tl-item.active .tl-dot {
+  background: #1296db;
+  box-shadow: 0 0 0 6rpx rgba(18,150,219,0.15);
+}
+
+.tl-content { flex: 1; }
+
+.tl-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.tl-item.active .tl-title { color: #111827; }
+
+.tl-time {
+  font-size: 24rpx;
+  color: #9ca3af;
+  margin-top: 4rpx;
+}
+
+/* ============================================================
+   聊天气泡(报修/互助沟通)
+   ============================================================ */
+.comment-left  { display: flex; justify-content: flex-start; }
+.comment-right { display: flex; justify-content: flex-end; }
+
+.comment-bubble {
+  max-width: 80%;
+  border-radius: 20rpx;
+  padding: 16rpx 20rpx;
+}
+
+.bubble-resident {
+  background: #e3f2fd;
+  border-bottom-left-radius: 4rpx;
+}
+
+.bubble-staff {
+  background: #e8f5e9;
+  border-bottom-right-radius: 4rpx;
+}
+
+.comment-name {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 4rpx;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: #111827;
+  line-height: 1.5;
+}
+
+.comment-time {
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-top: 6rpx;
+  text-align: right;
 }

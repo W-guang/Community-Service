@@ -56,6 +56,19 @@
       </view>
     </view>
 
+    <!-- 评价卡片（任务完成后显示） -->
+    <view class="card rate-card" wx:if="{{showRate}}">
+      <view class="section-title">评价 {{ratingTarget}}</view>
+      <view class="muted">任务已完成，请为对方评分（1-5星）</view>
+      <view class="stars-row mt">
+        <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this"
+              class="star {{myRating >= item ? 'on' : ''}}"
+              bindtap="onRateStar" data-star="{{item}}">{{myRating >= item ? '★' : '☆'}}</text>
+      </view>
+      <input class="rate-input mt" placeholder="写几句评价（可选）" value="{{rateComment}}" bindinput="onRateComment" />
+      <button class="btn-primary mt" bindtap="submitRate">提交评价</button>
+    </view>
+
     <!-- 进度记录 -->
     <view class="card">
       <view class="section-title">进度记录</view>

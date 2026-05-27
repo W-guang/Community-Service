@@ -1,15 +1,47 @@
-<navigation-bar title="用户/网格员管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="用户管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
   <view class="wrap">
+
+    <!-- ========== 用户列表 ========== -->
     <view class="card">
-      <view class="section-title">设置网格员/管理员（仅超级管理员）</view>
-      <view class="muted mt">说明：目标账号需要先登录过一次，系统才会在 `users` 里生成记录。</view>
+      <view class="row">
+        <view class="section-title">用户列表（共 {{usersTotal}} 人）</view>
+      </view>
+      <!-- 角色筛选 -->
+      <view class="filter-row mt">
+        <view class="filter-tag {{userFilterRole==='' ? 'on' : ''}}" bindtap="onFilterRole" data-role="">全部</view>
+        <view class="filter-tag {{userFilterRole==='resident' ? 'on' : ''}}" bindtap="onFilterRole" data-role="resident">居民</view>
+        <view class="filter-tag {{userFilterRole==='staff' ? 'on' : ''}}" bindtap="onFilterRole" data-role="staff">网格员</view>
+        <view class="filter-tag {{userFilterRole==='admin' ? 'on' : ''}}" bindtap="onFilterRole" data-role="admin">管理员</view>
+      </view>
+      <!-- 搜索 -->
+      <view class="search-row mt">
+        <input placeholder="搜索 openid 或昵称" value="{{userKeyword}}" bindinput="onSearchInput" />
+        <button size="mini" class="btn" bindtap="onSearch">搜索</button>
+      </view>
+      <!-- 列表 -->
+      <view wx:if="{{loadingUsers}}" class="muted" style="text-align:center;padding:20rpx">加载中...</view>
+      <view wx:elif="{{!users.length}}" class="muted" style="text-align:center;padding:20rpx">暂无用户数据</view>
+      <view wx:else class="user-list mt">
+        <view wx:for="{{users}}" wx:key="_id" class="user-item" bindtap="quickSet" data-user="{{item}}">
+          <view class="user-info">
+            <view class="user-name">{{item.nickname || '未设置昵称'}}</view>
+            <view class="user-id">{{item.openid}}</view>
+            <view class="user-time">{{item.timeText}}</view>
+          </view>
+          <view class="user-role role-{{item.role}}">{{item.roleText}}</view>
+        </view>
+      </view>
     </view>
 
+    <!-- ========== 角色设置 ========== -->
     <view class="card form">
-      <view class="field">
+      <view class="section-title">设置/修改角色</view>
+      <view class="muted mt">点击上方用户可快速填充 openid</view>
+
+      <view class="field mt">
         <view class="label">目标 openid</view>
-        <input placeholder="从“我的”页复制 openid" value="{{form.openid}}" bindinput="onInput" data-k="openid" />
+        <input placeholder="从上方列表点击或手动输入" value="{{form.openid}}" bindinput="onInput" data-k="openid" />
       </view>
       <view class="field">
         <view class="label">角色</view>
@@ -21,11 +53,29 @@
       <view class="field" wx:if="{{roles[roleIndex]==='staff'}}">
         <view class="label">管辖小区（逗号分隔）</view>
         <input placeholder="例如：学府小区,锦绣花园" value="{{form.managedCommunities}}" bindinput="onInput" data-k="managedCommunities" />
-        <view class="muted">网格员只能看到自己管辖小区的房屋核验请求。</view>
+        <view class="muted">网格员只能审批管辖小区的房屋绑定。</view>
       </view>
 
-      <button class="btn-primary submit" loading="{{saving}}" bindtap="save">保存</button>
+      <view class="row mt">
+        <button class="btn-primary" style="flex:1" loading="{{saving}}" bindtap="save">保存角色</button>
+      </view>
+      <view class="row mt" wx:if="{{roles[roleIndex]==='admin'}}">
+        <button class="btn" style="flex:1" bindtap="addAdmin">同时添加到管理员白名单</button>
+      </view>
     </view>
+
+    <!-- ========== 管理员白名单 ========== -->
+    <view class="card">
+      <view class="section-title">管理员白名单管理</view>
+      <view class="muted">白名单用于系统启动时识别管理员。普通管理员通过角色设置，白名单确保关键管理员始终可访问。</view>
+      <view class="muted mt" wx:if="{{users.length}}">
+        当前管理员：
+        <text wx:for="{{users}}" wx:if="{{item.role==='admin'}}" wx:key="_id" style="margin-right:12rpx">
+          {{item.nickname || item.openid.slice(-8)}}
+          <text style="color:#e74c3c;font-size:22rpx" bindtap="removeAdmin" data-openid="{{item.openid}}"> [移除]</text>
+        </text>
+      </view>
+    </view>
+
   </view>
 </view>
-
