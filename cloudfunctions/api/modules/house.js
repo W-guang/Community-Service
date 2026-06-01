@@ -116,10 +116,9 @@ async function actionHouseAdd({ openid, data }) {
   const community = (data.community || '').trim()
   const building = (data.building || '').trim()
   const unit = (data.unit || '').trim()
-  const room = (data.room || '').trim()
-  if (!community || !building || !unit || !room) throw new Error('请完整填写房屋地址')
+  if (!community || !building || !unit) throw new Error('请填写小区、楼栋、单元')
 
-  // 批量添加：如果 data 有 rooms 数组，则批量创建
+  // 批量添加：优先检测 rooms 数组
   if (Array.isArray(data.rooms) && data.rooms.length) {
     const results = []
     for (const r of data.rooms) {
@@ -127,7 +126,7 @@ async function actionHouseAdd({ openid, data }) {
       if (!rm) continue
       const exist = await db.collection(COL.houses)
         .where({ community, building, unit, room: rm }).limit(1).get()
-      if (exist.data && exist.data[0]) { results.push({ room: rm, status: 'existed' }); continue }
+      if (exist.data && exist.data[0]) { results.push({ room: rm, status: 'existed', _id: exist.data[0]._id }); continue }
       const addRes = await db.collection(COL.houses).add({
         data: { community, building, unit, room: rm, createdAt: now(), createdBy: openid },
       })
@@ -137,6 +136,8 @@ async function actionHouseAdd({ openid, data }) {
   }
 
   // 单个添加
+  const room = (data.room || '').trim()
+  if (!room) throw new Error('请填写房号')
   const existed = await db.collection(COL.houses)
     .where({ community, building, unit, room }).limit(1).get()
   if (existed.data && existed.data[0]) return ok({ status: 'existed', house: existed.data[0] })

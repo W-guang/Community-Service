@@ -4,20 +4,16 @@ Page({
   data: {
     items: [], total: 0, loading: true,
     community: '', building: '', unit: '',
-    room: '',           // 单个房号
-    batchRooms: '',     // 批量房号
-    batchMode: false,   // 仅控制UI显示
-    adding: false,
-    batchResult: '',
+    room: '', batchRooms: '', batchMode: false,
+    adding: false, batchResult: '',
   },
   async onShow() { await this.load() },
 
-  // 独立的字段handler，不依赖 data-k
-  onCommunity(e) { this.setData({ community: e.detail.value }) },
-  onBuilding(e)  { this.setData({ building: e.detail.value }) },
-  onUnit(e)      { this.setData({ unit: e.detail.value }) },
-  onRoom(e)      { this.setData({ room: e.detail.value }) },
-  onBatchRooms(e){ this.setData({ batchRooms: e.detail.value }) },
+  onCommunity(e)    { this.setData({ community: e.detail.value }) },
+  onBuilding(e)     { this.setData({ building: e.detail.value }) },
+  onUnit(e)         { this.setData({ unit: e.detail.value }) },
+  onRoom(e)         { this.setData({ room: e.detail.value }) },
+  onBatchRooms(e)   { this.setData({ batchRooms: e.detail.value }) },
 
   toggleBatch() {
     this.setData({ batchMode: !this.data.batchMode, batchResult: '' })
@@ -32,34 +28,28 @@ Page({
   },
 
   async add() {
-    const community = (this.data.community || '').trim()
-    const building  = (this.data.building || '').trim()
-    const unit      = (this.data.unit || '').trim()
-    const room      = (this.data.room || '').trim()
-    const batchText = (this.data.batchRooms || '').trim()
-
-    if (!community || !building || !unit) {
+    const c = (this.data.community || '').trim()
+    const b = (this.data.building || '').trim()
+    const u = (this.data.unit || '').trim()
+    if (!c || !b || !u) {
       return wx.showToast({ title: '请填写小区、楼栋、单元', icon: 'none' })
     }
 
-    // 自动检测：批量和单个哪个有内容就用哪个
-    if (batchText) {
-      // 批量模式
-      const rooms = batchText.split(/[,\n，\s]+/).filter(Boolean)
-      if (!rooms.length) {
-        return wx.showToast({ title: '未识别到有效房号，请用逗号分隔', icon: 'none' })
-      }
+    // 批量模式：有 batchRooms 内容时优先批量
+    if (this.data.batchMode) {
+      const raw = (this.data.batchRooms || '').trim()
+      if (!raw) return wx.showToast({ title: '请输入房号列表', icon: 'none' })
+      const rooms = raw.split(/[,\n，]+/).map(s => s.trim()).filter(Boolean)
+      if (!rooms.length) return wx.showToast({ title: '未识别到有效房号', icon: 'none' })
+
       this.setData({ adding: true, batchResult: '' })
       try {
-        const res = await callApi('house.add', { community, building, unit, rooms })
-        const added   = res.results.filter(r => r.status === 'added').length
+        const res = await callApi('house.add', { community: c, building: b, unit: u, rooms })
+        const added = res.results.filter(r => r.status === 'added').length
         const existed = res.results.filter(r => r.status === 'existed').length
-        this.setData({
-          batchResult: `共${res.results.length}条：新增${added}，已存在${existed}`,
-          adding: false, batchRooms: '', community: '', building: '', unit: '',
-        })
+        this.setData({ adding: false, batchRooms: '', batchResult: `共${res.results.length}条：新增${added}，已存在${existed}` })
         wx.showToast({ title: `新增${added}条`, icon: 'success' })
-        await this.load()
+        this.load()
       } catch (e) {
         this.setData({ adding: false })
         wx.showToast({ title: e.message || '添加失败', icon: 'none' })
@@ -67,20 +57,19 @@ Page({
       return
     }
 
-    if (!room) {
-      return wx.showToast({ title: '请输入房号', icon: 'none' })
-    }
-
     // 单个模式
+    const r = (this.data.room || '').trim()
+    if (!r) return wx.showToast({ title: '请输入房号', icon: 'none' })
+
     this.setData({ adding: true })
     try {
-      const res = await callApi('house.add', { community, building, unit, room })
+      const res = await callApi('house.add', { community: c, building: b, unit: u, room: r })
       if (res.status === 'existed') {
         wx.showToast({ title: '该房屋已存在', icon: 'none' })
       } else {
         wx.showToast({ title: '添加成功', icon: 'success' })
-        this.setData({ room: '', community: '', building: '', unit: '' })
-        await this.load()
+        this.setData({ room: '' })
+        this.load()
       }
     } catch (e) {
       wx.showToast({ title: e.message || '添加失败', icon: 'none' })
@@ -88,14 +77,13 @@ Page({
   },
 
   async deleteHouse(e) {
-    const id = e.currentTarget.dataset.id
-    const label = e.currentTarget.dataset.label
+    const { id, label } = e.currentTarget.dataset
     const result = await new Promise(r => wx.showModal({ title: '确认删除', content: `删除 ${label}？`, success: r }))
     if (!result.confirm) return
     try {
       await callApi('house.delete', { _id: id })
       wx.showToast({ title: '已删除', icon: 'success' })
-      await this.load()
+      this.load()
     } catch (e) { wx.showToast({ title: e.message || '删除失败', icon: 'none' }) }
   },
 })

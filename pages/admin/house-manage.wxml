@@ -27,10 +27,10 @@
       <!-- 批量模式：房号列表 -->
       <view wx:if="{{batchMode}}">
         <view class="field">
-          <view class="label">房号列表（逗号或换行分隔）</view>
-          <textarea placeholder="例如：101,102,103,201,202" value="{{batchRooms}}" bindinput="onBatchRooms" style="height:120rpx;padding:16rpx;border-radius:14rpx;background:#f3f4f6;width:100%;box-sizing:border-box" />
+          <view class="label">房号列表（逗号分隔）</view>
+          <input placeholder="例如：101,102,103,201,202" value="{{batchRooms}}" bindinput="onBatchRooms" />
         </view>
-        <view class="muted">用逗号、空格或换行分隔房号，例如 101,102,103</view>
+        <view class="muted">用逗号分隔房号，例如 101,102,103</view>
       </view>
 
       <!-- 单个模式：房号 -->
