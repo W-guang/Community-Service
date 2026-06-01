@@ -1,174 +1,114 @@
-<!-- pages/index/index.wxml -->
-<navigation-bar title="{{adminMode ? '管理模式' : '邻智灵'}}" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="{{adminMode ? '待办中心' : '邻智灵'}}" back="{{false}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
-  <view class="wrap">
 
-    <!-- ==================== 管理员模式：快捷工作台 ==================== -->
-    <block wx:if="{{adminMode && authed}}">
-      <view class="card" style="background:linear-gradient(135deg,#f0f4ff,#e8f0fe);border:2rpx dashed #1296db">
+  <!-- ========== 管理模式：待办中心 ========== -->
+  <view class="wrap" wx:if="{{adminMode && authed}}">
+    <view class="card" style="background:linear-gradient(135deg,#f0f4ff,#e8f0fe);border:2rpx dashed #1296db">
+      <view class="row" style="justify-content:flex-start;gap:16rpx">
+        <text style="font-size:40rpx">📋</text>
+        <view class="col"><text class="section-title">待办中心</text><text class="muted">{{roleText}} · 快捷处理待办事务</text></view>
+      </view>
+    </view>
+
+    <view class="card" wx:if="{{adminStats}}">
+      <view class="section-title">待处理概览</view>
+      <view class="stats-grid">
+        <view class="stat-item warn"><view class="stat-num">{{adminStats.repairs.pending || 0}}</view><view class="stat-label">待受理报修</view></view>
+        <view class="stat-item warn"><view class="stat-num">{{adminStats.helps.open || 0}}</view><view class="stat-label">待接单互助</view></view>
+        <view class="stat-item danger"><view class="stat-num">{{adminStats.sos.pending || 0}}</view><view class="stat-label">待处理SOS</view></view>
+        <view class="stat-item"><view class="stat-num">{{adminStats.users.total || 0}}</view><view class="stat-label">注册用户</view></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="section-title">管理功能</view>
+      <view class="admin-quick-grid">
+        <view class="quick-item" bindtap="go" data-url="/pages/admin/todo"><text class="quick-icon">📋</text><text class="quick-label">待办处理</text></view>
+        <view class="quick-item" bindtap="go" data-url="/pages/admin/notice-manage"><text class="quick-icon">📢</text><text class="quick-label">公告管理</text></view>
+        <view class="quick-item" bindtap="go" data-url="/pages/admin/house-verify"><text class="quick-icon">🏠</text><text class="quick-label">房屋核验</text></view>
+        <view class="quick-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage"><text class="quick-icon">👥</text><text class="quick-label">用户管理</text></view>
+        <view class="quick-item" bindtap="go" data-url="/pages/admin/dashboard"><text class="quick-icon">📈</text><text class="quick-label">数据看板</text></view>
+        <view class="quick-item" bindtap="go" data-url="/pages/mine/index"><text class="quick-icon">⚙️</text><text class="quick-label">我的</text></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== 普通模式：居民首页 ========== -->
+  <view class="wrap" wx:if="{{!adminMode || !authed}}">
+    <view class="skeleton-card" wx:if="{{loading}}">
+      <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
+    </view>
+
+    <block wx:if="{{!loading}}">
+      <view class="notice-bar" wx:if="{{noticeList.length > 0}}">
+        <text class="horn-icon">📢</text>
+        <swiper class="notice-swiper" vertical="true" autoplay="true" circular="true" interval="3000">
+          <swiper-item wx:for="{{noticeList}}" wx:key="id" bindtap="goToNotice" data-id="{{item.id}}">
+            <view class="notice-text"><text class="urgent-tag" wx:if="{{item.isUrgent}}">紧急</text>{{item.title}}</view>
+          </swiper-item>
+        </swiper>
+      </view>
+
+      <view class="section-title">社区服务</view>
+
+      <view class="card sos-card mt" bindtap="sos" hover-class="card-hover">
         <view class="row" style="justify-content:flex-start;gap:16rpx">
-          <text style="font-size:40rpx">🔧</text>
-          <view class="col">
-            <text class="section-title">管理模式</text>
-            <text class="muted">快捷工作台 · 点击下方入口进入对应功能</text>
-          </view>
+          <text style="font-size:48rpx">🆘</text>
+          <view class="col"><text class="card-name">一键求助</text><text class="card-desc">紧急呼叫网格员</text></view>
         </view>
       </view>
 
-      <view class="card" wx:if="{{adminStats}}">
-        <view class="section-title">📊 待处理概览</view>
-        <view class="stats-grid">
-          <view class="stat-item warn">
-            <view class="stat-num">{{adminStats.repairs.pending || 0}}</view>
-            <view class="stat-label">待受理报修</view>
-          </view>
-          <view class="stat-item warn">
-            <view class="stat-num">{{adminStats.helps.open || 0}}</view>
-            <view class="stat-label">待接单互助</view>
-          </view>
-          <view class="stat-item danger">
-            <view class="stat-num">{{adminStats.sos.pending || 0}}</view>
-            <view class="stat-label">待处理SOS</view>
-          </view>
+      <view class="card mt" wx:if="{{authed && boundCount>0}}" bindtap="goRepair" hover-class="card-hover">
+        <view class="row" style="justify-content:flex-start;gap:16rpx">
+          <text style="font-size:48rpx">🔧</text>
+          <view class="col"><text class="card-name">物业报修</text><text class="card-desc">水电管网一键报修</text></view>
+        </view>
+      </view>
+      <view class="card mt" wx:if="{{authed && boundCount>0}}" bindtap="goHelp" hover-class="card-hover">
+        <view class="row" style="justify-content:flex-start;gap:16rpx">
+          <text style="font-size:48rpx">🤝</text>
+          <view class="col"><text class="card-name">邻里互助</text><text class="card-desc">互帮互助共建社区</text></view>
+        </view>
+      </view>
+      <view class="card mt" wx:if="{{authed && boundCount>0}}" bindtap="goNotices" hover-class="card-hover">
+        <view class="row" style="justify-content:flex-start;gap:16rpx">
+          <text style="font-size:48rpx">📢</text>
+          <view class="col"><text class="card-name">社区公告</text><text class="card-desc">重要通知及时查看</text></view>
         </view>
       </view>
 
-      <view class="card">
-        <view class="section-title">管理功能</view>
-        <view class="admin-quick-grid">
-          <view class="quick-item" bindtap="go" data-url="/pages/admin/todo">
-            <text class="quick-icon">📋</text>
-            <text class="quick-label">待办处理</text>
-          </view>
-          <view class="quick-item" bindtap="go" data-url="/pages/admin/notice-manage">
-            <text class="quick-icon">📢</text>
-            <text class="quick-label">公告管理</text>
-          </view>
-          <view class="quick-item" bindtap="go" data-url="/pages/admin/house-verify">
-            <text class="quick-icon">🏠</text>
-            <text class="quick-label">房屋核验</text>
-          </view>
-          <view class="quick-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage">
-            <text class="quick-icon">👥</text>
-            <text class="quick-label">用户管理</text>
-          </view>
-          <view class="quick-item" bindtap="go" data-url="/pages/admin/dashboard">
-            <text class="quick-icon">📈</text>
-            <text class="quick-label">数据看板</text>
-          </view>
-        </view>
-      </view>
-    </block>
-
-    <!-- ==================== 普通模式：居民首页 ==================== -->
-    <block wx:if="{{!adminMode || !authed}}">
-      <!-- 骨架屏（加载中） -->
-      <view class="skeleton-card" wx:if="{{loading}}">
-        <view class="skeleton-line short"></view>
-        <view class="skeleton-line"></view>
-        <view class="skeleton-line medium"></view>
-      </view>
-
-      <block wx:if="{{!loading}}">
-        <!-- 滚动公告栏 -->
-        <view class="notice-bar" wx:if="{{noticeList.length > 0}}">
-          <text class="horn-icon">📢</text>
-          <swiper class="notice-swiper" vertical="true" autoplay="true" circular="true" interval="3000">
-            <swiper-item wx:for="{{noticeList}}" wx:key="id" bindtap="goToNotice" data-id="{{item.id}}">
-              <view class="notice-text">
-                <text class="urgent-tag" wx:if="{{item.isUrgent}}">紧急</text>
-                {{item.title}}
-              </view>
-            </swiper-item>
-          </swiper>
-        </view>
-
-        <!-- 社区服务标题 -->
-        <view class="section-title">社区服务</view>
-
-        <!-- SOS急救卡片 -->
-        <view class="card sos-card mt" bindtap="sos" hover-class="card-hover">
-          <view class="row" style="justify-content:flex-start;gap:16rpx">
-            <text style="font-size:48rpx">🆘</text>
-            <view class="col">
-              <text class="card-name">一键求助</text>
-              <text class="card-desc">紧急呼叫网格员</text>
-            </view>
-          </view>
-        </view>
-
-        <block wx:if="{{authed && boundCount>0}}">
-          <view class="card normal-card mt" bindtap="goRepair" hover-class="card-hover">
-            <view class="row" style="justify-content:flex-start;gap:16rpx">
-              <text style="font-size:48rpx">🔧</text>
-              <view class="col">
-                <text class="card-name">物业报修</text>
-                <text class="card-desc">水电管网一键报修</text>
-              </view>
-            </view>
-          </view>
-          <view class="card normal-card mt" bindtap="goHelp" hover-class="card-hover">
-            <view class="row" style="justify-content:flex-start;gap:16rpx">
-              <text style="font-size:48rpx">🤝</text>
-              <view class="col">
-                <text class="card-name">邻里互助</text>
-                <text class="card-desc">互帮互助共建社区</text>
-              </view>
-            </view>
-          </view>
-          <view class="card normal-card mt" bindtap="goNotices" hover-class="card-hover">
-            <view class="row" style="justify-content:flex-start;gap:16rpx">
-              <text style="font-size:48rpx">📢</text>
-              <view class="col">
-                <text class="card-name">社区公告</text>
-                <text class="card-desc">重要通知及时查看</text>
-              </view>
-            </view>
-          </view>
-        </block>
-
-        <!-- 未登录 -->
-        <view class="card login-card mt" wx:if="{{!authed}}">
+      <view class="card mt" wx:if="{{!authed}}">
+        <view class="row" style="justify-content:flex-start;gap:16rpx">
           <text style="font-size:48rpx">👤</text>
-          <view class="col" style="flex:1">
-            <text class="card-name">微信登录</text>
-            <text class="card-desc">授权登录使用完整功能</text>
-          </view>
-          <button class="btn-primary" bindtap="wxLogin">立即登录</button>
+          <view class="col"><text class="card-name">微信登录</text><text class="card-desc">授权登录使用完整功能</text></view>
         </view>
+        <button class="btn-primary" bindtap="wxLogin">立即登录</button>
+      </view>
 
-        <!-- 未绑定房屋 -->
-        <view class="card bind-card mt" wx:if="{{authed && boundCount==0}}">
+      <view class="card mt" wx:if="{{authed && boundCount==0}}">
+        <view class="row" style="justify-content:flex-start;gap:16rpx">
           <text style="font-size:48rpx">🏠</text>
-          <view class="col" style="flex:1">
-            <text class="card-name">绑定房屋</text>
-            <text class="card-desc">绑定后使用报修公告等功能</text>
-          </view>
-          <button class="btn-primary" bindtap="goBind">去绑定</button>
+          <view class="col"><text class="card-name">绑定房屋</text><text class="card-desc">绑定后使用报修公告等功能</text></view>
         </view>
+        <button class="btn-primary" bindtap="goBind">去绑定</button>
+      </view>
 
-        <!-- 用户信息卡片 -->
-        <view class="card user-card mt" wx:if="{{authed}}">
-          <view class="row" style="justify-content:flex-start;gap:16rpx">
-            <text style="font-size:48rpx">{{roleText === '管理员' ? '👨‍💼' : roleText === '物业/网格员' ? '👷' : '👤'}}</text>
-            <view class="col">
-              <text class="card-name">我的身份：{{roleText}}</text>
-              <text class="card-desc" wx:if="{{boundCount>0}}">已绑定 {{boundCount}} 套房屋</text>
-              <text class="card-desc" wx:else>未绑定房屋</text>
-            </view>
+      <view class="card mt" wx:if="{{authed}}">
+        <view class="row" style="justify-content:flex-start;gap:16rpx">
+          <text style="font-size:48rpx">{{roleText === '管理员' ? '👨‍💼' : roleText === '物业/网格员' ? '👷' : '👤'}}</text>
+          <view class="col">
+            <text class="card-name">我的身份：{{roleText}}</text>
+            <text class="card-desc">{{boundCount>0 ? '已绑定 ' + boundCount + ' 套房屋' : '未绑定房屋'}}</text>
           </view>
         </view>
-      </block>
+      </view>
     </block>
-
   </view>
 
 </scroll-view>
-
-<!-- 浮动SOS按钮 -->
-<view class="float-sos {{elderMode || adminMode ? 'show' : ''}}" wx:if="{{authed && (elderMode || adminMode)}}" bindtap="sos">
-  <text class="float-sos-icon">🆘</text>
 </view>
 
+<view class="float-sos {{elderMode ? 'show' : ''}}" wx:if="{{authed && elderMode && !adminMode}}" bindtap="sos">
+  <text class="float-sos-icon">🆘</text>
 </view>

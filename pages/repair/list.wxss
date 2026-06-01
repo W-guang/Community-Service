@@ -1,8 +1,7 @@
-.title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #111827;
-}
-.meta {
-  margin-top: 12rpx;
-}
+.title { font-size: 30rpx; font-weight: 600; color: #111827; }
+.meta { margin-top: 12rpx; }
+
+/* 状态筛选栏 */
+.filter-row { display: flex; gap: 10rpx; flex-wrap: wrap; margin-bottom: 4rpx; }
+.filter-tag { padding: 8rpx 18rpx; border-radius: 999rpx; font-size: 24rpx; background: #f3f4f6; color: #6b7280; }
+.filter-tag.on { background: #1296db; color: #fff; }

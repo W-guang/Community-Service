@@ -12,6 +12,13 @@ App({
       traceUser: true,
     })
   },
+  // 根据角色设置默认模式：admin登录后自动进入管理模式
+  setUserAndMode(user) {
+    this.globalData.user = user
+    if (user && user.role === 'admin') {
+      this.globalData.adminMode = true
+    }
+  },
   toggleAdminMode() {
     this.globalData.adminMode = !this.globalData.adminMode
     return this.globalData.adminMode

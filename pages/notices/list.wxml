@@ -2,9 +2,9 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
-    <view class="row" wx:if="{{isStaff}}">
-      <view class="muted">物业/管理员可发布公告</view>
-      <button class="btn btn-primary" size="mini" bindtap="goManage">管理</button>
+    <view class="row" wx:if="{{adminMode || isStaff}}">
+      <view class="muted">{{adminMode ? '公告管理' : '物业/管理员可发布公告'}}</view>
+      <button class="btn btn-primary" size="mini" bindtap="goManage">发布公告</button>
     </view>
 
     <!-- 骨架屏 -->

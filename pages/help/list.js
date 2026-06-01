@@ -2,28 +2,15 @@ const { callApi } = require('../../utils/api')
 const { formatDateTime } = require('../../utils/time')
 const { ensureBoundOrRedirect } = require('../../utils/guard')
 
-const STATUS_TEXT = {
-  open: '可接单',
-  taken: '进行中',
-  waiting_confirm: '待确认',
-  done: '已完成',
-}
+const STATUS_TEXT = { open: '可接单', taken: '进行中', waiting_confirm: '待确认', done: '已完成' }
 
 Page({
-  data: {
-    tab: 'hall',
-    items: [],
-    loading: true,
-    adminMode: false,
-  },
+  data: { tab: 'hall', items: [], loading: true, adminMode: false },
   async onShow() {
     const app = getApp()
     const adminMode = app.isAdminMode ? app.isAdminMode() : false
     this.setData({ adminMode })
-    if (!adminMode) {
-      const ok = await ensureBoundOrRedirect()
-      if (!ok) return
-    }
+    if (!adminMode) { const ok = await ensureBoundOrRedirect(); if (!ok) return }
     await this.load()
   },
   setTab(e) {
@@ -32,28 +19,15 @@ Page({
     this.setData({ tab, items: [], loading: true })
     this.load()
   },
-  format(ts) {
-    return formatDateTime(ts)
-  },
-  statusText(s) {
-    return STATUS_TEXT[s] || s
-  },
+  format(ts) { return formatDateTime(ts) },
+  statusText(s) { return STATUS_TEXT[s] || s },
   async load() {
     try {
-      const mine = this.data.tab === 'mine'
-      const takenByMe = this.data.tab === 'taken'
-      const res = await callApi('help.list', { mine, takenByMe })
+      const mine = this.data.tab === 'mine', takenByMe = this.data.tab === 'taken'
+      const res = await callApi('help.list', { mine: this.data.adminMode ? false : mine, takenByMe: this.data.adminMode ? false : takenByMe })
       this.setData({ items: res.items || [], loading: false })
-    } catch (e) {
-      this.setData({ loading: false })
-      wx.showToast({ title: e.message || '加载失败', icon: 'none' })
-    }
+    } catch (e) { this.setData({ loading: false }) }
   },
-  goCreate() {
-    wx.navigateTo({ url: '/pages/help/create' })
-  },
-  goDetail(e) {
-    const id = e.currentTarget.dataset.id
-    wx.navigateTo({ url: `/pages/help/detail?_id=${id}` })
-  },
+  goCreate() { wx.navigateTo({ url: '/pages/help/create' }) },
+  goDetail(e) { wx.navigateTo({ url: `/pages/help/detail?_id=${e.currentTarget.dataset.id}` }) },
 })
