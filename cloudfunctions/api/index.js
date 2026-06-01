@@ -28,6 +28,9 @@ const ROUTES = {
   'house.pendingList': house.actionHousePendingList,
   'house.approve': house.actionHouseApprove,
   'house.reject': house.actionHouseReject,
+  'house.add': house.actionHouseAdd,
+  'house.listAll': house.actionHouseListAll,
+  'house.delete': house.actionHouseDelete,
 
   'repair.create': repair.actionRepairCreate,
   'repair.list': repair.actionRepairList,

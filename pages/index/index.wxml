@@ -26,7 +26,8 @@
       <view class="admin-quick-grid">
         <view class="quick-item" bindtap="go" data-url="/pages/admin/todo"><text class="quick-icon">📋</text><text class="quick-label">待办处理</text></view>
         <view class="quick-item" bindtap="go" data-url="/pages/admin/notice-manage"><text class="quick-icon">📢</text><text class="quick-label">公告管理</text></view>
-        <view class="quick-item" bindtap="go" data-url="/pages/admin/house-verify"><text class="quick-icon">🏠</text><text class="quick-label">房屋核验</text></view>
+        <view class="quick-item" bindtap="go" data-url="/pages/admin/house-verify"><text class="quick-icon">✅</text><text class="quick-label">房屋核验</text></view>
+        <view class="quick-item" bindtap="go" data-url="/pages/admin/house-manage"><text class="quick-icon">🏠</text><text class="quick-label">房屋录入</text></view>
         <view class="quick-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage"><text class="quick-icon">👥</text><text class="quick-label">用户管理</text></view>
         <view class="quick-item" bindtap="go" data-url="/pages/admin/dashboard"><text class="quick-icon">📈</text><text class="quick-label">数据看板</text></view>
         <view class="quick-item" bindtap="go" data-url="/pages/mine/index"><text class="quick-icon">⚙️</text><text class="quick-label">我的</text></view>

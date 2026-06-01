@@ -1,0 +1,5 @@
+.title { font-size: 28rpx; font-weight: 600; color: #111827; }
+.field { display: flex; flex-direction: column; gap: 12rpx; margin-bottom: 16rpx; }
+.label { color: #111827; font-size: 28rpx; font-weight: 600; }
+.house-list { display: flex; flex-direction: column; gap: 8rpx; }
+.house-item { display: flex; align-items: center; justify-content: space-between; padding: 14rpx 12rpx; border-radius: 14rpx; background: #f8f9fa; }

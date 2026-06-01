@@ -110,7 +110,63 @@ async function actionHouseReject({ openid, data }) {
   return ok({ _id: data._id })
 }
 
+async function actionHouseAdd({ openid, data }) {
+  const user = await getOrCreateUser(openid)
+  requireRole(user, ['staff', 'admin'])
+  const community = (data.community || '').trim()
+  const building = (data.building || '').trim()
+  const unit = (data.unit || '').trim()
+  const room = (data.room || '').trim()
+  if (!community || !building || !unit || !room) throw new Error('请完整填写房屋地址')
+
+  // 批量添加：如果 data 有 rooms 数组，则批量创建
+  if (Array.isArray(data.rooms) && data.rooms.length) {
+    const results = []
+    for (const r of data.rooms) {
+      const rm = String(r).trim()
+      if (!rm) continue
+      const exist = await db.collection(COL.houses)
+        .where({ community, building, unit, room: rm }).limit(1).get()
+      if (exist.data && exist.data[0]) { results.push({ room: rm, status: 'existed' }); continue }
+      const addRes = await db.collection(COL.houses).add({
+        data: { community, building, unit, room: rm, createdAt: now(), createdBy: openid },
+      })
+      results.push({ room: rm, status: 'added', _id: addRes._id })
+    }
+    return ok({ community, building, unit, results })
+  }
+
+  // 单个添加
+  const existed = await db.collection(COL.houses)
+    .where({ community, building, unit, room }).limit(1).get()
+  if (existed.data && existed.data[0]) return ok({ status: 'existed', house: existed.data[0] })
+  const addRes = await db.collection(COL.houses).add({
+    data: { community, building, unit, room, createdAt: now(), createdBy: openid },
+  })
+  return ok({ status: 'added', _id: addRes._id })
+}
+
+async function actionHouseListAll({ openid, data }) {
+  const user = await getOrCreateUser(openid)
+  requireRole(user, ['staff', 'admin'])
+  const pageSize = Math.min(Number(data.pageSize || 50), 200)
+  const skip = Math.max(Number(data.skip || 0), 0)
+  const where = {}
+  if (data.community) where.community = data.community
+  const res = await db.collection(COL.houses).where(where).orderBy('createdAt', 'desc').skip(skip).limit(pageSize).get()
+  const countRes = await db.collection(COL.houses).where(where).count()
+  return ok({ items: res.data || [], total: countRes.total })
+}
+
+async function actionHouseDelete({ openid, data }) {
+  const user = await getOrCreateUser(openid)
+  requireRole(user, ['admin'])
+  await db.collection(COL.houses).doc(data._id).remove()
+  return ok({ _id: data._id })
+}
+
 module.exports = {
   actionHouseBind, actionHouseMyList, actionHousePendingList,
   actionHouseApprove, actionHouseReject,
+  actionHouseAdd, actionHouseListAll, actionHouseDelete,
 }

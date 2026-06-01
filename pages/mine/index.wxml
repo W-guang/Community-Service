@@ -46,7 +46,8 @@
           <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/todo"><view class="menu-icon">📋</view><view class="menu-info"><view class="menu-name">待办处理</view><view class="menu-desc">报修工单与SOS求助</view></view><view class="arrow">></view></view>
           <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/notice-manage"><view class="menu-icon">📢</view><view class="menu-info"><view class="menu-name">公告管理</view><view class="menu-desc">发布与编辑社区公告</view></view><view class="arrow">></view></view>
           <view class="admin-menu-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage"><view class="menu-icon">👥</view><view class="menu-info"><view class="menu-name">用户管理</view><view class="menu-desc">角色分配与白名单</view></view><view class="arrow">></view></view>
-          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/house-verify"><view class="menu-icon">🏠</view><view class="menu-info"><view class="menu-name">房屋核验</view><view class="menu-desc">审核绑定申请</view></view><view class="arrow">></view></view>
+          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/house-verify"><view class="menu-icon">✅</view><view class="menu-info"><view class="menu-name">房屋核验</view><view class="menu-desc">审核绑定申请</view></view><view class="arrow">></view></view>
+          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/house-manage"><view class="menu-icon">🏠</view><view class="menu-info"><view class="menu-name">房屋录入</view><view class="menu-desc">录入小区房屋信息</view></view><view class="arrow">></view></view>
           <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/dashboard"><view class="menu-icon">📈</view><view class="menu-info"><view class="menu-name">数据看板</view><view class="menu-desc">详细统计与报表导出</view></view><view class="arrow">></view></view>
         </view>
       </view>

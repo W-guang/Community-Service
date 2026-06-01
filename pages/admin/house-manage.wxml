@@ -1,0 +1,70 @@
+<navigation-bar title="房屋信息管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
+  <view class="wrap">
+
+    <!-- 添加房屋表单 -->
+    <view class="card">
+      <view class="row">
+        <view class="section-title">录入房屋信息</view>
+        <button size="mini" class="btn" bindtap="toggleBatch">{{batchMode ? '单个添加' : '批量添加'}}</button>
+      </view>
+
+      <view class="field mt">
+        <view class="label">小区名称</view>
+        <input placeholder="例如：学府小区" value="{{form.community}}" bindinput="onInput" data-k="community" />
+      </view>
+      <view class="field">
+        <view class="label">楼栋号</view>
+        <input placeholder="例如：3号楼" value="{{form.building}}" bindinput="onInput" data-k="building" />
+      </view>
+      <view class="field">
+        <view class="label">单元号</view>
+        <input placeholder="例如：2单元" value="{{form.unit}}" bindinput="onInput" data-k="unit" />
+      </view>
+
+      <block wx:if="{{!batchMode}}">
+        <view class="field">
+          <view class="label">房号</view>
+          <input placeholder="例如：1202" value="{{form.room}}" bindinput="onInput" data-k="room" />
+        </view>
+      </block>
+      <block wx:else>
+        <view class="field">
+          <view class="label">房号列表（逗号或换行分隔）</view>
+          <textarea placeholder="例如：101,102,103,201,202" value="{{batchRooms}}" bindinput="onBatchInput" style="height:120rpx" />
+        </view>
+        <view class="muted">示例：101,102,103 → 一次性录入3间房屋</view>
+      </block>
+
+      <button class="btn-primary mt" loading="{{adding}}" bindtap="add">{{batchMode ? '批量添加' : '添加房屋'}}</button>
+      <view class="muted mt" wx:if="{{batchResult}}" style="color:#1296db">{{batchResult}}</view>
+    </view>
+
+    <!-- 房屋列表 -->
+    <view class="card">
+      <view class="row">
+        <view class="section-title">已录入房屋（共 {{total}} 条）</view>
+        <button size="mini" class="btn" bindtap="load">刷新</button>
+      </view>
+
+      <view wx:if="{{loading}}" class="muted" style="text-align:center;padding:20rpx">加载中...</view>
+      <view wx:elif="{{!items.length}}" class="empty-state">
+        <text class="empty-icon">🏠</text>
+        <text class="muted">暂无房屋数据，请在上方录入</text>
+      </view>
+
+      <view wx:else class="house-list mt">
+        <view wx:for="{{items}}" wx:key="_id" class="house-item">
+          <view class="col">
+            <view class="title">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</view>
+            <view class="muted">录入时间：</view>
+          </view>
+          <button size="mini" class="btn" bindtap="deleteHouse" data-id="{{item._id}}" data-label="{{item.community}}{{item.building}}{{item.unit}}{{item.room}}">删除</button>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</scroll-view>
+</view>
