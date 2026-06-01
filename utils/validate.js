@@ -25,10 +25,10 @@ const rules = {
   },
   phone(value, msg) {
     if (!value) return '' // 可选字段
-    const digits = String(value).replace(/[\s\-\(\)​‌‍﻿\.]/g, '').replace(/\D/g, '')
+    const digits = String(value).replace(/\D/g, '')
     if (digits.length === 0) return '' // 纯空白或特殊字符，视为未填写
-    if (digits.length !== 11) return msg || `手机号需11位数字（当前${digits.length}位）`
-    if (!/^1[3-9]\d{9}$/.test(digits)) return '手机号格式不正确'
+    if (digits.length !== 11) return msg || `手机号需11位（当前${digits.length}位）`
+    if (!/^1[3-9]\d{9}$/.test(digits)) return '手机号首位应为1，第二位3-9'
     return ''
   },
 }

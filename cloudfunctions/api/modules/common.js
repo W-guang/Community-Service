@@ -11,7 +11,7 @@ const _ = db.command
 const COL = {
   users: 'users',
   houses: 'houses',
-  userHouses: 'user_houses',
+  userHouses: 'user_house',
   repairs: 'repairs',
   repairComments: 'repair_comments',
   helps: 'helps',
