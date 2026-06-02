@@ -1,7 +1,99 @@
-.title { font-size: 30rpx; font-weight: 600; color: #111827; }
-.meta { margin-top: 12rpx; }
+/* ============================================================
+   区块卡片
+   ============================================================ */
+.section-card {
+  background: #fff; border-radius: 24rpx; padding: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+}
+.filter-card { border-top: 6rpx solid #3b82f6; }
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12rpx;
+}
+.sec-head-left { flex: 1; display: flex; align-items: center; gap: 14rpx; }
+.sec-icon {
+  width: 56rpx; height: 56rpx; border-radius: 16rpx;
+  background: #eff6ff; display: flex; align-items: center;
+  justify-content: center; font-size: 28rpx; flex-shrink: 0;
+}
+.sec-head-text { display: flex; flex-direction: column; gap: 2rpx; }
+.sec-title { font-size: 32rpx; font-weight: 700; color: #1e293b; }
+.sec-sub  { font-size: 22rpx; color: #94a3b8; }
+.btn-add {
+  flex-shrink: 0; font-size: 26rpx; padding: 14rpx 24rpx;
+  border-radius: 14rpx; background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff; font-weight: 600; border: none;
+  box-shadow: 0 4rpx 14rpx rgba(59,130,246,0.2);
+}
+.btn-add:active { opacity: 0.85; }
 
-/* 状态筛选栏 */
-.filter-row { display: flex; gap: 10rpx; flex-wrap: wrap; margin-bottom: 4rpx; }
-.filter-tag { padding: 8rpx 18rpx; border-radius: 999rpx; font-size: 24rpx; background: #f3f4f6; color: #6b7280; }
-.filter-tag.on { background: #1296db; color: #fff; }
+/* 筛选栏 */
+.filter-row { display: flex; gap: 10rpx; flex-wrap: wrap; margin-bottom: 16rpx; }
+.filter-pill {
+  padding: 8rpx 18rpx; border-radius: 999rpx; font-size: 24rpx;
+  background: #f1f5f9; color: #64748b; font-weight: 500;
+}
+.filter-pill.on { background: #3b82f6; color: #fff; font-weight: 700; }
+
+/* ============================================================
+   报修卡片
+   ============================================================ */
+.repair-card {
+  background: #fff; border-radius: 20rpx; padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); margin-top: 14rpx;
+}
+.repair-card:active { background: #f8fafc; }
+.rc-top {
+  display: flex; gap: 16rpx; align-items: flex-start;
+}
+.rc-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 6rpx; }
+.rc-title {
+  font-size: 30rpx; font-weight: 700; color: #1e293b;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rc-content {
+  font-size: 26rpx; color: #94a3b8;
+  display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; overflow: hidden;
+}
+.rc-status {
+  flex-shrink: 0; font-size: 22rpx; padding: 6rpx 16rpx;
+  border-radius: 999rpx; font-weight: 700;
+}
+.rc-status.pending        { background: #fef3c7; color: #92400e; }
+.rc-status.processing      { background: #dbeafe; color: #1e40af; }
+.rc-status.waiting_confirm { background: #ede9fe; color: #5b21b6; }
+.rc-status.done            { background: #d1fae5; color: #065f46; }
+
+.rc-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14rpx; padding-top: 14rpx; border-top: 1rpx solid #f1f5f9;
+}
+.rc-category {
+  font-size: 22rpx; color: #3b82f6; font-weight: 600;
+}
+.rc-time { font-size: 22rpx; color: #94a3b8; }
+
+/* ============================================================
+   空状态 & 骨架屏
+   ============================================================ */
+.empty-card {
+  background: #fff; border-radius: 24rpx; padding: 64rpx 32rpx;
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); text-align: center;
+}
+.empty-circle {
+  width: 120rpx; height: 120rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20rpx;
+}
+.empty-circle.green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+.empty-circle-icon { font-size: 56rpx; }
+.empty-title {
+  font-size: 32rpx; font-weight: 700; color: #1e293b; margin-bottom: 8rpx;
+}
+.empty-desc { font-size: 26rpx; color: #94a3b8; }
+.skeleton-card {
+  background: #fff; border-radius: 24rpx; padding: 30rpx;
+}
+
+.wrap { padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 0; }

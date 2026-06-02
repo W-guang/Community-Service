@@ -2,34 +2,52 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
-    <view class="card form">
-      <view class="field">
-        <view class="label">类型</view>
-        <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="onPickType">
-          <view class="picker">{{types[typeIndex]}}</view>
-        </picker>
+
+    <view class="section-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon"><text>🙌</text></view>
+          <view class="sec-head-text">
+            <text class="sec-title">发布互助任务</text>
+            <text class="sec-sub">邻里守望，温暖相助</text>
+          </view>
+        </view>
       </view>
 
-      <view class="field">
-        <view class="label">标题</view>
-        <input placeholder="例如：代取快递" value="{{title}}" bindinput="onTitle" />
-      </view>
+      <view class="form">
+        <view class="field">
+          <text class="label">任务类型</text>
+          <picker mode="selector" range="{{types}}" value="{{typeIndex}}" bindchange="onPickType">
+            <view class="picker">
+              <text>{{types[typeIndex]}}</text>
+              <text class="picker-arrow">▾</text>
+            </view>
+          </picker>
+        </view>
 
-      <view class="field">
-        <view class="label">描述</view>
-        <textarea placeholder="请补充任务说明、时间地点等" value="{{content}}" bindinput="onContent" />
-      </view>
+        <view class="field">
+          <text class="label">标题</text>
+          <input placeholder="例如：代取快递、帮忙搬家" value="{{title}}" bindinput="onTitle" />
+        </view>
 
-      <view class="field">
-        <view class="label">悬赏积分</view>
-        <input type="number" placeholder="0-999" value="{{rewardPoints}}" bindinput="onReward" />
-        <view class="muted">演示版：仅记录积分数值，兑换规则可后续完善</view>
-      </view>
+        <view class="field">
+          <text class="label">详细描述</text>
+          <textarea placeholder="请说明任务详情、时间、地点等信息..." value="{{content}}" bindinput="onContent" />
+        </view>
 
-      <button class="btn-primary submit" loading="{{submitting}}" bindtap="submit">发布</button>
+        <view class="field">
+          <text class="label">🪙 悬赏积分</text>
+          <input type="number" placeholder="输入积分数量，0-999" value="{{rewardPoints}}" bindinput="onReward" />
+          <text class="field-note">积分是对邻居善意的感谢，请根据任务难度合理设置</text>
+        </view>
+
+        <button class="btn-submit" loading="{{submitting}}" bindtap="submit">
+          <text wx:if="{{!submitting}}">发布任务</text>
+          <text wx:else>发布中...</text>
+        </button>
+      </view>
     </view>
-  </view>
 
+  </view>
 </scroll-view>
 </view>
-

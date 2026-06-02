@@ -17,7 +17,8 @@
     "pages/admin/dashboard",
     "pages/admin/house-verify"
     ,"pages/admin/user-manage",
-    "pages/admin/house-manage"
+    "pages/admin/house-manage",
+    "pages/gift/list"
   ],
   "window": {
     "navigationBarTextStyle": "black",

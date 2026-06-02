@@ -2,37 +2,49 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
-    <view class="row" wx:if="{{adminMode || isStaff}}">
-      <view class="muted">{{adminMode ? '公告管理' : '物业/管理员可发布公告'}}</view>
-      <button class="btn btn-primary" size="mini" bindtap="goManage">发布公告</button>
-    </view>
 
-    <!-- 骨架屏 -->
-    <view wx:if="{{loading}}" class="card skeleton-card">
-      <view class="skeleton-line short"></view>
-      <view class="skeleton-line"></view>
-      <view class="skeleton-line medium"></view>
-    </view>
-
-    <!-- 空状态 -->
-    <view wx:elif="{{!items.length}}" class="card empty-state">
-      <text class="empty-icon">📢</text>
-      <text class="muted">暂无公告</text>
-    </view>
-
-    <!-- 列表 -->
-    <view wx:for="{{items}}" wx:key="_id" class="list-item" bindtap="goDetail" data-id="{{item._id}}">
-      <view class="row">
-        <view class="col">
-          <view class="title">
-            <text wx:if="{{item.pinned}}">【置顶】</text>{{item.title}}
+    <view class="section-card" wx:if="{{adminMode || isStaff}}">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon"><text>📢</text></view>
+          <view class="sec-head-text">
+            <text class="sec-title">{{adminMode ? '公告管理' : '物业通知'}}</text>
+            <text class="sec-sub">发布与管理社区公告</text>
           </view>
-          <view class="muted">{{item.type}} · {{format(item.createdAt)}}</view>
         </view>
-        <view class="tag tag-important" wx:if="{{item.important}}">重要</view>
+        <button class="btn-add" bindtap="goManage">发布公告</button>
       </view>
     </view>
-  </view>
 
+    <view class="skeleton-card" wx:if="{{loading}}">
+      <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
+    </view>
+
+    <view class="empty-card" wx:elif="{{!items.length}}">
+      <view class="empty-circle blue">
+        <text class="empty-circle-icon">📢</text>
+      </view>
+      <text class="empty-title">暂无公告</text>
+      <text class="empty-desc">社区最新通知会在这里展示</text>
+    </view>
+
+    <view wx:for="{{items}}" wx:key="_id" class="notice-card" bindtap="goDetail" data-id="{{item._id}}">
+      <view class="nc-left">
+        <view class="nc-title">
+          <text wx:if="{{item.pinned}}" class="nc-pin">📌 置顶</text>
+          <text wx:if="{{item.important}}" class="nc-dot">●</text>
+          {{item.title}}
+        </view>
+        <view class="nc-meta">
+          <text class="nc-type">{{item.type}}</text>
+          <text class="nc-sep">·</text>
+          <text>{{format(item.createdAt)}}</text>
+        </view>
+      </view>
+      <view class="nc-tag" wx:if="{{item.important}}">重要</view>
+      <text class="nc-arrow">›</text>
+    </view>
+
+  </view>
 </scroll-view>
 </view>

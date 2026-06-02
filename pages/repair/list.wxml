@@ -2,44 +2,57 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
-    <!-- 管理模式：状态筛选栏 -->
-    <view class="filter-row" wx:if="{{adminMode}}">
-      <view class="filter-tag {{filterStatus===''?'on':''}}" bindtap="setFilter" data-status="">全部</view>
-      <view class="filter-tag {{filterStatus==='pending'?'on':''}}" bindtap="setFilter" data-status="pending">待受理</view>
-      <view class="filter-tag {{filterStatus==='processing'?'on':''}}" bindtap="setFilter" data-status="processing">处理中</view>
-      <view class="filter-tag {{filterStatus==='waiting_confirm'?'on':''}}" bindtap="setFilter" data-status="waiting_confirm">待确认</view>
-      <view class="filter-tag {{filterStatus==='done'?'on':''}}" bindtap="setFilter" data-status="done">已完成</view>
+    <!-- 状态筛选栏 -->
+    <view class="section-card filter-card">
+      <view class="filter-row" wx:if="{{adminMode}}">
+        <view class="filter-pill {{filterStatus===''?'on':''}}" bindtap="setFilter" data-status="">全部</view>
+        <view class="filter-pill {{filterStatus==='pending'?'on':''}}" bindtap="setFilter" data-status="pending">待受理</view>
+        <view class="filter-pill {{filterStatus==='processing'?'on':''}}" bindtap="setFilter" data-status="processing">处理中</view>
+        <view class="filter-pill {{filterStatus==='waiting_confirm'?'on':''}}" bindtap="setFilter" data-status="waiting_confirm">待确认</view>
+        <view class="filter-pill {{filterStatus==='done'?'on':''}}" bindtap="setFilter" data-status="done">已完成</view>
+      </view>
+
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon"><text>🔧</text></view>
+          <view class="sec-head-text">
+            <text class="sec-title">{{adminMode ? '全部工单' : '我的报修'}}</text>
+            <text class="sec-sub">共 {{items.length}} 条记录</text>
+          </view>
+        </view>
+        <button class="btn-add" bindtap="goCreate">+ 新建报修</button>
+      </view>
     </view>
 
-    <view class="row" wx:if="{{!adminMode}}">
-      <view class="muted">我的报修 · {{items.length}} 条</view>
-      <button class="btn btn-primary" size="mini" bindtap="goCreate">新建报修</button>
-    </view>
-    <view class="row" wx:else>
-      <view class="muted">全部工单 · {{items.length}} 条</view>
-      <button class="btn btn-primary" size="mini" bindtap="goCreate">新建报修</button>
-    </view>
-
-    <view wx:if="{{loading}}" class="card skeleton-card">
+    <!-- 骨架屏 -->
+    <view class="skeleton-card" wx:if="{{loading}}">
       <view class="skeleton-line short"></view>
       <view class="skeleton-line"></view>
       <view class="skeleton-line medium"></view>
     </view>
 
-    <view wx:elif="{{!items.length}}" class="card empty-state">
-      <text class="empty-icon">🔧</text>
-      <text class="muted">暂无报修记录</text>
+    <!-- 空状态 -->
+    <view class="empty-card" wx:elif="{{!items.length}}">
+      <view class="empty-circle green">
+        <text class="empty-circle-icon">🔧</text>
+      </view>
+      <text class="empty-title">暂无报修记录</text>
+      <text class="empty-desc">点击右上角按钮提交新的报修工单</text>
     </view>
 
-    <view wx:for="{{items}}" wx:key="_id" class="list-item" bindtap="goDetail" data-id="{{item._id}}">
-      <view class="row">
-        <view class="col">
-          <view class="title">{{item.title || item.category}}</view>
-          <view class="muted">{{item.content}}</view>
+    <!-- 列表 -->
+    <view wx:for="{{items}}" wx:key="_id" class="repair-card" bindtap="goDetail" data-id="{{item._id}}">
+      <view class="rc-top">
+        <view class="rc-info">
+          <text class="rc-title">{{item.title || item.category}}</text>
+          <text class="rc-content">{{item.content || '暂无描述'}}</text>
         </view>
-        <view class="tag status-{{item.status}}">{{statusText(item.status)}}</view>
+        <view class="rc-status {{item.status}}">{{statusText(item.status)}}</view>
       </view>
-      <view class="meta muted">{{format(item.createdAt)}}</view>
+      <view class="rc-bottom">
+        <view class="rc-category">{{item.category}}</view>
+        <text class="rc-time">{{format(item.createdAt)}}</text>
+      </view>
     </view>
   </view>
 </scroll-view>

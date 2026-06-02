@@ -1,24 +1,104 @@
-.seg {
-  display: flex;
-  background: #f3f4f6;
-  border-radius: 16rpx;
-  overflow: hidden;
+/* ============================================================
+   区块
+   ============================================================ */
+.section-card {
+  background: #fff; border-radius: 24rpx; padding: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+  border-top: 6rpx solid #f59e0b;
+}
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12rpx;
+}
+.sec-head-left { flex: 1; display: flex; align-items: center; gap: 14rpx; }
+.sec-icon {
+  width: 56rpx; height: 56rpx; border-radius: 16rpx;
+  background: #fffbeb; display: flex; align-items: center;
+  justify-content: center; font-size: 28rpx; flex-shrink: 0;
+}
+.sec-head-text { display: flex; flex-direction: column; gap: 2rpx; }
+.sec-title { font-size: 32rpx; font-weight: 700; color: #1e293b; }
+.sec-sub  { font-size: 22rpx; color: #94a3b8; }
+.btn-add {
+  flex-shrink: 0; font-size: 26rpx; padding: 14rpx 24rpx;
+  border-radius: 14rpx; background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff; font-weight: 600; border: none;
+  box-shadow: 0 4rpx 14rpx rgba(245,158,11,0.25);
+}
+.btn-add:active { opacity: 0.85; }
+
+/* Tab */
+.seg-row {
+  display: flex; background: #f1f5f9; border-radius: 14rpx;
+  padding: 4rpx; margin-top: 16rpx;
 }
 .seg-item {
-  padding: 14rpx 18rpx;
-  font-size: 26rpx;
-  color: #374151;
+  flex: 1; text-align: center; padding: 14rpx 0;
+  font-size: 26rpx; color: #64748b; border-radius: 12rpx;
+  font-weight: 500; transition: all 0.2s;
 }
 .seg-item.on {
-  background: #ffffff;
-  color: #111827;
-  font-weight: 600;
+  background: #fff; color: #d97706; font-weight: 700;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06);
 }
-.title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #111827;
+
+/* ============================================================
+   互助卡片
+   ============================================================ */
+.help-card {
+  background: #fff; border-radius: 20rpx; padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); margin-top: 14rpx;
 }
-.meta {
-  margin-top: 12rpx;
+.help-card:active { background: #f8fafc; }
+.hc-top {
+  display: flex; gap: 16rpx; align-items: flex-start;
 }
+.hc-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 6rpx; }
+.hc-title {
+  font-size: 30rpx; font-weight: 700; color: #1e293b;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hc-desc {
+  font-size: 26rpx; color: #94a3b8;
+  display: -webkit-box; -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; overflow: hidden;
+}
+.hc-status {
+  flex-shrink: 0; font-size: 22rpx; padding: 6rpx 16rpx;
+  border-radius: 999rpx; font-weight: 700;
+}
+.hc-status.open            { background: #d1fae5; color: #065f46; }
+.hc-status.taken           { background: #dbeafe; color: #1e40af; }
+.hc-status.waiting_confirm { background: #ede9fe; color: #5b21b6; }
+.hc-status.done            { background: #e2e8f0; color: #475569; }
+
+.hc-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14rpx; padding-top: 14rpx; border-top: 1rpx solid #f1f5f9;
+}
+.hc-meta { display: flex; align-items: center; gap: 6rpx; font-size: 22rpx; color: #94a3b8; }
+.hc-type { color: #d97706; font-weight: 600; }
+.hc-sep  { color: #cbd5e1; }
+.hc-time { color: #94a3b8; }
+.hc-reward {
+  font-size: 24rpx; font-weight: 700; color: #d97706;
+}
+
+/* ============================================================
+   空状态 & 骨架屏
+   ============================================================ */
+.empty-card {
+  background: #fff; border-radius: 24rpx; padding: 64rpx 32rpx;
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); text-align: center;
+}
+.empty-circle {
+  width: 120rpx; height: 120rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 20rpx;
+}
+.empty-circle.yellow { background: linear-gradient(135deg, #fef9c3, #fde68a); }
+.empty-circle-icon { font-size: 56rpx; }
+.empty-title { font-size: 32rpx; font-weight: 700; color: #1e293b; margin-bottom: 8rpx; }
+.empty-desc { font-size: 26rpx; color: #94a3b8; }
+.skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; }
+
+.wrap { padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 0; }

@@ -1,19 +1,231 @@
-.wrap {
-  padding: 24rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 18rpx;
+/* ============================================================
+   概览横幅
+   ============================================================ */
+.todo-banner {
+  position: relative;
+  margin: 16rpx 24rpx 0;
+  border-radius: 24rpx;
+  overflow: hidden;
 }
-.mt {
-  margin-top: 12rpx;
+.banner-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #ea580c, #f97316, #fb923c, #f59e0b);
+  background-size: 300% 300%;
+  animation: bannerWarmFlow 12s ease-in-out infinite alternate;
 }
-.todo {
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid #f3f4f6;
+@keyframes bannerWarmFlow {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
 }
-.title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #111827;
+.banner-bg::after {
+  content: '';
+  position: absolute; right: -30rpx; top: -50rpx;
+  width: 240rpx; height: 240rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.35), transparent 60%);
+  animation: haloFloat 10s ease-in-out infinite alternate;
+}
+.banner-bg::before {
+  content: '';
+  position: absolute; left: -20rpx; bottom: -30rpx;
+  width: 160rpx; height: 160rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 60%);
+  animation: haloFloat2 10s ease-in-out infinite alternate;
+}
+@keyframes haloFloat {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(20rpx, 10rpx); }
+}
+@keyframes haloFloat2 {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(-10rpx, -15rpx); }
+}
+.banner-inner {
+  position: relative; z-index: 1;
+  display: flex; align-items: center;
+  padding: 32rpx 20rpx;
+}
+.banner-stat {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 10rpx;
+}
+.banner-ring {
+  width: 96rpx; height: 96rpx;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 5rpx solid rgba(255,255,255,0.7);
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.12);
+}
+.banner-ring.repair-ring { background: rgba(234,88,12,0.7); }
+.banner-ring.sos-ring   { background: rgba(220,38,38,0.7); }
+.banner-num {
+  font-size: 40rpx; font-weight: 800; color: #fff;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.2);
+}
+.banner-label {
+  font-size: 24rpx; color: #fff; font-weight: 600;
+  text-shadow: 0 1rpx 6rpx rgba(0,0,0,0.2);
+}
+.banner-divider {
+  width: 2rpx; height: 60rpx; background: rgba(255,255,255,0.4); flex-shrink: 0;
 }
 
+/* ============================================================
+   区块卡片
+   ============================================================ */
+.section-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+}
+.section-card.sos-section {
+  border: 2rpx solid #fee2e2;
+}
+.sec-head {
+  display: flex; align-items: center; gap: 12rpx;
+  margin-bottom: 14rpx;
+}
+.sec-head-left {
+  flex: 1; display: flex; align-items: center; gap: 14rpx;
+}
+.sec-icon {
+  width: 56rpx; height: 56rpx; border-radius: 16rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; flex-shrink: 0;
+}
+.sec-icon.repair-icon { background: #eff6ff; }
+.sec-icon.sos-icon   { background: #fef2f2; }
+.sec-head-text {
+  display: flex; flex-direction: column; gap: 2rpx;
+}
+.sec-title {
+  font-size: 32rpx; font-weight: 700; color: #1e293b;
+}
+.sec-sub {
+  font-size: 22rpx; color: #94a3b8;
+}
+.sec-badge {
+  min-width: 40rpx; height: 40rpx; border-radius: 20rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22rpx; font-weight: 700; color: #fff; padding: 0 14rpx;
+}
+.sec-badge.repair-badge { background: #f59e0b; }
+.sec-badge.sos-badge   { background: #ef4444; }
+.btn-mini-ghost {
+  font-size: 24rpx; padding: 8rpx 18rpx; border-radius: 10rpx;
+  background: #f8fafc; color: #64748b; border: 1rpx solid #e2e8f0;
+}
+
+/* ============================================================
+   报修待办列表
+   ============================================================ */
+.todo-list {
+  display: flex; flex-direction: column; gap: 8rpx;
+}
+.todo-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20rpx 18rpx; border-radius: 14rpx;
+  background: #fbfdff; border: 1rpx solid #f1f5f9;
+  gap: 16rpx; transition: all 0.15s;
+}
+.todo-row:active { background: #eff6ff; border-color: #bfdbfe; }
+.todo-row-left {
+  flex: 1; display: flex; align-items: center; gap: 14rpx; overflow: hidden;
+}
+.todo-dot {
+  width: 14rpx; height: 14rpx; border-radius: 50%; flex-shrink: 0;
+}
+.todo-dot.pending        { background: #f59e0b; box-shadow: 0 0 0 6rpx rgba(245,158,11,0.12); }
+.todo-dot.processing      { background: #3b82f6; box-shadow: 0 0 0 6rpx rgba(59,130,246,0.12); }
+.todo-dot.waiting_confirm { background: #8b5cf6; box-shadow: 0 0 0 6rpx rgba(139,92,246,0.12); }
+.todo-info {
+  flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 4rpx;
+}
+.todo-row-title {
+  font-size: 28rpx; font-weight: 600; color: #1e293b;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.todo-row-meta {
+  display: flex; align-items: center; gap: 6rpx;
+}
+.meta-tag {
+  font-size: 22rpx; color: #3b82f6; font-weight: 500;
+}
+.meta-sep { color: #cbd5e1; font-size: 22rpx; }
+.meta-time { font-size: 22rpx; color: #94a3b8; }
+
+/* 状态胶囊 */
+.status-pill {
+  flex-shrink: 0; font-size: 22rpx; padding: 6rpx 16rpx;
+  border-radius: 999rpx; font-weight: 600;
+}
+.status-pill.pending        { background: #fef3c7; color: #92400e; }
+.status-pill.processing      { background: #dbeafe; color: #1e40af; }
+.status-pill.waiting_confirm { background: #ede9fe; color: #5b21b6; }
+.status-pill.done            { background: #d1fae5; color: #065f46; }
+
+/* ============================================================
+   求助待办列表
+   ============================================================ */
+.sos-list {
+  display: flex; flex-direction: column; gap: 12rpx;
+}
+.sos-card-item {
+  padding: 22rpx; border-radius: 16rpx;
+  background: #fffbfb; border: 1rpx solid #fee2e2;
+  border-left: 6rpx solid #ef4444;
+}
+.sos-card-top {
+  display: flex; align-items: center; gap: 14rpx;
+}
+.sos-avatar {
+  width: 64rpx; height: 64rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #fecaca, #fca5a5);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 700; color: #991b1b; flex-shrink: 0;
+}
+.sos-card-info {
+  flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 4rpx;
+}
+.sos-card-name {
+  font-size: 28rpx; font-weight: 700; color: #1e293b;
+}
+.sos-card-note {
+  font-size: 24rpx; color: #64748b;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sos-card-time {
+  font-size: 22rpx; color: #94a3b8; flex-shrink: 0;
+}
+.sos-card-actions {
+  display: flex; gap: 14rpx; margin-top: 16rpx;
+}
+.btn-action-outline, .btn-action-solid {
+  flex: 1; height: 72rpx; line-height: 72rpx;
+  font-size: 26rpx; font-weight: 600; border-radius: 14rpx; border: none;
+}
+.btn-action-outline {
+  background: #fff; color: #3b82f6; border: 2rpx solid #bfdbfe;
+}
+.btn-action-solid {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff; box-shadow: 0 4rpx 14rpx rgba(16,185,129,0.25);
+}
+.btn-action-outline:active { background: #eff6ff; }
+.btn-action-solid:active { opacity: 0.85; }
+
+/* ============================================================
+   空状态 & 间距
+   ============================================================ */
+.empty-soft {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48rpx 0 28rpx; gap: 10rpx;
+}
+.empty-soft-icon { font-size: 56rpx; }
+.empty-soft-text { font-size: 26rpx; color: #94a3b8; }
+
+.wrap {
+  padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 18rpx;
+}

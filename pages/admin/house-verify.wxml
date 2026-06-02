@@ -1,28 +1,52 @@
 <navigation-bar title="房屋核验" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
+
+  <!-- 待办计数条 -->
+  <view class="verify-ribbon" wx:if="{{items.length}}">
+    <text class="verify-ribbon-icon">📋</text>
+    <text class="verify-ribbon-num">{{items.length}}</text>
+    <text class="verify-ribbon-text">条绑定申请等待核验</text>
+  </view>
+
   <view class="wrap">
-    <view class="card">
-      <view class="row">
-        <view class="section-title">待核验</view>
-        <button size="mini" bindtap="load">刷新</button>
+    <!-- 空状态 -->
+    <view class="soft-empty-card" wx:if="{{!items.length}}">
+      <view class="empty-circle">
+        <text class="empty-circle-icon">✅</text>
       </view>
-      <view wx:if="{{!items.length}}" class="muted mt">暂无待核验请求</view>
-      <view wx:for="{{items}}" wx:key="_id" class="item">
-        <view class="row">
-          <view class="col">
-            <view class="title">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</view>
-            <view class="muted">姓名：{{item.name}} <text wx:if="{{item.phone}}">· {{item.phone}}</text></view>
-          </view>
-          <view class="actions">
-            <button size="mini" class="btn-primary" bindtap="approve" data-id="{{item._id}}">通过</button>
-            <button size="mini" bindtap="reject" data-id="{{item._id}}">驳回</button>
-          </view>
+      <text class="empty-title-lg">全部已处理</text>
+      <text class="empty-desc-lg">所有房屋绑定请求已核验完毕</text>
+      <button size="mini" class="btn-refresh-lg" bindtap="load">刷新查看</button>
+    </view>
+
+    <!-- 核验卡片列表 -->
+    <view wx:for="{{items}}" wx:key="_id" class="verify-card">
+      <!-- 卡片头 -->
+      <view class="vc-head">
+        <view class="vc-avatar">
+          <text>{{item.name ? item.name[0] : '?'}}</text>
         </view>
+        <view class="vc-user">
+          <text class="vc-name">{{item.name || '未填写姓名'}}</text>
+          <text class="vc-phone" wx:if="{{item.phone}}">{{item.phone}}</text>
+        </view>
+        <view class="vc-badge">待核验</view>
+      </view>
+
+      <!-- 地址 -->
+      <view class="vc-addr">
+        <text class="vc-addr-icon">📍</text>
+        <text class="vc-addr-text">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</text>
+      </view>
+
+      <!-- 操作 -->
+      <view class="vc-actions">
+        <button size="mini" class="vc-btn-reject" bindtap="reject" data-id="{{item._id}}">✕ 驳回</button>
+        <button size="mini" class="vc-btn-approve" bindtap="approve" data-id="{{item._id}}">✓ 通过核验</button>
       </view>
     </view>
   </view>
 
 </scroll-view>
 </view>
-

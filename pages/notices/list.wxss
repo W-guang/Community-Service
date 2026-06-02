@@ -1,5 +1,80 @@
-.title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #111827;
+/* ============================================================
+   区块卡片
+   ============================================================ */
+.section-card {
+  background: #fff; border-radius: 24rpx; padding: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+  border-top: 6rpx solid #8b5cf6;
 }
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12rpx;
+}
+.sec-head-left { flex: 1; display: flex; align-items: center; gap: 14rpx; }
+.sec-icon {
+  width: 56rpx; height: 56rpx; border-radius: 16rpx;
+  background: #f5f3ff; display: flex; align-items: center;
+  justify-content: center; font-size: 28rpx; flex-shrink: 0;
+}
+.sec-head-text { display: flex; flex-direction: column; gap: 2rpx; }
+.sec-title { font-size: 32rpx; font-weight: 700; color: #1e293b; }
+.sec-sub  { font-size: 22rpx; color: #94a3b8; }
+.btn-add {
+  flex-shrink: 0; font-size: 26rpx; padding: 14rpx 24rpx;
+  border-radius: 14rpx; background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: #fff; font-weight: 600; border: none;
+  box-shadow: 0 4rpx 14rpx rgba(139,92,246,0.2);
+}
+.btn-add:active { opacity: 0.85; }
+
+/* ============================================================
+   公告卡片
+   ============================================================ */
+.notice-card {
+  display: flex; align-items: center; padding: 22rpx 20rpx;
+  border-radius: 18rpx; background: #fff; gap: 12rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); margin-top: 12rpx;
+}
+.notice-card:active { background: #f8fafc; }
+.nc-left { flex: 1; overflow: hidden; }
+.nc-title {
+  font-size: 30rpx; font-weight: 600; color: #1e293b;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.nc-pin {
+  font-size: 20rpx; padding: 2rpx 8rpx; border-radius: 6rpx;
+  background: #dbeafe; color: #1e40af; font-weight: 700; margin-right: 6rpx;
+}
+.nc-dot { color: #ef4444; font-size: 18rpx; margin-right: 4rpx; }
+.nc-meta {
+  display: flex; align-items: center; gap: 6rpx;
+  margin-top: 8rpx; font-size: 24rpx; color: #94a3b8;
+}
+.nc-type { color: #8b5cf6; font-weight: 600; }
+.nc-sep { color: #cbd5e1; }
+.nc-tag {
+  flex-shrink: 0; font-size: 20rpx; padding: 4rpx 12rpx;
+  border-radius: 999rpx; background: #fee2e2; color: #dc2626; font-weight: 700;
+}
+.nc-arrow {
+  font-size: 40rpx; color: #cbd5e1; flex-shrink: 0; font-weight: 300;
+}
+
+/* ============================================================
+   空状态 & 骨架屏
+   ============================================================ */
+.empty-card {
+  background: #fff; border-radius: 24rpx; padding: 64rpx 32rpx;
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); text-align: center;
+}
+.empty-circle {
+  width: 120rpx; height: 120rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 20rpx;
+}
+.empty-circle.blue { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+.empty-circle-icon { font-size: 56rpx; }
+.empty-title { font-size: 32rpx; font-weight: 700; color: #1e293b; margin-bottom: 8rpx; }
+.empty-desc { font-size: 26rpx; color: #94a3b8; }
+.skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; }
+
+.wrap { padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 0; }

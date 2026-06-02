@@ -23,6 +23,8 @@ const COL = {
   creditLogs: 'credit_logs',
   helpRatings: 'help_ratings',
   adminConfigs: 'admin_configs',
+  lotteryLogs: 'lottery_logs',
+  lotteryPrizes: 'lottery_prizes',
 }
 
 let cachedAdminOpenids = null

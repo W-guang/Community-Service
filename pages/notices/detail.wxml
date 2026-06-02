@@ -2,25 +2,46 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap" wx:if="{{notice}}">
-    <view class="card">
-      <view class="section-title">{{notice.title}}</view>
-      <view class="muted mt">{{notice.type}} · {{format(notice.createdAt)}} <text wx:if="{{read}}">· 已读</text></view>
-      <view class="content mt">{{notice.content}}</view>
+
+    <view class="unified-card">
+      <!-- ---------- 头部标签 + 状态 ---------- -->
+      <view class="nd-head">
+        <text class="nd-type">{{notice.type}}</text>
+        <text wx:if="{{read}}" class="nd-read-badge">已读 ✓</text>
+      </view>
+
+      <!-- ---------- 标题 ---------- -->
+      <text class="nd-title">{{notice.title}}</text>
+      <view class="nd-meta">
+        <text>{{format(notice.createdAt)}}</text>
+      </view>
+
+      <!-- ---------- 正文 ---------- -->
+      <view class="nd-body">
+        <view class="nd-content">{{notice.content}}</view>
+      </view>
+
+      <!-- ---------- 触达统计（仅 staff） ---------- -->
+      <view class="nd-stats" wx:if="{{isStaff}}">
+        <view class="nd-stats-label">📊 触达统计</view>
+        <view class="stats-bar-wrap">
+          <view class="stats-bar">
+            <view class="stats-bar-fill" style="width:{{stats.percent || 0}}%"></view>
+          </view>
+          <view class="stats-meta-row">
+            <text class="stats-text">已读 {{stats.readUsers}} / {{stats.totalUsers}} 人</text>
+            <button size="mini" class="btn-refresh" bindtap="loadStats">刷新</button>
+          </view>
+        </view>
+      </view>
     </view>
 
-    <view class="card" wx:if="{{isStaff}}">
-      <view class="row">
-        <view class="section-title">触达统计</view>
-        <button size="mini" bindtap="loadStats">刷新</button>
-      </view>
-      <view class="muted mt">已读：{{stats.readUsers}} / {{stats.totalUsers}}</view>
-    </view>
   </view>
 
   <view class="wrap" wx:else>
-    <view class="card"><view class="muted">加载中...</view></view>
+    <view class="skeleton-card">
+      <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
+    </view>
   </view>
-
 </scroll-view>
 </view>
-

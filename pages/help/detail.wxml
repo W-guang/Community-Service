@@ -2,103 +2,96 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap" wx:if="{{help}}">
-    <!-- 状态时间线 -->
-    <view class="card timeline-card">
-      <view class="section-title">任务进度</view>
-      <view class="timeline">
-        <view class="tl-item active">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">已发布</view>
-            <view class="tl-time">{{format(help.createdAt)}}</view>
+
+    <view class="unified-card">
+      <!-- ---------- 头部标题 ---------- -->
+      <view class="uc-head">
+        <text class="uc-title">{{help.title}}</text>
+        <view class="status-pill {{help.status}}">{{statusText(help.status)}}</view>
+      </view>
+      <view class="uc-meta">
+        <text class="meta-tag">{{help.type}}</text>
+        <text class="meta-sep">·</text>
+        <text>{{format(help.createdAt)}}</text>
+        <text class="meta-sep">·</text>
+        <text class="meta-reward">🪙 {{help.rewardPoints}} 积分</text>
+      </view>
+
+      <!-- ---------- 任务进度 ---------- -->
+      <view class="uc-section">
+        <view class="uc-sec-label">任务进度</view>
+        <view class="timeline">
+          <view class="tl-item active">
+            <view class="tl-dot"></view>
+            <view class="tl-body"><text class="tl-label">已发布</text><text class="tl-time">{{format(help.createdAt)}}</text></view>
+          </view>
+          <view class="tl-item {{help.status === 'taken' || help.status === 'waiting_confirm' || help.status === 'done' ? 'active' : ''}}">
+            <view class="tl-dot"></view>
+            <view class="tl-body"><text class="tl-label">已承接</text><text class="tl-time" wx:if="{{help.takerOpenid}}">接单人：{{help.takerName || '已接单'}}</text></view>
+          </view>
+          <view class="tl-item {{help.status === 'waiting_confirm' || help.status === 'done' ? 'active' : ''}}">
+            <view class="tl-dot"></view>
+            <view class="tl-body"><text class="tl-label">待确认</text><text class="tl-time" wx:if="{{help.status === 'waiting_confirm' || help.status === 'done'}}">等待发布者确认</text></view>
+          </view>
+          <view class="tl-item {{help.status === 'done' ? 'active' : ''}}">
+            <view class="tl-dot"></view>
+            <view class="tl-body"><text class="tl-label">已完成</text><text class="tl-time" wx:if="{{help.status === 'done'}}">任务已关闭</text></view>
           </view>
         </view>
-        <view class="tl-item {{help.status === 'taken' || help.status === 'waiting_confirm' || help.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">已承接</view>
-            <view class="tl-time" wx:if="{{help.takerOpenid}}">接单人：{{help.takerName || '已接单'}}</view>
+      </view>
+
+      <!-- ---------- 任务描述 ---------- -->
+      <view class="uc-section">
+        <view class="uc-sec-label">任务描述</view>
+        <view class="uc-content">{{help.content || '暂无详细描述'}}</view>
+
+        <view wx:if="{{help.takerOpenid}}" class="taker-row">
+          <view class="taker-avatar"><text>🤝</text></view>
+          <text class="taker-name">接单人：{{help.takerName || '已接单'}}</text>
+        </view>
+
+        <view wx:if="{{canOperate}}" class="uc-actions">
+          <button wx:if="{{canTake}}" class="act-btn fill-yellow" bindtap="take">🤝 我要接单</button>
+          <button wx:if="{{canWaitingConfirm}}" class="act-btn outline-purple" bindtap="setStatus" data-status="waiting_confirm">我已完成，待确认</button>
+          <button wx:if="{{canDone}}" class="act-btn fill-green" bindtap="setStatus" data-status="done">✓ 确认完成</button>
+        </view>
+
+        <!-- 评价（嵌入） -->
+        <view wx:if="{{showRate}}" class="rate-inline">
+          <view class="rate-inline-label">⭐ 评价 {{ratingTarget}}</view>
+          <view class="stars-row">
+            <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this" class="star {{myRating >= item ? 'on' : ''}}" bindtap="onRateStar" data-star="{{item}}">{{myRating >= item ? '★' : '☆'}}</text>
+          </view>
+          <input class="rate-input" placeholder="写几句评价（可选）" value="{{rateComment}}" bindinput="onRateComment" />
+          <button class="btn-rate-inline" bindtap="submitRate">提交评价</button>
+        </view>
+      </view>
+
+      <!-- ---------- 进度记录 ---------- -->
+      <view class="uc-section uc-section-last">
+        <view class="uc-sec-label">进度记录</view>
+        <view wx:if="{{!progress.length}}" class="uc-empty-note">暂无进度记录</view>
+        <view wx:for="{{progress}}" wx:key="_id" class="prog-item">
+          <view class="prog-dot"></view>
+          <view class="prog-body">
+            <text class="prog-time">{{format(item.createdAt)}}</text>
+            <text class="prog-text">{{item.content}}</text>
           </view>
         </view>
-        <view class="tl-item {{help.status === 'waiting_confirm' || help.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">待确认</view>
-            <view class="tl-time" wx:if="{{help.status === 'waiting_confirm' || help.status === 'done'}}">等待发布者确认</view>
-          </view>
-        </view>
-        <view class="tl-item {{help.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">已完成</view>
-            <view class="tl-time" wx:if="{{help.status === 'done'}}">任务已关闭</view>
-          </view>
+
+        <view class="chat-input-row" wx:if="{{canChat}}">
+          <input placeholder="更新进度..." value="{{msg}}" bindinput="onMsg" confirm-type="send" bindconfirm="send" />
+          <button size="mini" class="btn-send" loading="{{sending}}" bindtap="send">发送</button>
         </view>
       </view>
     </view>
 
-    <!-- 任务信息 -->
-    <view class="card">
-      <view class="row">
-        <view class="section-title">{{help.title}}</view>
-        <view class="tag status-{{help.status}}">{{statusText(help.status)}}</view>
-      </view>
-      <view class="muted">{{format(help.createdAt)}} · {{help.type}} · 悬赏 {{help.rewardPoints}} 积分</view>
-      <view class="content mt">{{help.content}}</view>
-
-      <view class="mt muted" wx:if="{{help.takerOpenid}}">
-        <text>接单人：{{help.takerName || '已接单'}}</text>
-      </view>
-
-      <view class="actions" wx:if="{{canOperate}}">
-        <button wx:if="{{canTake}}" class="btn-primary" bindtap="take">接单</button>
-        <button wx:if="{{canWaitingConfirm}}" bindtap="setStatus" data-status="waiting_confirm">我已完成，待对方确认</button>
-        <button wx:if="{{canDone}}" class="btn-primary" bindtap="setStatus" data-status="done">确认完成</button>
-      </view>
-    </view>
-
-    <!-- 评价卡片（任务完成后显示） -->
-    <view class="card rate-card" wx:if="{{showRate}}">
-      <view class="section-title">评价 {{ratingTarget}}</view>
-      <view class="muted">任务已完成，请为对方评分（1-5星）</view>
-      <view class="stars-row mt">
-        <text wx:for="{{[1,2,3,4,5]}}" wx:key="*this"
-              class="star {{myRating >= item ? 'on' : ''}}"
-              bindtap="onRateStar" data-star="{{item}}">{{myRating >= item ? '★' : '☆'}}</text>
-      </view>
-      <input class="rate-input mt" placeholder="写几句评价（可选）" value="{{rateComment}}" bindinput="onRateComment" />
-      <button class="btn-primary mt" bindtap="submitRate">提交评价</button>
-    </view>
-
-    <!-- 进度记录 -->
-    <view class="card">
-      <view class="section-title">进度记录</view>
-      <view wx:if="{{!progress.length}}" class="empty-state">
-        <text class="empty-icon">📋</text>
-        <text class="muted">暂无进度</text>
-      </view>
-      <view wx:for="{{progress}}" wx:key="_id" class="progress-item">
-        <view class="progress-dot"></view>
-        <view class="progress-content">
-          <view class="muted">{{format(item.createdAt)}}</view>
-          <view class="content">{{item.content}}</view>
-        </view>
-      </view>
-
-      <view class="composer" wx:if="{{canChat}}">
-        <input placeholder="更新进度..." value="{{msg}}" bindinput="onMsg" />
-        <button size="mini" class="btn-primary" loading="{{sending}}" bindtap="send">发送</button>
-      </view>
-    </view>
   </view>
 
   <view class="wrap" wx:else>
-    <view class="card skeleton-card">
-      <view class="skeleton-line short"></view>
-      <view class="skeleton-line"></view>
-      <view class="skeleton-line medium"></view>
+    <view class="skeleton-card">
+      <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
     </view>
   </view>
-
 </scroll-view>
 </view>

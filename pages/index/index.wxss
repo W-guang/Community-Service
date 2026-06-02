@@ -1,101 +1,355 @@
 /**index.wxss**/
 
-.card-name {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #111827;
-  margin-bottom: 8rpx;
+/* ============================================================
+   普通用户首页
+   ============================================================ */
+.resident-wrap {
+  padding: 12rpx 20rpx 24rpx; min-height: 0;
+  background: linear-gradient(180deg, #e8f5e9 0%, #f7f9fa 15%, #f7f9fa 100%);
 }
+.resident-wrap > view,
+.resident-wrap > block > view { margin-bottom: 14rpx; }
 
-.card-desc {
-  font-size: 26rpx;
-  color: #999;
+/* —— 骨架屏 —— */
+.r-skeleton {
+  background: #fff; border-radius: 20rpx; padding: 30rpx;
 }
+.r-sk-banner {
+  height: 160rpx; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  border-radius: 14rpx; margin-bottom: 20rpx;
+}
+.r-sk-line {
+  height: 28rpx; background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  border-radius: 8rpx; margin-bottom: 16rpx;
+}
+.r-sk-line.short  { width: 40%; }
+.r-sk-line.medium { width: 75%; }
+.r-sk-line:last-child { margin-bottom: 0; }
 
-.sos-card .card-name {
-  color: #e74c3c;
-}
-
-/* 浮动SOS按钮 */
-.float-sos {
-  position: fixed;
-  right: 30rpx;
-  bottom: 200rpx;
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff6b81, #ff4757);
-  box-shadow: 0 8rpx 24rpx rgba(255,71,87,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  opacity: 0;
-  transform: scale(0.5);
-  transition: all 0.3s ease;
-}
-.float-sos.show {
-  opacity: 1;
-  transform: scale(1);
-}
-.float-sos-icon {
-  font-size: 50rpx;
-}
-
-/* 管理模式 - 快捷工作台 */
-.admin-quick-grid {
-  margin-top: 16rpx;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16rpx;
-}
-.quick-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8rpx;
-  padding: 24rpx 12rpx;
-  border-radius: 16rpx;
-  background: #f8f9fa;
-}
-.quick-item:active {
-  background: #e9ecef;
-}
-.quick-icon {
-  font-size: 40rpx;
-}
-.quick-label {
-  font-size: 24rpx;
-  color: #111827;
-  font-weight: 500;
-}
-
-/* 管理模式 - 统计网格 */
-.stats-grid {
-  margin-top: 16rpx;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* —— ① 登录/身份条 —— */
+.r-login-bar {
+  display: flex; align-items: center; justify-content: space-between;
   gap: 12rpx;
 }
-.stat-item {
-  padding: 18rpx 12rpx;
-  border-radius: 14rpx;
-  background: #f8f9fa;
-  text-align: center;
+.r-login-bar:active { opacity: 0.7; }
+.r-login-left { display: flex; align-items: center; gap: 14rpx; flex: 1; }
+.r-login-avatar {
+  width: 64rpx; height: 64rpx; border-radius: 50%;
+  background: #e8f5e9; display: flex; align-items: center;
+  justify-content: center; font-size: 32rpx; flex-shrink: 0;
 }
-.stat-item.warn {
-  background: #fff3cd;
+.r-login-text { font-size: 28rpx; font-weight: 600; color: #333; }
+.r-login-arrow { font-size: 40rpx; color: #cbd5e1; }
+
+.r-user-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12rpx;
 }
-.stat-item.danger {
-  background: #ffe3e3;
+.r-user-left { display: flex; align-items: center; gap: 14rpx; flex: 1; overflow: hidden; }
+.r-user-avatar {
+  width: 64rpx; height: 64rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 700; color: #2e7d32; flex-shrink: 0;
 }
-.stat-num {
-  font-size: 36rpx;
-  font-weight: 700;
-  color: #111827;
+.r-user-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 2rpx; }
+.r-user-name { font-size: 30rpx; font-weight: 700; color: #333; }
+.r-user-house { font-size: 24rpx; color: #999; }
+.r-user-badge {
+  flex-shrink: 0; font-size: 22rpx; padding: 6rpx 16rpx;
+  border-radius: 999rpx; font-weight: 600;
 }
-.stat-label {
-  font-size: 22rpx;
-  color: #6b7280;
-  margin-top: 4rpx;
+.r-user-badge.resident { background: #e8f5e9; color: #2e7d32; }
+.r-user-badge.staff    { background: #e3f2fd; color: #1565c0; }
+.r-user-badge.admin    { background: #f3e5f5; color: #7b1fa2; }
+
+/* —— ② 宣传横幅 —— */
+.r-banner {
+  border-radius: 16rpx; overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+}
+.r-banner-img {
+  width: 100%; height: 220rpx; display: block; background: #e0e0e0;
+}
+
+/* —— ③ 网格管家卡片 —— */
+.r-manager-card {
+  background: #fff; border-radius: 16rpx; padding: 20rpx 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.r-mgr-left { display: flex; align-items: center; gap: 14rpx; }
+.r-mgr-avatar-wrap { position: relative; flex-shrink: 0; }
+.r-mgr-avatar {
+  width: 72rpx; height: 72rpx; border-radius: 50%;
+  background: #f5f5f5; display: flex; align-items: center;
+  justify-content: center; font-size: 36rpx;
+}
+.r-mgr-tag {
+  position: absolute; bottom: -4rpx; left: 50%; transform: translateX(-50%);
+  background: #4caf50; color: #fff; font-size: 18rpx;
+  padding: 2rpx 10rpx; border-radius: 6rpx; white-space: nowrap; font-weight: 600;
+}
+.r-mgr-info { display: flex; flex-direction: column; gap: 4rpx; }
+.r-mgr-name { font-size: 28rpx; font-weight: 700; color: #333; }
+.r-mgr-status { font-size: 24rpx; color: #4caf50; font-weight: 500; }
+.r-mgr-ops { flex-shrink: 0; }
+.r-mgr-phone { font-size: 26rpx; font-weight: 600; color: #333; }
+
+/* —— ④ 公告栏 —— */
+.r-notice {
+  background: #fff; border-radius: 16rpx; padding: 18rpx 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+  display: flex; align-items: center; gap: 12rpx;
+}
+.r-notice:active { background: #f9fafb; }
+.r-notice-left { display: flex; align-items: center; gap: 8rpx; flex-shrink: 0; }
+.r-notice-icon { font-size: 30rpx; }
+.r-notice-label { font-size: 26rpx; font-weight: 700; color: #333; }
+.r-notice-swiper { flex: 1; height: 40rpx; overflow: hidden; }
+.r-notice-text {
+  height: 40rpx; line-height: 40rpx; font-size: 26rpx; color: #666;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.r-urgent-tag {
+  background: #ffebee; color: #e53935; font-size: 20rpx;
+  padding: 2rpx 8rpx; border-radius: 6rpx; margin-right: 8rpx; font-weight: 700;
+}
+.r-notice-arrow { font-size: 36rpx; color: #cbd5e1; flex-shrink: 0; }
+
+/* —— ⑤ 核心服务金刚区 —— */
+.r-service-grid {
+  background: #fff; border-radius: 16rpx; padding: 28rpx 12rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+  display: flex; justify-content: space-around;
+}
+.r-svc-item {
+  display: flex; flex-direction: column; align-items: center; gap: 12rpx;
+}
+.r-svc-item:active { opacity: 0.7; }
+.r-svc-circle {
+  width: 88rpx; height: 88rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40rpx;
+}
+.r-circle-sos    { background: #ffebee; }
+.r-circle-repair { background: #e8f5e9; }
+.r-circle-help   { background: #fff3e0; }
+.r-circle-bind   { background: #e3f2fd; }
+.r-svc-label { font-size: 26rpx; color: #333; font-weight: 500; }
+
+/* —— ⑥ 爱心礼遇 —— */
+.r-goods { margin-top: 6rpx; }
+.r-goods-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14rpx;
+}
+.r-goods-title { font-size: 34rpx; font-weight: 800; color: #333; }
+.r-goods-more { font-size: 26rpx; color: #999; }
+.r-goods-more:active { color: #4caf50; }
+
+/* ===== 爱心礼遇：纯块级布局 ===== */
+
+/* 滚动容器 — 必须显式高度，否则 Skyline 手机端坍塌 */
+.r-goods-scroll {
+  white-space: nowrap; width: 100%; height: 290rpx;
+}
+
+/* 卡片 — 全统一 inline-block */
+.r-goods-card {
+  width: 200rpx; display: inline-block; vertical-align: top;
+  background: #fff; border-radius: 14rpx; padding: 14rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.03); margin-right: 16rpx;
+}
+.r-goods-card:last-child { margin-right: 0; }
+.r-goods-card:active  { opacity: 0.8; }
+
+/* 图片区 — 所有卡片的图片区完全同等 */
+.r-goods-img {
+  width: 200rpx; height: 160rpx; border-radius: 14rpx;
+  text-align: center; overflow: hidden; margin-bottom: 12rpx;
+}
+/* 红色抵扣券底 */
+.r-goods-red  { background: linear-gradient(135deg, #e53935, #ff5252); }
+/* 灰色普通商品底 */
+.r-goods-gray { background: #f3f4f6; }
+
+/* 抵扣券大数字 — 严格 160rpx */
+.r-goods-img-text {
+  display: block; height: 160rpx; line-height: 160rpx;
+  font-size: 52rpx; font-weight: 800; color: #fff; text-align: center;
+}
+
+/* 普通商品大图标 */
+.r-goods-img-emoji {
+  display: block; height: 160rpx; line-height: 160rpx;
+  font-size: 64rpx; text-align: center;
+}
+
+/* 商品名 */
+.r-goods-name {
+  font-size: 24rpx; color: #333; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* 积分价 */
+.r-goods-points { font-size: 24rpx; color: #e53935; font-weight: 700; margin-top: 6rpx; }
+/* 原价 */
+.r-goods-price-old { font-size: 20rpx; color: #999; text-decoration: line-through; margin-top: 2rpx; }
+
+/* —— ⑦ 推荐活动 —— */
+.r-events { margin-top: 6rpx; }
+.r-events-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14rpx;
+}
+.r-events-title { font-size: 34rpx; font-weight: 800; color: #333; }
+
+.r-events-banner {
+  border-radius: 16rpx; overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+}
+.r-events-img {
+  width: 100%; height: 320rpx; display: block; background: #f5f5f5;
+}
+
+/* —— ⑧ 未绑定引导 —— */
+.r-bind-guide {
+  background: #fff; border-radius: 20rpx; padding: 48rpx 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.r-bind-guide-icon { font-size: 72rpx; margin-bottom: 16rpx; }
+.r-bind-guide-title { font-size: 32rpx; font-weight: 700; color: #333; margin-bottom: 10rpx; }
+.r-bind-guide-desc { font-size: 26rpx; color: #999; line-height: 1.5; margin-bottom: 24rpx; }
+.r-bind-guide-btn {
+  width: 100%; height: 84rpx; line-height: 84rpx; border-radius: 18rpx;
+  background: linear-gradient(135deg, #4caf50, #43a047);
+  color: #fff; font-size: 30rpx; font-weight: 700; border: none;
+  box-shadow: 0 6rpx 20rpx rgba(76,175,80,0.25);
+}
+
+/* 浮动SOS */
+.float-sos {
+  position: fixed; right: 30rpx; bottom: 200rpx;
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  box-shadow: 0 8rpx 24rpx rgba(239,68,68,0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999; opacity: 0; transform: scale(0.5);
+  transition: all 0.3s ease;
+}
+.float-sos.show { opacity: 1; transform: scale(1); }
+.float-sos-icon { font-size: 50rpx; }
+
+/* ============================================================
+   管理员首页 — 仪表盘
+   ============================================================ */
+
+/* —— 毛玻璃静态卡片 —— */
+.admin-hero {
+  position: relative; border-radius: 28rpx; overflow: hidden;
+  background: linear-gradient(135deg,
+    rgba(165,180,252,0.55) 0%,
+    rgba(196,181,253,0.45) 18%,
+    rgba(251,207,232,0.4) 36%,
+    rgba(253,230,138,0.35) 54%,
+    rgba(125,211,252,0.45) 72%,
+    rgba(165,180,252,0.5) 100%
+  );
+  border: 1rpx solid rgba(255,255,255,0.35);
+  box-shadow: 0 8rpx 32rpx rgba(99,102,241,0.08);
+}
+.admin-hero-content {
+  position: relative; z-index: 1; padding: 36rpx 32rpx 28rpx;
+}
+.admin-hero-top {
+  display: flex; align-items: center; gap: 18rpx;
+}
+.admin-avatar-wrap {
+  width: 80rpx; height: 80rpx; border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.admin-avatar-text {
+  font-size: 36rpx; font-weight: 700; color: #1a1a2e;
+}
+.admin-hero-info {
+  display: flex; flex-direction: column; gap: 6rpx;
+}
+.admin-hello {
+  font-size: 36rpx; font-weight: 800; color: #1a1a2e;
+  letter-spacing: 2rpx;
+}
+.admin-role-tag {
+  display: inline-block; width: fit-content;
+  font-size: 22rpx; padding: 4rpx 16rpx; border-radius: 999rpx;
+  background: rgba(0,0,0,0.08); color: #1a1a2e; font-weight: 500;
+}
+.admin-hero-date {
+  display: block; margin-top: 18rpx; font-size: 24rpx;
+  color: rgba(0,0,0,0.5);
+}
+
+/* —— 关键指标行 —— */
+.admin-kpi-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14rpx;
+}
+.admin-kpi {
+  border-radius: 20rpx; padding: 24rpx 16rpx; text-align: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.04);
+}
+.repair-kpi { background: linear-gradient(135deg, #fef9c3, #fef3c7); }
+.help-kpi  { background: linear-gradient(135deg, #dbeafe, #eff6ff); }
+.sos-kpi   { background: linear-gradient(135deg, #fee2e2, #fef2f2); }
+.admin-kpi-num {
+  display: block; font-size: 46rpx; font-weight: 800; line-height: 1.1;
+}
+.repair-kpi .admin-kpi-num { color: #b45309; }
+.help-kpi  .admin-kpi-num { color: #1e40af; }
+.sos-kpi   .admin-kpi-num { color: #dc2626; }
+.admin-kpi-label {
+  display: block; font-size: 22rpx; color: #64748b; margin-top: 6rpx;
+}
+
+/* —— 快捷入口卡片列表 —— */
+.admin-actions {
+  display: flex; flex-direction: column; gap: 10rpx;
+}
+.admin-action-card {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #fff; border-radius: 18rpx; padding: 22rpx 22rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03);
+  gap: 16rpx;
+}
+.admin-action-card:active { background: #f8fafc; }
+.aac-left {
+  flex: 1; display: flex; align-items: center; gap: 18rpx; overflow: hidden;
+}
+.aac-icon-box {
+  width: 68rpx; height: 68rpx; border-radius: 18rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32rpx; flex-shrink: 0;
+}
+.todo-box   { background: #eff6ff; }
+.notice-box { background: #fef9c3; }
+.verify-box { background: #f0fdf4; }
+.house-box  { background: #f3e8ff; }
+.user-box   { background: #fce7f3; }
+.dash-box   { background: #e0f2fe; }
+.aac-info {
+  flex: 1; overflow: hidden;
+  display: flex; flex-direction: column; gap: 4rpx;
+}
+.aac-title {
+  font-size: 30rpx; font-weight: 700; color: #1e293b;
+}
+.aac-desc {
+  font-size: 24rpx; color: #94a3b8;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.aac-arrow {
+  font-size: 40rpx; color: #cbd5e1; flex-shrink: 0; font-weight: 300;
 }

@@ -1,20 +1,109 @@
-.wrap {
-  padding: 24rpx;
+/* ============================================================
+   顶部计数条
+   ============================================================ */
+.verify-ribbon {
+  margin: 16rpx 24rpx 0; padding: 24rpx 28rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #fff7ed, #fffbeb);
+  border: 2rpx solid #fed7aa;
+  display: flex; align-items: center; gap: 12rpx;
 }
-.mt {
-  margin-top: 12rpx;
+.verify-ribbon-icon { font-size: 36rpx; }
+.verify-ribbon-num {
+  font-size: 48rpx; font-weight: 800; color: #f59e0b; line-height: 1;
 }
-.item {
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid #f3f4f6;
-}
-.title {
-  font-size: 30rpx;
-  font-weight: 600;
-  color: #111827;
-}
-.actions {
-  display: flex;
-  gap: 10rpx;
+.verify-ribbon-text {
+  font-size: 28rpx; color: #92400e; font-weight: 500;
 }
 
+/* ============================================================
+   核验卡片
+   ============================================================ */
+.verify-card {
+  background: #fff; border-radius: 24rpx; padding: 28rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+  margin-top: 18rpx;
+}
+.vc-head {
+  display: flex; align-items: center; gap: 16rpx;
+}
+.vc-avatar {
+  width: 72rpx; height: 72rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #dbeafe, #93c5fd);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32rpx; font-weight: 700; color: #1e40af; flex-shrink: 0;
+}
+.vc-user {
+  flex: 1; display: flex; flex-direction: column; gap: 4rpx;
+}
+.vc-name {
+  font-size: 30rpx; font-weight: 700; color: #1e293b;
+}
+.vc-phone {
+  font-size: 24rpx; color: #94a3b8;
+}
+.vc-badge {
+  flex-shrink: 0; font-size: 22rpx; padding: 8rpx 18rpx;
+  border-radius: 999rpx; background: #fef3c7; color: #92400e;
+  font-weight: 700;
+}
+
+/* 地址行 */
+.vc-addr {
+  display: flex; align-items: center; gap: 10rpx;
+  margin-top: 18rpx; padding: 18rpx 20rpx;
+  border-radius: 14rpx; background: #f8fafc;
+  border: 1rpx solid #f1f5f9;
+}
+.vc-addr-icon { font-size: 28rpx; flex-shrink: 0; }
+.vc-addr-text {
+  font-size: 28rpx; color: #475569; font-weight: 500;
+}
+
+/* 操作按钮 */
+.vc-actions {
+  display: flex; gap: 14rpx; margin-top: 18rpx;
+}
+.vc-btn-approve, .vc-btn-reject {
+  flex: 1; height: 72rpx; line-height: 72rpx;
+  font-size: 28rpx; font-weight: 600; border-radius: 14rpx; border: none;
+}
+.vc-btn-approve {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff; box-shadow: 0 4rpx 16rpx rgba(59,130,246,0.2);
+}
+.vc-btn-reject {
+  background: #fff; color: #ef4444;
+  border: 2rpx solid #fecaca;
+}
+.vc-btn-approve:active { opacity: 0.85; }
+.vc-btn-reject:active { background: #fef2f2; }
+
+/* ============================================================
+   空状态卡片
+   ============================================================ */
+.soft-empty-card {
+  background: #fff; border-radius: 24rpx; padding: 64rpx 32rpx;
+  display: flex; flex-direction: column; align-items: center;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); text-align: center;
+}
+.empty-circle {
+  width: 120rpx; height: 120rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20rpx;
+}
+.empty-circle-icon { font-size: 56rpx; }
+.empty-title-lg {
+  font-size: 32rpx; font-weight: 700; color: #1e293b; margin-bottom: 8rpx;
+}
+.empty-desc-lg {
+  font-size: 26rpx; color: #94a3b8; margin-bottom: 24rpx;
+}
+.btn-refresh-lg {
+  border-radius: 14rpx; font-size: 26rpx; padding: 14rpx 36rpx;
+  background: #f1f5f9; color: #475569; border: 1rpx solid #e2e8f0;
+}
+
+/* wrap */
+.wrap { padding: 0 24rpx 24rpx; display: flex; flex-direction: column; }

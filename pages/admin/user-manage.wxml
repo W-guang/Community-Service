@@ -1,83 +1,129 @@
 <navigation-bar title="用户管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
-  <view class="wrap">
 
-    <!-- ========== 用户列表 ========== -->
-    <view class="card">
-      <view class="row">
-        <view class="section-title">用户列表（共 {{usersTotal}} 人）</view>
-      </view>
-      <!-- 角色筛选 -->
-      <view class="filter-row mt">
-        <view class="filter-tag {{userFilterRole==='' ? 'on' : ''}}" bindtap="onFilterRole" data-role="">全部</view>
-        <view class="filter-tag {{userFilterRole==='resident' ? 'on' : ''}}" bindtap="onFilterRole" data-role="resident">居民</view>
-        <view class="filter-tag {{userFilterRole==='staff' ? 'on' : ''}}" bindtap="onFilterRole" data-role="staff">网格员</view>
-        <view class="filter-tag {{userFilterRole==='admin' ? 'on' : ''}}" bindtap="onFilterRole" data-role="admin">管理员</view>
-      </view>
-      <!-- 搜索 -->
-      <view class="search-row mt">
-        <input placeholder="搜索 openid 或昵称" value="{{userKeyword}}" bindinput="onSearchInput" />
-        <button size="mini" class="btn" bindtap="onSearch">搜索</button>
-      </view>
-      <!-- 列表 -->
-      <view wx:if="{{loadingUsers}}" class="muted" style="text-align:center;padding:20rpx">加载中...</view>
-      <view wx:elif="{{!users.length}}" class="muted" style="text-align:center;padding:20rpx">暂无用户数据</view>
-      <view wx:else class="user-list mt">
-        <view wx:for="{{users}}" wx:key="_id" class="user-item" bindtap="quickSet" data-user="{{item}}">
-          <view class="user-info">
-            <view class="user-name">{{item.nickname || '未设置昵称'}}</view>
-            <view class="user-id">{{item.openid}}</view>
-            <view class="user-time">{{item.timeText}}</view>
+  <view class="wrap">
+    <!-- 用户列表 -->
+    <view class="section-card user-list-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon user-icon">👥</view>
+          <view class="sec-head-text">
+            <text class="sec-title">用户列表</text>
+            <text class="sec-sub">共 {{users.length}} 人</text>
           </view>
-          <view class="user-role role-{{item.role}}">{{item.roleText}}</view>
+        </view>
+      </view>
+
+      <!-- 筛选 -->
+      <view class="um-filters">
+        <view class="um-filter {{userFilterRole==='' ? 'on all' : ''}}" bindtap="onFilterRole" data-role="">全部</view>
+        <view class="um-filter {{userFilterRole==='resident' ? 'on resident' : ''}}" bindtap="onFilterRole" data-role="resident">👤 居民</view>
+        <view class="um-filter {{userFilterRole==='staff' ? 'on staff' : ''}}" bindtap="onFilterRole" data-role="staff">👷 网格员</view>
+        <view class="um-filter {{userFilterRole==='admin' ? 'on admin' : ''}}" bindtap="onFilterRole" data-role="admin">👑 管理员</view>
+      </view>
+
+      <!-- 搜索 -->
+      <view class="um-search">
+        <view class="um-search-box">
+          <text class="um-search-icon">🔍</text>
+          <input class="um-search-input" placeholder="搜索 openid 或昵称..." value="{{userKeyword}}" bindinput="onSearchInput" confirm-type="search" bindconfirm="onSearch" />
+        </view>
+        <button size="mini" class="um-search-btn" bindtap="onSearch">搜索</button>
+      </view>
+
+      <!-- 列表区 -->
+      <view class="um-status" wx:if="{{loadingUsers}}">
+        <text class="muted">加载中...</text>
+      </view>
+      <view class="empty-soft" wx:elif="{{!users.length}}">
+        <text class="empty-soft-icon">📭</text>
+        <text class="empty-soft-text">{{userFilterRole || userKeyword ? '没有匹配的用户' : '暂无用户数据'}}</text>
+      </view>
+      <view wx:else class="um-list">
+        <view wx:for="{{users}}" wx:key="_id" class="um-item" bindtap="quickSet" data-user="{{item}}">
+          <view class="um-avatar {{item.role}}">
+            <text>{{item.nickname ? item.nickname[0] : '?'}}</text>
+          </view>
+          <view class="um-info">
+            <view class="um-name-row">
+              <text class="um-name">{{item.nickname || '未设置昵称'}}</text>
+              <view class="um-role-pill {{item.role}}">{{item.roleText}}</view>
+            </view>
+            <text class="um-oid">{{item.openid}}</text>
+            <text class="um-time">{{item.timeText}}</text>
+          </view>
         </view>
       </view>
     </view>
 
-    <!-- ========== 角色设置 ========== -->
-    <view class="card form">
-      <view class="section-title">设置/修改角色</view>
-      <view class="muted mt">点击上方用户可快速填充 openid</view>
-
-      <view class="field mt">
-        <view class="label">目标 openid</view>
-        <input placeholder="从上方列表点击或手动输入" value="{{form.openid}}" bindinput="onInput" data-k="openid" />
-      </view>
-      <view class="field">
-        <view class="label">角色</view>
-        <picker mode="selector" range="{{roles}}" value="{{roleIndex}}" bindchange="onPickRole">
-          <view class="picker">{{roles[roleIndex]}}</view>
-        </picker>
+    <!-- 角色设置 -->
+    <view class="section-card role-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon role-icon">⚙️</view>
+          <view class="sec-head-text">
+            <text class="sec-title">角色设置</text>
+            <text class="sec-sub">点击上方用户可快速填充</text>
+          </view>
+        </view>
       </view>
 
-      <view class="field" wx:if="{{roles[roleIndex]==='staff'}}">
-        <view class="label">管辖小区（逗号分隔）</view>
-        <input placeholder="例如：学府小区,锦绣花园" value="{{form.managedCommunities}}" bindinput="onInput" data-k="managedCommunities" />
-        <view class="muted">网格员只能审批管辖小区的房屋绑定。</view>
-      </view>
+      <view class="role-form">
+        <view class="role-field">
+          <text class="role-label">目标用户 openid</text>
+          <input placeholder="点击列表或手动输入" value="{{form.openid}}" bindinput="onInput" data-k="openid" />
+        </view>
 
-      <view class="row mt">
-        <button class="btn-primary" style="flex:1" loading="{{saving}}" bindtap="save">保存角色</button>
-      </view>
-      <view class="row mt" wx:if="{{roles[roleIndex]==='admin'}}">
-        <button class="btn" style="flex:1" bindtap="addAdmin">同时添加到管理员白名单</button>
+        <view class="role-field">
+          <text class="role-label">角色</text>
+          <picker mode="selector" range="{{roles}}" value="{{roleIndex}}" bindchange="onPickRole">
+            <view class="role-picker">
+              <text>{{roles[roleIndex] === 'admin' ? '👑 管理员' : roles[roleIndex] === 'staff' ? '👷 网格员' : '👤 居民'}}</text>
+              <text class="role-picker-arrow">▾</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="role-field" wx:if="{{roles[roleIndex]==='staff'}}">
+          <text class="role-label">管辖小区</text>
+          <input placeholder="多个小区用逗号分隔" value="{{form.managedCommunities}}" bindinput="onInput" data-k="managedCommunities" />
+          <text class="role-hint">网格员只能审批管辖小区内的房屋绑定请求</text>
+        </view>
+
+        <view class="role-btns">
+          <button class="role-btn-save" loading="{{saving}}" bindtap="save">💾 保存角色</button>
+          <button class="role-btn-add" wx:if="{{roles[roleIndex]==='admin'}}" bindtap="addAdmin">⭐ 加白名单</button>
+        </view>
       </view>
     </view>
 
-    <!-- ========== 管理员白名单 ========== -->
-    <view class="card">
-      <view class="section-title">管理员白名单管理</view>
-      <view class="muted">白名单用于系统启动时识别管理员。普通管理员通过角色设置，白名单确保关键管理员始终可访问。</view>
-      <view class="muted mt" wx:if="{{users.length}}">
-        当前管理员：
-        <text wx:for="{{users}}" wx:if="{{item.role==='admin'}}" wx:key="_id" style="margin-right:12rpx">
-          {{item.nickname || item.openid.slice(-8)}}
-          <text style="color:#e74c3c;font-size:22rpx" bindtap="removeAdmin" data-openid="{{item.openid}}"> [移除]</text>
-        </text>
+    <!-- 管理员白名单 -->
+    <view class="section-card wl-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon wl-icon">🛡️</view>
+          <view class="sec-head-text">
+            <text class="sec-title">管理员白名单</text>
+            <text class="sec-sub">保障关键管理员身份识别</text>
+          </view>
+        </view>
+      </view>
+      <text class="wl-desc">白名单用于系统启动时识别管理员身份，确保关键管理员始终拥有访问权限。</text>
+
+      <view wx:if="{{users.length}}" class="wl-tags-wrap">
+        <text class="wl-tags-label">当前管理员：</text>
+        <view class="wl-tags">
+          <view wx:for="{{users}}" wx:if="{{item.role==='admin'}}" wx:key="_id" class="wl-tag">
+            <text>{{item.nickname || item.openid.slice(-8)}}</text>
+            <text class="wl-tag-x" bindtap="removeAdmin" data-openid="{{item.openid}}"> ✕</text>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="wl-empty">
+        <text class="muted">暂无管理员白名单</text>
       </view>
     </view>
-
   </view>
 
 </scroll-view>

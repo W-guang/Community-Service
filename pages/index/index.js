@@ -6,18 +6,30 @@ function roleText(role) {
   return '居民'
 }
 
+function buildGreeting() {
+  const now = new Date()
+  const h = now.getHours()
+  let text = '早上好'
+  if (h >= 12 && h < 18) text = '下午好'
+  if (h >= 18 || h < 6) text = '晚上好'
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六']
+  const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 星期${weekDays[now.getDay()]}`
+  return { greetingText: text, todayDate: dateStr }
+}
+
 Page({
   data: {
     user: null, roleText: '居民', authed: false, boundCount: 0,
     noticeList: [], loading: true, elderMode: false,
     adminMode: false, adminStats: null,
+    greetingText: '', todayDate: '',
   },
   async onShow() {
     await this.ensureAuth()
     const app = getApp()
     const isStaff = app.globalData.user && (app.globalData.user.role === 'staff' || app.globalData.user.role === 'admin')
     const adminMode = app.isAdminMode ? app.isAdminMode() : false
-    this.setData({ adminMode, isStaff })
+    this.setData({ adminMode, isStaff, ...buildGreeting() })
     if (adminMode) {
       this.setData({ loading: false })
       this.loadAdminStats()
@@ -69,6 +81,7 @@ Page({
   goHelp() { wx.switchTab({ url: '/pages/help/list' }) },
   goNotices() { wx.switchTab({ url: '/pages/notices/list' }) },
   goBind() { wx.navigateTo({ url: '/pages/house/bind' }) },
+  goGift() { wx.navigateTo({ url: '/pages/gift/list' }) },
   go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
   async sos() {
     try {

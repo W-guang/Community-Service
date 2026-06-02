@@ -1,71 +1,103 @@
 <navigation-bar title="房屋信息管理" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
+
   <view class="wrap">
-
     <!-- 录入表单 -->
-    <view class="card">
-      <view class="row">
-        <view class="section-title">录入房屋</view>
-        <button size="mini" bindtap="toggleBatch">{{batchMode ? '切回单个' : '切换批量'}}</button>
-      </view>
-
-      <!-- 小区/楼栋/单元 —— 切换模式时不变 -->
-      <view class="field mt">
-        <view class="label">小区名称</view>
-        <input placeholder="例如：学府小区" value="{{community}}" bindinput="onCommunity" />
-      </view>
-      <view class="field">
-        <view class="label">楼栋号</view>
-        <input placeholder="例如：3号楼" value="{{building}}" bindinput="onBuilding" />
-      </view>
-      <view class="field">
-        <view class="label">单元号</view>
-        <input placeholder="例如：2单元" value="{{unit}}" bindinput="onUnit" />
-      </view>
-
-      <!-- 批量模式：房号列表 -->
-      <view wx:if="{{batchMode}}">
-        <view class="field">
-          <view class="label">房号列表（逗号分隔）</view>
-          <input placeholder="例如：101,102,103,201,202" value="{{batchRooms}}" bindinput="onBatchRooms" />
+    <view class="section-card form-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon form-icon">🏗️</view>
+          <view class="sec-head-text">
+            <text class="sec-title">录入房屋信息</text>
+            <text class="sec-sub">{{batchMode ? '批量添加模式' : '单个添加模式'}}</text>
+          </view>
         </view>
-        <view class="muted">用逗号分隔房号，例如 101,102,103</view>
-      </view>
-
-      <!-- 单个模式：房号 -->
-      <view wx:else>
-        <view class="field">
-          <view class="label">房号</view>
-          <input placeholder="例如：1202" value="{{room}}" bindinput="onRoom" />
+        <view class="mode-switch" bindtap="toggleBatch">
+          <text class="mode-opt {{!batchMode ? 'on' : ''}}">单个</text>
+          <text class="mode-opt {{batchMode ? 'on' : ''}}">批量</text>
         </view>
       </view>
 
-      <button class="btn-primary mt" loading="{{adding}}" bindtap="add">{{batchMode ? '批量添加' : '添加房屋'}}</button>
-      <view class="muted mt" wx:if="{{batchResult}}" style="color:#1296db">{{batchResult}}</view>
+      <view class="hm-form">
+        <view class="hm-form-row">
+          <view class="hm-field flex-1">
+            <text class="hm-label">小区名称</text>
+            <input placeholder="例如：学府小区" value="{{form.community}}" bindinput="onInput" data-k="community" />
+          </view>
+          <view class="hm-field flex-1">
+            <text class="hm-label">楼栋号</text>
+            <input placeholder="例如：3号楼" value="{{form.building}}" bindinput="onInput" data-k="building" />
+          </view>
+        </view>
+
+        <view class="hm-form-row">
+          <view class="hm-field flex-1">
+            <text class="hm-label">单元号</text>
+            <input placeholder="例如：2单元" value="{{form.unit}}" bindinput="onInput" data-k="unit" />
+          </view>
+          <block wx:if="{{!batchMode}}">
+            <view class="hm-field flex-1">
+              <text class="hm-label">房号</text>
+              <input placeholder="例如：1202" value="{{form.room}}" bindinput="onInput" data-k="room" />
+            </view>
+          </block>
+        </view>
+
+        <block wx:if="{{batchMode}}">
+          <view class="hm-field">
+            <text class="hm-label">房号列表</text>
+            <textarea placeholder="用逗号或换行分隔，如：101,102,103,201,202" value="{{batchRooms}}" bindinput="onBatchInput" />
+          </view>
+          <view class="hm-hint">
+            <text class="hm-hint-icon">💡</text>
+            <text class="hm-hint-text">支持逗号或换行分隔多个房号，系统自动跳过已存在的房屋</text>
+          </view>
+        </block>
+
+        <button class="hm-submit" loading="{{adding}}" bindtap="add">
+          {{batchMode ? '📦 批量录入' : '➕ 录入房屋'}}
+        </button>
+
+        <view wx:if="{{batchResult}}" class="hm-result">
+          <text class="hm-result-text">{{batchResult}}</text>
+        </view>
+      </view>
     </view>
 
     <!-- 房屋列表 -->
-    <view class="card">
-      <view class="row">
-        <view class="section-title">已录入（共{{total}}条）</view>
-        <button size="mini" bindtap="load">刷新</button>
+    <view class="section-card list-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon list-icon">📋</view>
+          <view class="sec-head-text">
+            <text class="sec-title">已录入房屋</text>
+            <text class="sec-sub">共 {{total}} 条记录</text>
+          </view>
+        </view>
+        <button size="mini" class="btn-mini-ghost" bindtap="load">刷新</button>
       </view>
 
-      <view wx:if="{{loading}}" class="muted" style="text-align:center;padding:20rpx">加载中...</view>
-      <view wx:elif="{{!items.length}}" class="empty-state">
-        <text class="empty-icon">🏠</text><text class="muted">暂无房屋数据</text>
+      <view class="hm-loading" wx:if="{{loading}}">
+        <text class="muted">加载中...</text>
       </view>
-      <view wx:else class="house-list mt">
-        <view wx:for="{{items}}" wx:key="_id" class="house-item">
-          <view class="col">
-            <view class="title">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</view>
+
+      <view class="empty-soft" wx:elif="{{!items.length}}">
+        <text class="empty-soft-icon">🏠</text>
+        <text class="empty-soft-text">暂无房屋数据</text>
+        <text class="empty-soft-sub">在上方表单中录入小区房屋信息</text>
+      </view>
+
+      <view wx:else class="hm-table">
+        <view wx:for="{{items}}" wx:key="_id" class="hm-row">
+          <view class="hm-row-left">
+            <text class="hm-row-addr">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</text>
           </view>
-          <button size="mini" bindtap="deleteHouse" data-id="{{item._id}}" data-label="{{item.community}}{{item.building}}{{item.unit}}{{item.room}}">删除</button>
+          <button size="mini" class="hm-row-del" bindtap="deleteHouse" data-id="{{item._id}}" data-label="{{item.community}}{{item.building}}{{item.unit}}{{item.room}}">删除</button>
         </view>
       </view>
     </view>
-
   </view>
+
 </scroll-view>
 </view>

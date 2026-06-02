@@ -2,83 +2,196 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
-    <!-- 用户信息卡片 -->
-    <view class="card">
-      <view class="row">
-        <view class="section-title">{{user.nickname || '未设置昵称'}}</view>
-        <view class="tag">{{roleText}}</view>
-      </view>
-      <view class="muted mt">OpenID：{{user.openid}}</view>
-      <view class="row mt">
-        <button class="btn" size="mini" bindtap="wxLogin">微信授权更新</button>
-        <button class="btn" size="mini" bindtap="goHouses">我的房屋</button>
-      </view>
-    </view>
 
-    <!-- 模式切换开关（仅staff/admin可见） -->
-    <view class="card admin-switch-card" wx:if="{{isStaff}}" bindtap="toggleAdminMode">
-      <view class="row">
-        <view class="column">
-          <view class="section-title">{{adminMode ? '🔧 管理模式' : '🏠 普通模式'}}</view>
-          <view class="muted">{{adminMode ? '点击返回普通用户视图' : '点击切换到管理视图'}}</view>
+    <!-- ===== 普通用户模式 ===== -->
+    <block wx:if="{{!adminMode}}">
+
+      <!-- 1. 个人信息栏 -->
+      <view class="m-user-row">
+        <view class="m-avatar">
+          <text>👤</text>
         </view>
-        <view class="mode-badge {{adminMode ? 'on' : ''}}">{{adminMode ? '管理中' : '普通'}}</view>
+        <text class="m-user-name">{{user.nickname || '登录/注册'}}</text>
       </view>
-    </view>
 
-    <!-- ========== 管理模式：数据看板 ========== -->
-    <block wx:if="{{adminMode && stats}}">
-      <view class="card">
-        <view class="section-title">📊 数据概览</view>
-        <view class="stats-grid">
-          <view class="stat-item"><view class="stat-num">{{stats.users.total || 0}}</view><view class="stat-label">注册用户</view></view>
-          <view class="stat-item"><view class="stat-num">{{stats.houses.bound || 0}}</view><view class="stat-label">已绑定房屋</view></view>
-          <view class="stat-item warn"><view class="stat-num">{{stats.repairs.pending || 0}}</view><view class="stat-label">待受理报修</view></view>
-          <view class="stat-item warn"><view class="stat-num">{{stats.helps.open || 0}}</view><view class="stat-label">待接单互助</view></view>
-          <view class="stat-item danger"><view class="stat-num">{{stats.sos.pending || 0}}</view><view class="stat-label">紧急求助</view></view>
-          <view class="stat-item"><view class="stat-num">{{stats.notices.total || 0}}</view><view class="stat-label">公告总数</view></view>
+      <!-- 2. 资产数据行 -->
+      <view class="m-assets">
+        <view class="m-asset-item">
+          <text class="m-asset-val">0</text>
+          <text class="m-asset-label">卡券</text>
+        </view>
+        <view class="m-asset-item">
+          <text class="m-asset-val">{{user.totalPoints || 0}}</text>
+          <text class="m-asset-label">积分</text>
         </view>
       </view>
 
-      <view class="card">
-        <view class="section-title">管理功能</view>
-        <view class="admin-menu">
-          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/todo"><view class="menu-icon">📋</view><view class="menu-info"><view class="menu-name">待办处理</view><view class="menu-desc">报修工单与SOS求助</view></view><view class="arrow">></view></view>
-          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/notice-manage"><view class="menu-icon">📢</view><view class="menu-info"><view class="menu-name">公告管理</view><view class="menu-desc">发布与编辑社区公告</view></view><view class="arrow">></view></view>
-          <view class="admin-menu-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage"><view class="menu-icon">👥</view><view class="menu-info"><view class="menu-name">用户管理</view><view class="menu-desc">角色分配与白名单</view></view><view class="arrow">></view></view>
-          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/house-verify"><view class="menu-icon">✅</view><view class="menu-info"><view class="menu-name">房屋核验</view><view class="menu-desc">审核绑定申请</view></view><view class="arrow">></view></view>
-          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/house-manage"><view class="menu-icon">🏠</view><view class="menu-info"><view class="menu-name">房屋录入</view><view class="menu-desc">录入小区房屋信息</view></view><view class="arrow">></view></view>
-          <view class="admin-menu-item" bindtap="go" data-url="/pages/admin/dashboard"><view class="menu-icon">📈</view><view class="menu-info"><view class="menu-name">数据看板</view><view class="menu-desc">详细统计与报表导出</view></view><view class="arrow">></view></view>
+      <!-- 3. 三大促销卡片 -->
+      <view class="m-promo-grid">
+        <view class="m-promo-card">
+          <image class="m-promo-bg" src="/lingquan.jpg" mode="aspectFill" />
+          <text class="m-promo-title">领券中心</text>
+          <text class="m-promo-desc">0张优惠券待领取</text>
+        </view>
+        <view class="m-promo-card" bindtap="openLottery">
+          <image class="m-promo-bg" src="/choujiang.jpg" mode="aspectFill" />
+          <text class="m-promo-title">积分转盘</text>
+          <text class="m-promo-desc">超值好礼随手抽</text>
+        </view>
+        <view class="m-promo-card" bindtap="goGift">
+          <image class="m-promo-bg" src="/shangcheng.jpg" mode="aspectFill" />
+          <text class="m-promo-title">爱心商城</text>
+          <text class="m-promo-desc">业主的百货超市</text>
         </view>
       </view>
+
+      <!-- 4. 模式切换（仅 staff/admin） -->
+      <view class="m-mode-card" wx:if="{{isStaff}}" bindtap="toggleAdminMode">
+        <view class="m-mode-left">
+          <text class="m-mode-icon">🔄</text>
+          <view class="m-mode-text">
+            <text class="m-mode-title">切换到管理模式</text>
+            <text class="m-mode-desc">管理待办、公告、核验等事务</text>
+          </view>
+        </view>
+        <text class="m-mode-arrow">›</text>
+      </view>
+
+      <!-- 5. 设置列表 -->
+      <view class="m-list-card">
+        <view class="m-list-item" bindtap="toggleEdit">
+          <view class="m-list-left">
+            <text class="m-list-icon">✏️</text>
+            <text>个人信息</text>
+          </view>
+          <text class="m-list-arrow">›</text>
+        </view>
+        <view class="m-list-divider"></view>
+        <view class="m-list-item" bindtap="goHouses">
+          <view class="m-list-left">
+            <text class="m-list-icon">🏠</text>
+            <text>我的房屋</text>
+          </view>
+          <text class="m-list-arrow">›</text>
+        </view>
+        <view class="m-list-divider"></view>
+        <view class="m-list-item">
+          <view class="m-list-left">
+            <text class="m-list-icon">⚙️</text>
+            <text>设置</text>
+          </view>
+          <text class="m-list-arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 6. 个人信息编辑（展开/折叠） -->
+      <view class="m-edit-card" wx:if="{{showEdit}}">
+        <view class="m-edit-field">
+          <text class="m-edit-label">昵称</text>
+          <input placeholder="设置你的社区昵称" value="{{form.nickname}}" bindinput="onNick" />
+        </view>
+        <view class="m-edit-field">
+          <text class="m-edit-label">手机号</text>
+          <input placeholder="选填，方便求助时联系" value="{{form.phone}}" bindinput="onPhone" />
+        </view>
+        <view class="m-edit-switch">
+          <view class="m-edit-switch-info">
+            <text class="m-edit-switch-label">👴 老人模式</text>
+            <text class="m-edit-switch-desc">首页展示一键求助悬浮按钮</text>
+          </view>
+          <switch checked="{{form.elderMode}}" bindchange="onElder" color="#4caf50" />
+        </view>
+        <button class="m-edit-btn" loading="{{saving}}" bindtap="save">保存修改</button>
+
+        <button class="m-sos-btn" wx:if="{{form.elderMode}}" bindtap="sos">🆘 紧急求助</button>
+      </view>
+
     </block>
 
-    <!-- ========== 普通模式：个人信息 ========== -->
-    <block wx:if="{{!adminMode}}">
-      <view class="card form">
-        <view class="field"><view class="label">昵称</view><input placeholder="用于显示在沟通记录里" value="{{form.nickname}}" bindinput="onNick" /></view>
-        <view class="field"><view class="label">手机号</view><input placeholder="求助时可用（可选）" value="{{form.phone}}" bindinput="onPhone" /></view>
-        <view class="row"><view class="label">老人模式</view><switch checked="{{form.elderMode}}" bindchange="onElder" /></view>
-        <button class="btn-primary submit" loading="{{saving}}" bindtap="save">保存</button>
-      </view>
-
-      <view class="card" wx:if="{{isStaff}}">
-        <view class="section-title">管理入口</view>
-        <view class="menu">
-          <view class="menu-item" bindtap="go" data-url="/pages/admin/todo">待办处理（报修/求助）</view>
-          <view class="menu-item" bindtap="go" data-url="/pages/admin/notice-manage">公告发布/管理</view>
-          <view class="menu-item" wx:if="{{user.role==='admin'}}" bindtap="go" data-url="/pages/admin/user-manage">用户/网格员管理</view>
-          <view class="menu-item" bindtap="go" data-url="/pages/admin/house-verify">房屋核验</view>
-          <view class="menu-item" bindtap="go" data-url="/pages/admin/dashboard">数据看板</view>
+    <!-- ===== 管理模式 ===== -->
+    <block wx:if="{{adminMode}}">
+      <!-- 用户头部 -->
+      <view class="profile-hero">
+        <view class="profile-hero-inner">
+          <view class="profile-avatar">
+            <text>👤</text>
+          </view>
+          <text class="profile-name">{{user.nickname || '未设置昵称'}}</text>
+          <view class="profile-role {{user.role}}">{{roleText}}</view>
         </view>
       </view>
 
-      <view class="card" wx:if="{{form.elderMode}}">
-        <view class="section-title">老人模式 · 一键求助</view>
-        <button class="btn-danger sos" bindtap="sos">紧急求助</button>
+      <view class="mode-card" bindtap="toggleAdminMode">
+        <view class="mode-left">
+          <text class="mode-title">🔧 当前：管理模式</text>
+          <text class="mode-desc">点击返回普通用户视图</text>
+        </view>
+        <view class="mode-switch-pill on">管理中</view>
+      </view>
+
+      <view class="data-section" wx:if="{{stats}}">
+        <text class="data-title">📊 数据概览</text>
+        <view class="data-grid">
+          <view class="data-kpi"><text class="data-num">{{stats.users.total || 0}}</text><text class="data-label">注册用户</text></view>
+          <view class="data-kpi"><text class="data-num">{{stats.houses.bound || 0}}</text><text class="data-label">已绑定房屋</text></view>
+          <view class="data-kpi warn"><text class="data-num">{{stats.repairs.pending || 0}}</text><text class="data-label">待受理报修</text></view>
+          <view class="data-kpi warn"><text class="data-num">{{stats.helps.open || 0}}</text><text class="data-label">待接单互助</text></view>
+          <view class="data-kpi danger"><text class="data-num">{{stats.sos.pending || 0}}</text><text class="data-label">紧急求助</text></view>
+          <view class="data-kpi"><text class="data-num">{{stats.notices.total || 0}}</text><text class="data-label">公告总数</text></view>
+        </view>
+      </view>
+
+      <view class="admin-menu-card">
+        <text class="data-title">管理功能</text>
+        <view wx:for="{{adminMenus}}" wx:key="url" class="am-item" bindtap="go" data-url="{{item.url}}" wx:if="{{item.url !== '/pages/admin/user-manage' || user.role === 'admin'}}">
+          <view class="am-icon">{{item.icon}}</view>
+          <view class="am-info">
+            <text class="am-name">{{item.name}}</text>
+            <text class="am-desc">{{item.desc}}</text>
+          </view>
+          <text class="am-arrow">›</text>
+        </view>
       </view>
     </block>
 
   </view>
 </scroll-view>
+
+<!-- ===== 积分转盘弹窗 ===== -->
+<view class="lottery-mask" wx:if="{{lotteryShow}}" bindtap="closeLottery">
+  <view class="lottery-popup" catchtap="nop">
+    
+    <!-- 标题 -->
+    <text class="lottery-title">🎉 积分幸运转盘</text>
+
+    <view class="lw-shell">
+      <view class="lw-border">
+        <view class="lw-face" style="transform: rotate({{wheelDeg}}deg);">
+          <canvas type="2d" id="wheelCanvas" class="lw-canvas" style="width: 100%; height: 100%;"></canvas>
+        </view>
+      </view>
+      
+      <!-- 更漂亮的指针 -->
+      <view class="lw-hub">
+        <view class="lw-pointer"></view>
+      </view>
+    </view>
+
+    <view class="lw-btn {{lotterySpinning ? 'disabled' : ''}}" bindtap="doLottery">
+      <text>{{lotterySpinning ? '抽奖中...' : '🎯 开始抽奖'}}</text>
+    </view>
+
+    <view class="lottery-result {{lotteryResult ? 'show' : ''}}">
+      <block wx:if="{{lotteryResult}}">
+        <text wx:if="{{lotteryResult !== '谢谢惠顾'}}">🎉 恭喜获得 <text class="lottery-score">{{lotteryResult}}</text></text>
+        <text wx:else class="lottery-no-win">😅 {{lotteryResult}}，下次一定！</text>
+      </block>
+    </view>
+
+    <view class="lottery-footer">
+      <text class="lottery-remain">测试模式 · 不扣积分</text>
+      <text class="lottery-close" bindtap="closeLottery">关闭</text>
+    </view>
+  </view>
+</view>
 </view>

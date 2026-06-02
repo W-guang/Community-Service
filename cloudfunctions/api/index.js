@@ -1,6 +1,6 @@
 /**
  * 邻智灵云函数入口 — 路由分发器
- * 按业务领域拆分为独立模块：auth / house / repair / help / notice / sos / dashboard
+ * 按业务领域拆分为独立模块：auth / house / repair / help / notice / sos / dashboard / lottery
  * 共享工具模块 common.js 提供数据库实例、守卫函数、响应格式化
  */
 const cloud = require('wx-server-sdk')
@@ -14,6 +14,7 @@ const help = require('./modules/help')
 const notice = require('./modules/notice')
 const sos = require('./modules/sos')
 const dashboard = require('./modules/dashboard')
+const lottery = require('./modules/lottery')
 
 const ROUTES = {
   auth: auth.actionAuth,
@@ -58,6 +59,11 @@ const ROUTES = {
 
   'dashboard.stats': dashboard.actionDashboardStats,
   'dashboard.export': dashboard.actionDashboardExport,
+
+  'lottery.spin': lottery.actionLotterySpin,
+  'lottery.remain': lottery.actionLotteryRemain,
+  'lottery.history': lottery.actionLotteryHistory,
+  'lottery.prizes': lottery.actionLotteryPrizes,
 }
 
 exports.main = async (event) => {

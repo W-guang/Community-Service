@@ -3,67 +3,75 @@
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
 
-    <view class="card tip-card">
-      <view class="row" style="justify-content:flex-start;gap:16rpx">
-        <view class="card-icon">🏠</view>
-        <view class="col">
-          <text class="card-name">使用核心功能前必须绑定房屋</text>
-          <text class="card-desc">支持绑定多套房屋；同一房屋也可绑定多个家人</text>
-        </view>
+    <view class="tip-card">
+      <text class="tip-icon">🏠</text>
+      <view class="tip-text">
+        <text class="tip-title">绑定房屋</text>
+        <text class="tip-desc">绑定房屋后即可使用报修、公告、互助等核心功能。支持绑定多套房屋，同一房屋也可被多个家人绑定。</text>
       </view>
     </view>
 
-    <view class="card form-card">
-      <view class="section-title">📝 房屋信息</view>
-      <view class="form-content mt">
-        <view class="field">
-          <view class="label">小区名称</view>
-          <input placeholder="例如：学府小区" value="{{form.community}}" bindinput="onInput" data-k="community" />
-        </view>
-        <view class="field">
-          <view class="label">楼栋</view>
-          <input placeholder="例如：3号楼" value="{{form.building}}" bindinput="onInput" data-k="building" />
-        </view>
-        <view class="field">
-          <view class="label">单元</view>
-          <input placeholder="例如：2单元" value="{{form.unit}}" bindinput="onInput" data-k="unit" />
-        </view>
-        <view class="field">
-          <view class="label">房号</view>
-          <input placeholder="例如：1202" value="{{form.room}}" bindinput="onInput" data-k="room" />
-        </view>
-        <view class="field">
-          <view class="label">业主姓名</view>
-          <input placeholder="用于线下核验" value="{{form.name}}" bindinput="onInput" data-k="name" />
-        </view>
-        <view class="field">
-          <view class="label">手机号（可选）</view>
-          <input placeholder="便于联系" value="{{form.phone}}" bindinput="onInput" data-k="phone" />
-        </view>
-        <view class="row">
-          <button class="btn-primary" style="flex:1" loading="{{submitting}}" bindtap="submit">提交绑定</button>
-          <button class="btn" style="flex:1" bindtap="goMyHouses">我的房屋</button>
+    <view class="section-card">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon"><text>📝</text></view>
+          <text class="sec-title">房屋信息</text>
         </view>
       </view>
-    </view>
 
-    <view class="card" wx:if="{{bindings && bindings.houses && bindings.houses.length}}">
-      <view class="row">
-        <view class="section-title">我的绑定记录</view>
-        <button size="mini" class="btn" bindtap="refresh">刷新</button>
-      </view>
-      <view wx:for="{{bindings.houses}}" wx:key="_id" class="list-item mt" wx:if="{{index > 0 || true}}">
-        <view class="row">
-          <view class="col">
-            <view class="title">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</view>
-            <view class="muted">姓名：{{item.name}} <text wx:if="{{item.phone}}">· {{item.phone}}</text></view>
+      <view class="form">
+        <view class="form-row">
+          <view class="field flex-1">
+            <text class="label">小区名称</text>
+            <input placeholder="例如：学府小区" value="{{form.community}}" bindinput="onInput" data-k="community" />
           </view>
-          <view class="tag">{{statusText(item.status)}}</view>
+          <view class="field flex-1">
+            <text class="label">楼栋</text>
+            <input placeholder="例如：3号楼" value="{{form.building}}" bindinput="onInput" data-k="building" />
+          </view>
         </view>
+        <view class="form-row">
+          <view class="field flex-1">
+            <text class="label">单元</text>
+            <input placeholder="例如：2单元" value="{{form.unit}}" bindinput="onInput" data-k="unit" />
+          </view>
+          <view class="field flex-1">
+            <text class="label">房号</text>
+            <input placeholder="例如：1202" value="{{form.room}}" bindinput="onInput" data-k="room" />
+          </view>
+        </view>
+        <view class="form-row">
+          <view class="field flex-1">
+            <text class="label">业主姓名</text>
+            <input placeholder="用于线下核验身份" value="{{form.name}}" bindinput="onInput" data-k="name" />
+          </view>
+          <view class="field flex-1">
+            <text class="label">手机号（可选）</text>
+            <input placeholder="便于物业联系" value="{{form.phone}}" bindinput="onInput" data-k="phone" />
+          </view>
+        </view>
+
+        <view class="btn-row">
+          <button class="btn-submit" loading="{{submitting}}" bindtap="submit">提交绑定申请</button>
+          <button class="btn-outline" bindtap="goMyHouses">查看我的房屋</button>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-card bindings-card" wx:if="{{bindings && bindings.houses && bindings.houses.length}}">
+      <view class="sec-head">
+        <text class="sec-title">📋 我的绑定记录</text>
+        <button size="mini" class="btn-refresh" bindtap="refresh">刷新</button>
+      </view>
+      <view wx:for="{{bindings.houses}}" wx:key="_id" class="bind-item">
+        <view class="bind-info">
+          <text class="bind-addr">{{item.community}} {{item.building}} {{item.unit}} {{item.room}}</text>
+          <text class="bind-name">{{item.name}}<text wx:if="{{item.phone}}"> · {{item.phone}}</text></text>
+        </view>
+        <view class="bind-status {{item.status}}">{{statusText(item.status)}}</view>
       </view>
     </view>
 
   </view>
-
 </scroll-view>
 </view>

@@ -45,7 +45,8 @@ Page({
   async loadStats() {
     try {
       const res = await callApi('notice.stats', { _id: this.data._id })
-      this.setData({ stats: { totalUsers: res.totalUsers || 0, readUsers: res.readUsers || 0 } })
+      const total = res.totalUsers || 0; const read = res.readUsers || 0
+      this.setData({ stats: { totalUsers: total, readUsers: read, percent: total > 0 ? Math.round(read / total * 100) : 0 } })
     } catch (e) {
       wx.showToast({ title: e.message || '加载失败', icon: 'none' })
     }

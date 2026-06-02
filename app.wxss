@@ -1,27 +1,57 @@
 /**app.wxss**/
 
 /* ============================================================
-   页面容器 — 含Skyline滚动修复
+   页面根节点
+   ============================================================ */
+page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  --brand: #1296db;
+  --brand-dark: #0b7bc1;
+  --brand-light: #e3f2fd;
+  --accent-orange: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-green: #10b981;
+  --accent-purple: #8b5cf6;
+  --bg-page: #f0f2f8;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border-light: #f1f5f9;
+  --shadow-sm: 0 2rpx 12rpx rgba(0,0,0,0.04);
+  --shadow-md: 0 8rpx 24rpx rgba(0,0,0,0.06);
+  --radius-sm: 12rpx;
+  --radius-md: 20rpx;
+  --radius-lg: 28rpx;
+}
+
+/* ============================================================
+   页面容器
    ============================================================ */
 .page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: #F4F6F9;
+  flex: 1;
+  min-height: 0;
+  background: linear-gradient(180deg, #eef1f9 0%, #f5f6fb 100%);
   overflow: hidden;
 }
 
 .page-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: #F4F6F9;
+  flex: 1;
+  min-height: 0;
+  background: linear-gradient(180deg, #eef1f9 0%, #f5f6fb 100%);
   overflow: hidden;
 }
 
 .scroll-content {
   flex: 1;
-  height: 0;
+  min-height: 0;
 }
 
 /* ============================================================
@@ -32,7 +62,7 @@
   border-radius: 24rpx;
   padding: 30rpx;
   box-sizing: border-box;
-  box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.04);
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.04);
 }
 
 .card-hover {
@@ -46,42 +76,42 @@
 .section-title {
   font-size: 34rpx;
   font-weight: bold;
-  color: #111827;
+  color: #1e293b;
 }
 
 .muted {
-  color: #6b7280;
+  color: #64748b;
   font-size: 26rpx;
 }
 
 .content {
-  color: #111827;
+  color: #1e293b;
   font-size: 28rpx;
   white-space: pre-wrap;
 }
 
 /* ============================================================
-   按钮 — 统一24rpx圆角
+   按钮
    ============================================================ */
 .btn-primary {
-  background: linear-gradient(145deg, #1296db, #0b7bc1);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: #ffffff;
   border-radius: 24rpx;
-  box-shadow: 0 8rpx 16rpx rgba(18, 150, 219, 0.2);
+  box-shadow: 0 6rpx 20rpx rgba(59,130,246,0.25);
 }
 
 .btn-danger {
-  background: linear-gradient(145deg, #ff6b81, #ff4757);
+  background: linear-gradient(135deg, #f87171, #ef4444);
   color: #ffffff;
   border-radius: 24rpx;
-  box-shadow: 0 8rpx 16rpx rgba(255, 71, 87, 0.4);
+  box-shadow: 0 6rpx 20rpx rgba(239,68,68,0.25);
 }
 
 .btn {
   border-radius: 24rpx;
   background: #ffffff;
-  color: #111827;
-  border: 1rpx solid #e5e7eb;
+  color: #1e293b;
+  border: 1rpx solid #e2e8f0;
 }
 
 button.btn,
@@ -97,7 +127,7 @@ button::after {
 }
 
 /* ============================================================
-   布局工具 — 全局唯一版本
+   布局工具
    ============================================================ */
 .row {
   display: flex;
@@ -125,7 +155,7 @@ button::after {
 }
 
 /* ============================================================
-   标签 — Pill形状
+   标签
    ============================================================ */
 .tag {
   display: inline-flex;
@@ -136,16 +166,14 @@ button::after {
   color: #3730a3;
 }
 
-/* 状态标签颜色 — 全局统一 */
-.tag.status-open       { background: #d4edda; color: #155724; }
-.tag.status-taken      { background: #cce5ff; color: #004085; }
-.tag.status-waiting_confirm { background: #e8daef; color: #6c3483; }
-.tag.status-done       { background: #d4edda; color: #155724; }
-.tag.status-pending    { background: #fff3cd; color: #856404; }
-.tag.status-processing { background: #cce5ff; color: #004085; }
+.tag.status-open       { background: #d1fae5; color: #065f46; }
+.tag.status-taken      { background: #dbeafe; color: #1e40af; }
+.tag.status-waiting_confirm { background: #ede9fe; color: #5b21b6; }
+.tag.status-done       { background: #d1fae5; color: #065f46; }
+.tag.status-pending    { background: #fef3c7; color: #92400e; }
+.tag.status-processing { background: #dbeafe; color: #1e40af; }
 
-/* 重要标签 */
-.tag-important { background: #ffe3e3; color: #e74c3c; }
+.tag-important { background: #fee2e2; color: #dc2626; }
 
 /* ============================================================
    表单元素
@@ -156,39 +184,53 @@ button::after {
 
 .label {
   font-size: 30rpx;
-  color: #111827;
+  color: #1e293b;
   margin-bottom: 12rpx;
   font-weight: 500;
 }
 
-/* 统一input: borderless gray (大多数页面使用) */
 input {
   width: 100%;
-  padding: 18rpx 16rpx;
+  min-height: 80rpx;
+  padding: 14rpx 20rpx;
   border-radius: 14rpx;
-  background: #f3f4f6;
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
   box-sizing: border-box;
   font-size: 28rpx;
+  line-height: 1.4;
 }
 
-/* picker统一外观 */
+textarea {
+  width: 100%;
+  min-height: 220rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 14rpx;
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
 .picker {
   padding: 18rpx 16rpx;
   border-radius: 14rpx;
-  background: #f3f4f6;
-  color: #111827;
+  background: #f8fafc;
+  border: 1rpx solid #e2e8f0;
+  color: #1e293b;
 }
 
 /* ============================================================
    头部
    ============================================================ */
 .header-section {
-  background: linear-gradient(135deg, #1296db, #0b7bc1);
+  background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
   padding: 100rpx 40rpx 60rpx 40rpx;
   color: white;
   border-bottom-left-radius: 40rpx;
   border-bottom-right-radius: 40rpx;
-  box-shadow: 0 10rpx 20rpx rgba(18, 150, 219, 0.2);
+  box-shadow: 0 10rpx 30rpx rgba(59,130,246,0.2);
 }
 
 .greeting {
@@ -232,15 +274,15 @@ input {
   height: 80rpx;
   line-height: 80rpx;
   font-size: 28rpx;
-  color: #111827;
+  color: #1e293b;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .urgent-tag {
-  background-color: #ffe3e3;
-  color: #e74c3c;
+  background-color: #fee2e2;
+  color: #dc2626;
   font-size: 20rpx;
   padding: 2rpx 10rpx;
   border-radius: 8rpx;
@@ -262,7 +304,7 @@ input {
 }
 
 /* ============================================================
-   骨架屏 — 全局统一定义
+   骨架屏
    ============================================================ */
 .skeleton-card {
   background: #fff;
@@ -289,7 +331,7 @@ input {
 }
 
 /* ============================================================
-   空状态 — 全局统一定义
+   空状态
    ============================================================ */
 .empty-state {
   display: flex;
@@ -304,7 +346,7 @@ input {
 }
 
 /* ============================================================
-   时间线 — 全局统一定义
+   时间线
    ============================================================ */
 .timeline { padding: 10rpx 0; }
 
@@ -330,7 +372,7 @@ input {
 }
 
 .tl-item.active:not(:last-child)::before {
-  background: #1296db;
+  background: #3b82f6;
 }
 
 .tl-dot {
@@ -345,8 +387,8 @@ input {
 }
 
 .tl-item.active .tl-dot {
-  background: #1296db;
-  box-shadow: 0 0 0 6rpx rgba(18,150,219,0.15);
+  background: #3b82f6;
+  box-shadow: 0 0 0 6rpx rgba(59,130,246,0.15);
 }
 
 .tl-content { flex: 1; }
@@ -357,7 +399,7 @@ input {
   color: #9ca3af;
 }
 
-.tl-item.active .tl-title { color: #111827; }
+.tl-item.active .tl-title { color: #1e293b; }
 
 .tl-time {
   font-size: 24rpx;
@@ -366,7 +408,7 @@ input {
 }
 
 /* ============================================================
-   聊天气泡(报修/互助沟通)
+   聊天气泡
    ============================================================ */
 .comment-left  { display: flex; justify-content: flex-start; }
 .comment-right { display: flex; justify-content: flex-end; }
@@ -378,31 +420,31 @@ input {
 }
 
 .bubble-resident {
-  background: #e3f2fd;
+  background: #dbeafe;
   border-bottom-left-radius: 4rpx;
 }
 
 .bubble-staff {
-  background: #e8f5e9;
+  background: #d1fae5;
   border-bottom-right-radius: 4rpx;
 }
 
 .comment-name {
   font-size: 24rpx;
   font-weight: 600;
-  color: #6b7280;
+  color: #64748b;
   margin-bottom: 4rpx;
 }
 
 .comment-text {
   font-size: 28rpx;
-  color: #111827;
+  color: #1e293b;
   line-height: 1.5;
 }
 
 .comment-time {
   font-size: 22rpx;
-  color: #9ca3af;
+  color: #94a3b8;
   margin-top: 6rpx;
   text-align: right;
 }

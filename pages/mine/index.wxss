@@ -1,157 +1,268 @@
-.wrap {
-  padding: 24rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 18rpx;
-}
-.mt {
-  margin-top: 12rpx;
-}
-.column {
-  display: flex;
-  flex-direction: column;
-}
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 18rpx;
-}
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 12rpx;
-}
-.label {
-  color: #111827;
-  font-size: 28rpx;
-  font-weight: 600;
-}
-input {
-  width: 100%;
-  padding: 18rpx 16rpx;
-  border-radius: 14rpx;
-  background: #f3f4f6;
-  box-sizing: border-box;
-}
-.submit {
-  border-radius: 16rpx;
-}
-.roles {
-  display: flex;
-  gap: 12rpx;
-  margin-top: 14rpx;
-}
-.menu {
-  margin-top: 14rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 10rpx;
-}
-.menu-item {
-  padding: 20rpx 18rpx;
-  border-radius: 14rpx;
-  background: #f3f4f6;
-  color: #111827;
-}
-.sos {
-  margin-top: 14rpx;
-  height: 96rpx;
-  line-height: 96rpx;
-  border-radius: 18rpx;
-  font-size: 34rpx;
+/* 页面底色 */
+.page {
+  background: linear-gradient(180deg, #e6f4e3 0%, #f6f9f5 25%, #f7f9fa 100%);
 }
 
-/* 管理员模式切换卡片 */
-.admin-switch-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 2rpx dashed #adb5bd;
+/* ============================================================
+   1. 个人信息栏
+   ============================================================ */
+.m-user-row { display: flex; align-items: center; gap: 16rpx; padding: 20rpx 8rpx 8rpx; }
+.m-avatar { width: 96rpx; height: 96rpx; border-radius: 50%; background: #ffb74d; border: 3rpx solid #fff; box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; font-size: 48rpx; }
+.m-user-name { font-size: 36rpx; font-weight: 800; color: #333; }
+
+/* ============================================================
+   2. 资产数据行
+   ============================================================ */
+.m-assets { display: flex; justify-content: space-around; text-align: center; padding: 16rpx 40rpx 8rpx; }
+.m-asset-item { display: flex; flex-direction: column; align-items: center; gap: 6rpx; }
+.m-asset-val { font-size: 48rpx; font-weight: 800; color: #000; line-height: 1.1; }
+.m-asset-label { font-size: 26rpx; color: #666; }
+
+/* ============================================================
+   3. 三大促销卡片
+   ============================================================ */
+.m-promo-grid { display: flex; justify-content: space-between; gap: 8rpx; margin-bottom: 16rpx; }
+.m-promo-card { flex: 1; height: 180rpx; border-radius: 12rpx; padding: 14rpx 10rpx; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; position: relative; overflow: hidden; box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.02); }
+.m-promo-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 0; }
+.m-promo-title { position: relative; z-index: 1; font-size: 28rpx; font-weight: 800; color: #111; margin-bottom: 4rpx; }
+.m-promo-desc { position: relative; z-index: 1; font-size: 22rpx; color: #777; white-space: nowrap; }
+
+/* ============================================================
+   4. 模式切换卡片
+   ============================================================ */
+.m-mode-card { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 16rpx; padding: 22rpx 22rpx; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); gap: 16rpx; }
+.m-mode-card.on { background: #f5f3ff; border: 2rpx solid #ddd6fe; }
+.m-mode-card:active { opacity: 0.7; }
+.m-mode-left { flex: 1; display: flex; align-items: center; gap: 14rpx; }
+.m-mode-icon { font-size: 36rpx; }
+.m-mode-text { display: flex; flex-direction: column; gap: 4rpx; }
+.m-mode-title { font-size: 28rpx; font-weight: 700; color: #333; }
+.m-mode-desc { font-size: 24rpx; color: #999; }
+.m-mode-arrow { font-size: 38rpx; color: #cbd5e1; }
+.m-mode-badge { flex-shrink: 0; font-size: 24rpx; padding: 8rpx 20rpx; border-radius: 999rpx; font-weight: 700; background: #e2e8f0; color: #64748b; }
+.m-mode-badge.on { background: #8b5cf6; color: #fff; }
+
+/* ============================================================
+   5. 设置列表
+   ============================================================ */
+.m-list-card { background: #fff; border-radius: 16rpx; padding: 4rpx 20rpx; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); }
+.m-list-item { display: flex; align-items: center; justify-content: space-between; padding: 22rpx 0; gap: 14rpx; }
+.m-list-item:active { opacity: 0.6; }
+.m-list-left { flex: 1; display: flex; align-items: center; gap: 14rpx; font-size: 28rpx; color: #333; }
+.m-list-icon { font-size: 32rpx; flex-shrink: 0; width: 40rpx; text-align: center; }
+.m-list-text { display: flex; flex-direction: column; gap: 2rpx; }
+.m-list-name { font-size: 28rpx; font-weight: 600; color: #333; }
+.m-list-desc { font-size: 22rpx; color: #999; }
+.m-list-arrow { font-size: 36rpx; color: #cbd5e1; flex-shrink: 0; }
+.m-list-divider { height: 1rpx; background: #f5f5f5; }
+
+/* ============================================================
+   6. 编辑表单
+   ============================================================ */
+.m-edit-card { background: #fff; border-radius: 16rpx; padding: 28rpx; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 18rpx; }
+.m-edit-field { display: flex; flex-direction: column; gap: 8rpx; }
+.m-edit-label { font-size: 26rpx; font-weight: 600; color: #475569; }
+.m-edit-field input { width: 100%; min-height: 76rpx; padding: 14rpx 18rpx; border-radius: 12rpx; background: #f8fafc; border: 1rpx solid #e2e8f0; box-sizing: border-box; font-size: 28rpx; color: #1e293b; }
+.m-edit-switch { display: flex; align-items: center; justify-content: space-between; padding: 16rpx 18rpx; border-radius: 14rpx; background: #f8fafc; }
+.m-edit-switch-info { display: flex; flex-direction: column; gap: 2rpx; }
+.m-edit-switch-label { font-size: 26rpx; font-weight: 600; color: #475569; }
+.m-edit-switch-desc { font-size: 22rpx; color: #94a3b8; }
+.m-edit-btn { height: 80rpx; line-height: 80rpx; border-radius: 14rpx; background: linear-gradient(135deg, #4caf50, #43a047); color: #fff; font-size: 28rpx; font-weight: 700; border: none; box-shadow: 0 4rpx 16rpx rgba(76,175,80,0.2); }
+.m-edit-btn:active { opacity: 0.85; }
+.m-sos-btn { height: 88rpx; line-height: 88rpx; border-radius: 16rpx; background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; font-size: 30rpx; font-weight: 700; border: none; box-shadow: 0 6rpx 20rpx rgba(239,68,68,0.3); }
+.m-sos-btn:active { opacity: 0.85; }
+
+/* ============================================================
+   7. 个人头部: 毛玻璃静态卡片（仅管理模式）
+   ============================================================ */
+.profile-hero { position: relative; border-radius: 28rpx; overflow: hidden; background: linear-gradient(135deg, rgba(196,181,253,0.55) 0%, rgba(186,230,253,0.5) 20%, rgba(252,231,243,0.45) 45%, rgba(191,219,254,0.5) 70%, rgba(196,181,253,0.5) 100%); border: 1rpx solid rgba(255,255,255,0.35); box-shadow: 0 8rpx 32rpx rgba(139,92,246,0.08); }
+.profile-hero-inner { position: relative; z-index: 1; padding: 40rpx 32rpx 36rpx; display: flex; flex-direction: column; align-items: center; gap: 12rpx; }
+.profile-avatar { width: 96rpx; height: 96rpx; border-radius: 50%; background: rgba(255,255,255,0.28); border: 2rpx solid rgba(255,255,255,0.45); display: flex; align-items: center; justify-content: center; }
+.profile-avatar text { font-size: 42rpx; font-weight: 700; color: #1a1a2e; }
+.profile-name { font-size: 36rpx; font-weight: 800; color: #1a1a2e; }
+.profile-role { font-size: 22rpx; padding: 4rpx 16rpx; border-radius: 999rpx; background: rgba(0,0,0,0.08); color: #1a1a2e; font-weight: 500; }
+
+/* ============================================================
+   8. 管理模式（旧设计，未改动）
+   ============================================================ */
+.mode-card { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 24rpx; border-radius: 20rpx; background: linear-gradient(135deg, #f5f3ff, #fff); border: 2rpx solid #ddd6fe; gap: 16rpx; }
+.mode-card:active { background: #ede9fe; }
+.mode-left { flex: 1; display: flex; flex-direction: column; gap: 4rpx; }
+.mode-title { font-size: 28rpx; font-weight: 700; color: #5b21b6; }
+.mode-desc { font-size: 24rpx; color: #94a3b8; }
+.mode-switch-pill { flex-shrink: 0; font-size: 24rpx; padding: 10rpx 22rpx; border-radius: 999rpx; font-weight: 700; background: #e2e8f0; color: #64748b; }
+.mode-switch-pill.on { background: #8b5cf6; color: #fff; }
+.data-section { background: #fff; border-radius: 24rpx; padding: 24rpx; box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); }
+.data-title { font-size: 30rpx; font-weight: 700; color: #1e293b; margin-bottom: 14rpx; display: block; }
+.data-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10rpx; }
+.data-kpi { text-align: center; padding: 18rpx 8rpx; background: #f8fafc; border-radius: 14rpx; }
+.data-kpi.warn { background: #fff7ed; }
+.data-kpi.danger { background: #fef2f2; }
+.data-num { display: block; font-size: 38rpx; font-weight: 800; color: #1e293b; line-height: 1.2; }
+.data-kpi.warn .data-num { color: #f59e0b; }
+.data-kpi.danger .data-num { color: #ef4444; }
+.data-label { font-size: 22rpx; color: #94a3b8; margin-top: 2rpx; }
+.admin-menu-card { background: #fff; border-radius: 24rpx; padding: 24rpx; box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); }
+.am-item { display: flex; align-items: center; gap: 16rpx; padding: 18rpx 14rpx; border-radius: 14rpx; background: #fafcfd; border: 1rpx solid #f1f5f9; margin-top: 8rpx; }
+.am-item:active { background: #eff6ff; }
+.am-icon { font-size: 32rpx; flex-shrink: 0; }
+.am-info { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 2rpx; }
+.am-name { font-size: 28rpx; font-weight: 700; color: #1e293b; }
+.am-desc { font-size: 22rpx; color: #94a3b8; }
+.am-arrow { font-size: 36rpx; color: #cbd5e1; flex-shrink: 0; }
+
+/* 间距 */
+.wrap { padding: 14rpx 22rpx 30rpx; display: flex; flex-direction: column; gap: 16rpx; }
+
+/* ====================== 积分转盘弹窗 ====================== */
+.lottery-mask {
+  position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 999;
+  background: rgba(0,0,0,0.75);
+  display: flex; align-items: center; justify-content: center;
 }
-.admin-switch-card:active {
-  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-}
-.mode-indicator {
-  font-size: 48rpx;
-  width: 80rpx;
-  height: 80rpx;
+
+.lottery-popup {
+  width: 680rpx;
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 40rpx 30rpx 36rpx;
+  box-shadow: 0 20rpx 80rpx rgba(0,0,0,0.25);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-.mode-indicator.on {
-  background: #e3f2fd;
-}
-.mode-indicator.off {
-  background: #f5f5f5;
 }
 
-/* 数据看板网格 */
-.stats-grid {
-  margin-top: 16rpx;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12rpx;
-}
-.stat-item {
-  padding: 18rpx 12rpx;
-  border-radius: 14rpx;
-  background: #f8f9fa;
-  text-align: center;
-}
-.stat-item.warn {
-  background: #fff3cd;
-}
-.stat-item.danger {
-  background: #ffe3e3;
-}
-.stat-num {
+.lottery-title {
   font-size: 36rpx;
   font-weight: 700;
-  color: #111827;
-}
-.stat-label {
-  font-size: 22rpx;
-  color: #6b7280;
-  margin-top: 4rpx;
+  color: #333;
+  margin-bottom: 30rpx;
 }
 
-/* 管理功能菜单 */
-.admin-menu {
-  margin-top: 14rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
+/* 转盘外壳 */
+.lw-shell {
+  width: 580rpx;
+  height: 580rpx;
+  padding: 20rpx;
+  background: linear-gradient(145deg, #ffd700, #ff8c00, #ff4757);
+  border-radius: 50%;
+  box-shadow:
+    0 10rpx 40rpx rgba(255, 140, 0, 0.4),
+    inset 0 8rpx 20rpx rgba(255,255,255,0.6),
+    inset 0 -8rpx 20rpx rgba(0,0,0,0.3);
+  position: relative;
+  box-sizing: border-box;
 }
-.admin-menu-item {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-  padding: 20rpx 18rpx;
-  border-radius: 14rpx;
-  background: #f8f9fa;
+
+.lw-border {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #2c2c54;
+  border: 12rpx solid #fff;
+  box-shadow: inset 0 0 60rpx rgba(0,0,0,0.85);
+  position: relative;
+  overflow: hidden;
 }
-.admin-menu-item:active {
-  background: #e9ecef;
+
+.lw-face {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transition: transform 5s cubic-bezier(0.23, 1, 0.32, 1); /* 更自然的缓动 */
+  transform-origin: center center;
 }
-.menu-icon {
-  font-size: 36rpx;
-  width: 56rpx;
+
+.lw-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 指针 */
+.lw-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+}
+
+.lw-pointer {
+  width: 0;
+  height: 0;
+  border-left: 28rpx solid transparent;
+  border-right: 28rpx solid transparent;
+  border-bottom: 72rpx solid #ff4757;
+  filter: drop-shadow(0 4rpx 12rpx rgba(0,0,0,0.5));
+  position: relative;
+}
+
+.lw-pointer::after {
+  content: '';
+  position: absolute;
+  top: -8rpx;
+  left: -14rpx;
+  width: 28rpx;
+  height: 28rpx;
+  background: #fff;
+  border-radius: 50%;
+  border: 4rpx solid #ffd700;
+}
+
+/* 按钮 */
+.lw-btn {
+  margin-top: 40rpx;
+  width: 420rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  background: linear-gradient(90deg, #ff4757, #ff6b81);
+  border-radius: 46rpx;
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 25rpx rgba(255, 71, 87, 0.4);
   text-align: center;
 }
-.menu-info {
-  flex: 1;
+
+.lw-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
 }
-.menu-name {
-  font-size: 28rpx;
+
+.lw-btn.disabled {
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+/* 结果 */
+.lottery-result {
+  margin-top: 20rpx;
+  min-height: 60rpx;
+  font-size: 32rpx;
   font-weight: 600;
-  color: #111827;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.4s;
 }
-.menu-desc {
-  font-size: 22rpx;
-  color: #9ca3af;
-  margin-top: 2rpx;
+
+.lottery-result.show {
+  opacity: 1;
 }
-.arrow {
-  color: #ccc;
-  font-size: 28rpx;
+
+.lottery-score {
+  color: #ff4757;
+  font-size: 38rpx;
+}
+
+.lottery-no-win {
+  color: #888;
+}
+
+.lottery-footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30rpx;
+  font-size: 26rpx;
+  color: #999;
 }

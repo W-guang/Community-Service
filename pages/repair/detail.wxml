@@ -2,96 +2,100 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap" wx:if="{{repair}}">
-    <!-- 状态时间线 -->
-    <view class="card timeline-card">
-      <view class="section-title">工单进度</view>
-      <view class="timeline">
-        <view class="tl-item {{repair.status === 'pending' || repair.status === 'processing' || repair.status === 'waiting_confirm' || repair.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">已提交</view>
-            <view class="tl-time">{{format(repair.createdAt)}}</view>
+    <!-- ===== 单张统一大卡片 ===== -->
+    <view class="unified-card">
+      <!-- ---------- 头部标题 ---------- -->
+      <view class="uc-head">
+        <text class="uc-title">{{repair.title || repair.category}}</text>
+        <view class="status-pill {{repair.status}}">{{statusText(repair.status)}}</view>
+      </view>
+      <view class="uc-meta">
+        <text class="meta-cat">{{repair.category}}</text>
+        <text class="meta-sep">·</text>
+        <text>{{format(repair.createdAt)}}</text>
+      </view>
+
+      <!-- ---------- 进度时间线 ---------- -->
+      <view class="uc-section">
+        <view class="uc-sec-label">工单进度</view>
+        <view class="timeline">
+          <view class="tl-item active">
+            <view class="tl-dot"></view>
+            <view class="tl-body">
+              <text class="tl-label">已提交</text>
+              <text class="tl-time">{{format(repair.createdAt)}}</text>
+            </view>
+          </view>
+          <view class="tl-item {{repair.status === 'processing' || repair.status === 'waiting_confirm' || repair.status === 'done' ? 'active' : ''}}">
+            <view class="tl-dot"></view>
+            <view class="tl-body">
+              <text class="tl-label">处理中</text>
+              <text class="tl-time" wx:if="{{repair.accepted_at}}">{{format(repair.accepted_at)}}</text>
+              <text class="tl-time" wx:elif="{{repair.status === 'processing' || repair.status === 'waiting_confirm' || repair.status === 'done'}}">已受理，正在处理</text>
+            </view>
+          </view>
+          <view class="tl-item {{repair.status === 'waiting_confirm' || repair.status === 'done' ? 'active' : ''}}">
+            <view class="tl-dot"></view>
+            <view class="tl-body">
+              <text class="tl-label">待确认</text>
+              <text class="tl-time" wx:if="{{repair.status === 'waiting_confirm' || repair.status === 'done'}}">请确认维修结果</text>
+            </view>
+          </view>
+          <view class="tl-item {{repair.status === 'done' ? 'active' : ''}}">
+            <view class="tl-dot"></view>
+            <view class="tl-body">
+              <text class="tl-label">已完成</text>
+              <text class="tl-time" wx:if="{{repair.status === 'done'}}">工单已关闭</text>
+            </view>
           </view>
         </view>
-        <view class="tl-item {{repair.status === 'processing' || repair.status === 'waiting_confirm' || repair.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">处理中</view>
-            <view class="tl-time" wx:if="{{repair.accepted_at}}">{{format(repair.accepted_at)}}</view>
-            <view class="tl-time" wx:elif="{{repair.status === 'processing' || repair.status === 'waiting_confirm' || repair.status === 'done'}}">已受理</view>
+      </view>
+
+      <!-- ---------- 详细描述 ---------- -->
+      <view class="uc-section">
+        <view class="uc-sec-label">问题描述</view>
+        <view class="uc-content">{{repair.content || '暂无详细描述'}}</view>
+
+        <view wx:if="{{repair.images && repair.images.length}}" class="uc-imgs">
+          <image wx:for="{{repair.images}}" wx:key="*this" class="uc-img" mode="aspectFill" src="{{item}}" bindtap="preview" data-src="{{item}}" />
+        </view>
+
+        <view wx:if="{{repair.location}}" class="uc-loc">
+          <text>📍</text>
+          <text>{{repair.location.address || repair.location.name || '已定位'}}</text>
+        </view>
+
+        <view wx:if="{{isStaff}}" class="uc-actions">
+          <button size="mini" class="act-btn outline" bindtap="setStatus" data-status="processing">接单处理</button>
+          <button size="mini" class="act-btn outline-purple" bindtap="setStatus" data-status="waiting_confirm">转待确认</button>
+          <button size="mini" class="act-btn fill" bindtap="setStatus" data-status="done">标记完成</button>
+        </view>
+      </view>
+
+      <!-- ---------- 沟通记录 ---------- -->
+      <view class="uc-section uc-section-last">
+        <view class="uc-sec-label">沟通记录</view>
+        <view wx:if="{{!comments.length}}" class="uc-empty-note">暂无留言，在下方发送第一条</view>
+        <view wx:for="{{comments}}" wx:key="_id" class="chat-msg {{item.fromRole === 'resident' ? 'left' : 'right'}}">
+          <view class="chat-bubble {{item.fromRole === 'resident' ? 'bub-resident' : 'bub-staff'}}">
+            <text class="chat-from">{{item.fromName}}</text>
+            <text class="chat-text">{{item.content}}</text>
+            <text class="chat-time">{{format(item.createdAt)}}</text>
           </view>
         </view>
-        <view class="tl-item {{repair.status === 'waiting_confirm' || repair.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">待确认</view>
-            <view class="tl-time" wx:if="{{repair.status === 'waiting_confirm' || repair.status === 'done'}}">等待居民确认</view>
-          </view>
+
+        <view class="chat-input-row">
+          <input placeholder="输入留言..." value="{{comment}}" bindinput="onComment" confirm-type="send" bindconfirm="send" />
+          <button size="mini" class="btn-send" loading="{{sending}}" bindtap="send">发送</button>
         </view>
-        <view class="tl-item {{repair.status === 'done' ? 'active' : ''}}">
-          <view class="tl-dot"></view>
-          <view class="tl-content">
-            <view class="tl-title">已完成</view>
-            <view class="tl-time" wx:if="{{repair.status === 'done'}}">工单已关闭</view>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 报修信息 -->
-    <view class="card">
-      <view class="row">
-        <view class="section-title">{{repair.title || repair.category}}</view>
-        <view class="tag status-{{repair.status}}">{{statusText(repair.status)}}</view>
-      </view>
-      <view class="muted">{{format(repair.createdAt)}}</view>
-      <view class="content mt">{{repair.content}}</view>
-
-      <view wx:if="{{repair.images && repair.images.length}}" class="imgs">
-        <image wx:for="{{repair.images}}" wx:key="*this" class="img" mode="aspectFill" src="{{item}}" bindtap="preview" data-src="{{item}}" />
-      </view>
-
-      <view wx:if="{{repair.location}}" class="location-info mt">
-        <text class="loc-icon">📍</text>
-        <text class="muted">{{repair.location.address || repair.location.name || '已定位'}}</text>
-      </view>
-
-      <view wx:if="{{isStaff}}" class="actions">
-        <button size="mini" bindtap="setStatus" data-status="processing">接单/处理中</button>
-        <button size="mini" bindtap="setStatus" data-status="waiting_confirm">转待确认</button>
-        <button size="mini" class="btn-primary" bindtap="setStatus" data-status="done">完成</button>
-      </view>
-    </view>
-
-    <!-- 沟通记录 -->
-    <view class="card">
-      <view class="section-title">沟通记录</view>
-      <view wx:if="{{!comments.length}}" class="empty-state">
-        <text class="empty-icon">💬</text>
-        <text class="muted">暂无留言</text>
-      </view>
-      <view wx:for="{{comments}}" wx:key="_id" class="comment {{item.fromRole === 'resident' ? 'comment-left' : 'comment-right'}}">
-        <view class="comment-bubble {{item.fromRole === 'resident' ? 'bubble-resident' : 'bubble-staff'}}">
-          <view class="comment-name">{{item.fromName}}</view>
-          <view class="comment-text">{{item.content}}</view>
-          <view class="comment-time">{{format(item.createdAt)}}</view>
-        </view>
-      </view>
-
-      <view class="composer">
-        <input placeholder="输入留言..." value="{{comment}}" bindinput="onComment" />
-        <button size="mini" class="btn-primary" loading="{{sending}}" bindtap="send">发送</button>
       </view>
     </view>
   </view>
 
   <view class="wrap" wx:else>
-    <view class="card skeleton-card">
-      <view class="skeleton-line short"></view>
-      <view class="skeleton-line"></view>
-      <view class="skeleton-line medium"></view>
+    <view class="skeleton-card">
+      <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
     </view>
   </view>
-
 </scroll-view>
 </view>
