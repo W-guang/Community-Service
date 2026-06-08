@@ -124,7 +124,9 @@ async function getBindings(openid) {
   }
 }
 
-async function requireBoundHouse(openid) {
+async function requireBoundHouse(openid, user) {
+  // 管理员和网格员跳过房屋绑定检查
+  if (user && (user.role === 'staff' || user.role === 'admin')) return null
   try {
     const res = await db.collection(COL.userHouses).where({ openid, status: 'bound' }).limit(1).get()
     if (res.data && res.data[0]) return res.data[0]

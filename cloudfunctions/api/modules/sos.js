@@ -5,7 +5,7 @@ const { db, COL, now, ok, getOrCreateUser, requireRole, requireBoundHouse } = re
 
 async function actionSosCreate({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid) // 必须绑定房屋才能发送SOS
+  await requireBoundHouse(openid, user) // 必须绑定房屋才能发送SOS
   const doc = {
     openid,
     fromName: user.nickname || '求助人',

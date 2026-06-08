@@ -1,7 +1,7 @@
 /**
  * 认证与用户管理模块
  */
-const { db, COL, now, ok, fail, getOrCreateUser, getBindings, requireRole } = require('./common')
+const { db, _, COL, now, ok, fail, getOrCreateUser, getBindings, requireRole } = require('./common')
 
 async function actionAuth({ openid }) {
   const user = await getOrCreateUser(openid)

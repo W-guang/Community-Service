@@ -22,8 +22,8 @@ async function actionNoticeCreate({ openid, data }) {
 }
 
 async function actionNoticeList({ openid, data }) {
-  await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  const user = await getOrCreateUser(openid)
+  await requireBoundHouse(openid, user)
   const pageSize = Math.min(Number(data.pageSize || 20), 50)
   const skip = Math.max(Number(data.skip || 0), 0)
   // 默认只显示已发布的
@@ -35,8 +35,8 @@ async function actionNoticeList({ openid, data }) {
 }
 
 async function actionNoticeDetail({ openid, data }) {
-  await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  const user = await getOrCreateUser(openid)
+  await requireBoundHouse(openid, user)
   const n = await db.collection(COL.notices).doc(data._id).get()
   const notice = n.data
   const readRes = await db.collection(COL.noticeReads).where({ noticeId: data._id, openid }).limit(1).get()
@@ -45,8 +45,8 @@ async function actionNoticeDetail({ openid, data }) {
 }
 
 async function actionNoticeMarkRead({ openid, data }) {
-  await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  const user = await getOrCreateUser(openid)
+  await requireBoundHouse(openid, user)
   const existing = await db.collection(COL.noticeReads).where({ noticeId: data._id, openid }).limit(1).get()
   if (existing.data && existing.data[0]) return ok({ _id: data._id })
   await db.collection(COL.noticeReads).add({ data: { noticeId: data._id, openid, createdAt: now() } })
@@ -70,8 +70,8 @@ async function actionNoticeStats({ openid, data }) {
 
 // 用户获取待办公告（重要且未读的公告）
 async function actionNoticePending({ openid }) {
-  await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  const user = await getOrCreateUser(openid)
+  await requireBoundHouse(openid, user)
   // 获取所有重要公告
   const allImportant = await db.collection(COL.notices)
     .where({ important: true, status: 'published' })

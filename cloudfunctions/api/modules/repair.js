@@ -5,7 +5,7 @@ const { db, COL, now, ok, getOrCreateUser, requireBoundHouse } = require('./comm
 
 async function actionRepairCreate({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   // 超时预警：2小时后未受理则预警
   const TIMEOUT_HOURS = 2
   // 获取房屋信息（用户选择的房屋）
@@ -49,7 +49,7 @@ async function actionRepairCreate({ openid, data }) {
 
 async function actionRepairList({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const pageSize = Math.min(Number(data.pageSize || 20), 50)
   const skip = Math.max(Number(data.skip || 0), 0)
   const where = {}
@@ -62,7 +62,7 @@ async function actionRepairList({ openid, data }) {
 
 async function actionRepairDetail({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const r = await db.collection(COL.repairs).doc(data._id).get()
   const repair = r.data
   if (user.role === 'resident' && repair.openid !== openid) throw new Error('无权限查看该报修单')
@@ -80,7 +80,7 @@ const REPAIR_TRANSITIONS = {
 
 async function actionRepairUpdateStatus({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const r = await db.collection(COL.repairs).doc(data._id).get()
   const repair = r.data
   const current = repair.status
@@ -111,7 +111,7 @@ async function actionRepairUpdateStatus({ openid, data }) {
 
 async function actionRepairComment({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const r = await db.collection(COL.repairs).doc(data.repairId).get()
   const repair = r.data
   if (user.role === 'resident' && repair.openid !== openid) throw new Error('无权限')

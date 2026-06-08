@@ -1,7 +1,7 @@
 /**
  * 邻里互助模块 - 任务CRUD、接单、进度、状态流转、积分发放、荣誉分
  */
-const { db, COL, now, ok, getOrCreateUser, requireBoundHouse, requireRole } = require('./common')
+const { db, _, COL, now, ok, getOrCreateUser, requireBoundHouse, requireRole } = require('./common')
 
 async function actionHelpCreate({ openid, data }) {
   const user = await getOrCreateUser(openid)
@@ -9,7 +9,7 @@ async function actionHelpCreate({ openid, data }) {
   if (user.role === 'staff' || user.role === 'admin') {
     throw new Error('管理员和网格员不能发布互助任务，请切换至普通模式')
   }
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   // 计算截止时间：默认7天
   const deadlineDays = Math.max(1, Math.min(30, Number(data.deadlineDays || 7)))
   const deadline = now() + deadlineDays * 86400 * 1000
@@ -51,7 +51,7 @@ async function actionHelpReview({ openid, data }) {
 
 async function actionHelpList({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const pageSize = Math.min(Number(data.pageSize || 20), 50)
   const skip = Math.max(Number(data.skip || 0), 0)
   const where = {}
@@ -75,7 +75,7 @@ async function actionHelpList({ openid, data }) {
 
 async function actionHelpDetail({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const h = await db.collection(COL.helps).doc(data._id).get()
   const help = h.data
   const progress = await db.collection(COL.helpProgress).where({ helpId: data._id }).orderBy('createdAt', 'asc').get()
@@ -84,7 +84,11 @@ async function actionHelpDetail({ openid, data }) {
 
 async function actionHelpTake({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
+  // 管理员/网格员不能接单
+  if (user.role === 'staff' || user.role === 'admin') {
+    throw new Error('管理员和网格员不能承接互助任务，请切换至普通模式')
+  }
   const h = await db.collection(COL.helps).doc(data._id).get()
   const help = h.data
   if (help.status !== 'open') throw new Error('任务不可接单')
@@ -114,8 +118,8 @@ async function actionHelpTake({ openid, data }) {
 }
 
 async function actionHelpAddProgress({ openid, data }) {
-  await requireBoundHouse(openid)
-  await getOrCreateUser(openid)
+  const user = await getOrCreateUser(openid)
+  await requireBoundHouse(openid, user)
   const h = await db.collection(COL.helps).doc(data.helpId).get()
   const help = h.data
   if (help.openid !== openid && help.takerOpenid !== openid) throw new Error('无权限')
@@ -139,8 +143,8 @@ const HELP_TRANSITIONS = {
 }
 
 async function actionHelpUpdateStatus({ openid, data }) {
-  await requireBoundHouse(openid)
-  await getOrCreateUser(openid)
+  const user = await getOrCreateUser(openid)
+  await requireBoundHouse(openid, user)
   const h = await db.collection(COL.helps).doc(data._id).get()
   const help = h.data
   const current = help.status
@@ -205,7 +209,7 @@ async function actionHelpUpdateStatus({ openid, data }) {
 
 async function actionHelpRate({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const helpId = data.helpId
   const h = await db.collection(COL.helps).doc(helpId).get()
   const help = h.data
@@ -269,7 +273,7 @@ async function actionHelpRate({ openid, data }) {
 // 互助荣誉榜
 async function actionHelpLeaderboard({ openid, data }) {
   await getOrCreateUser(openid)
-  await requireBoundHouse(openid)
+  await requireBoundHouse(openid, user)
   const pageSize = Math.min(Number(data.pageSize || 50), 100)
   const res = await db.collection(COL.users)
     .where({ honorPoints: _.gt(0) })
