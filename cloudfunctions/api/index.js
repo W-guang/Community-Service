@@ -23,6 +23,8 @@ const ROUTES = {
   'admin.add': auth.actionAdminAdd,
   'admin.remove': auth.actionAdminRemove,
   'admin.userList': auth.actionAdminUserList,
+  'admin.userDetail': auth.actionAdminUserDetail,
+  'admin.userHouseMap': auth.actionAdminUserHouseMap,
 
   'house.bind': house.actionHouseBind,
   'house.myList': house.actionHouseMyList,
@@ -46,12 +48,18 @@ const ROUTES = {
   'help.addProgress': help.actionHelpAddProgress,
   'help.updateStatus': help.actionHelpUpdateStatus,
   'help.rate': help.actionHelpRate,
+  'help.review': help.actionHelpReview,
+  'help.leaderboard': help.actionHelpLeaderboard,
 
   'notice.create': notice.actionNoticeCreate,
   'notice.list': notice.actionNoticeList,
   'notice.detail': notice.actionNoticeDetail,
   'notice.markRead': notice.actionNoticeMarkRead,
   'notice.stats': notice.actionNoticeStats,
+  'notice.pending': notice.actionNoticePending,
+  'notice.update': notice.actionNoticeUpdate,
+  'notice.delete': notice.actionNoticeDelete,
+  'notice.listAll': notice.actionNoticeListAll,
 
   'sos.create': sos.actionSosCreate,
   'sos.list': sos.actionSosList,

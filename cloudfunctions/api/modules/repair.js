@@ -8,6 +8,19 @@ async function actionRepairCreate({ openid, data }) {
   await requireBoundHouse(openid)
   // 超时预警：2小时后未受理则预警
   const TIMEOUT_HOURS = 2
+  // 获取房屋信息（用户选择的房屋）
+  let houseInfo = null
+  if (data.houseId) {
+    const houseRes = await db.collection(COL.userHouses).where({ _id: data.houseId, openid, status: 'bound' }).limit(1).get()
+    if (houseRes.data && houseRes.data[0]) {
+      houseInfo = houseRes.data[0]
+    }
+  }
+  if (!houseInfo) {
+    // 如果没选房屋，自动取第一个已绑定的
+    const hRes = await db.collection(COL.userHouses).where({ openid, status: 'bound' }).limit(1).get()
+    if (hRes.data && hRes.data[0]) houseInfo = hRes.data[0]
+  }
   const doc = {
     openid,
     roleSnapshot: user.role,
@@ -15,7 +28,13 @@ async function actionRepairCreate({ openid, data }) {
     title: (data.title || '').slice(0, 50),
     content: (data.content || '').slice(0, 500),
     images: Array.isArray(data.images) ? data.images.slice(0, 6) : [],
-    location: data.location || null,
+    house: houseInfo ? {
+      community: houseInfo.community,
+      building: houseInfo.building,
+      unit: houseInfo.unit,
+      room: houseInfo.room,
+    } : null,
+    location: null,
     status: 'pending',
     assigneeOpenid: '',
     assigneeName: '',
@@ -35,6 +54,7 @@ async function actionRepairList({ openid, data }) {
   const skip = Math.max(Number(data.skip || 0), 0)
   const where = {}
   if (user.role === 'resident') where.openid = openid
+  if (data.status) where.status = data.status
   const q = db.collection(COL.repairs).where(where).orderBy('createdAt', 'desc').skip(skip).limit(pageSize)
   const res = await q.get()
   return ok({ items: res.data })
@@ -97,14 +117,18 @@ async function actionRepairComment({ openid, data }) {
   if (user.role === 'resident' && repair.openid !== openid) throw new Error('无权限')
   const content = (data.content || '').slice(0, 300)
   if (!content) throw new Error('内容不能为空')
+  // 工作人员回复时显示：小区名+物业+名字
+  let fromName = user.nickname || (user.role === 'resident' ? '居民' : '工作人员')
+  if (user.role !== 'resident' && repair.house && repair.house.community) {
+    fromName = `${repair.house.community}物业${user.nickname || '网格员'}`
+  }
   await db.collection(COL.repairComments).add({
     data: {
       repairId: data.repairId, fromOpenid: openid, fromRole: user.role,
-      fromName: user.nickname || (user.role === 'resident' ? '居民' : '工作人员'),
-      content, createdAt: now(),
+      fromName, content, createdAt: now(),
     },
   })
-  // 居民评分：存入独立的 repair_ratings 集合
+  // 居民评分
   if (user.role === 'resident' && typeof data.rating === 'number') {
     const score = Math.max(1, Math.min(5, Math.round(data.rating)))
     await db.collection(COL.repairs).doc(data.repairId).update({

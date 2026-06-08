@@ -7,13 +7,15 @@
       <!-- ---------- 头部标签 + 状态 ---------- -->
       <view class="nd-head">
         <text class="nd-type">{{notice.type}}</text>
+        <text wx:if="{{notice.pinned}}" class="nd-badge-pin">置顶</text>
+        <text wx:if="{{notice.important}}" class="nd-badge-important">重要</text>
         <text wx:if="{{read}}" class="nd-read-badge">已读 ✓</text>
       </view>
 
       <!-- ---------- 标题 ---------- -->
       <text class="nd-title">{{notice.title}}</text>
       <view class="nd-meta">
-        <text>{{format(notice.createdAt)}}</text>
+        <text>发布时间：{{format(notice.createdAt)}}</text>
       </view>
 
       <!-- ---------- 正文 ---------- -->
@@ -21,17 +23,52 @@
         <view class="nd-content">{{notice.content}}</view>
       </view>
 
-      <!-- ---------- 触达统计（仅 staff） ---------- -->
-      <view class="nd-stats" wx:if="{{isStaff}}">
-        <view class="nd-stats-label">📊 触达统计</view>
+      <!-- ---------- 触达统计（仅重要公告+staff）---------- -->
+      <view class="nd-stats" wx:if="{{isStaff && stats.isImportant}}">
+        <view class="nd-stats-label">📊 已读统计</view>
         <view class="stats-bar-wrap">
           <view class="stats-bar">
-            <view class="stats-bar-fill" style="width:{{stats.percent || 0}}%"></view>
+            <view class="stats-bar-fill" style="width:{{stats.readPercent || 0}}%"></view>
           </view>
           <view class="stats-meta-row">
-            <text class="stats-text">已读 {{stats.readUsers}} / {{stats.totalUsers}} 人</text>
+            <text class="stats-text">已读 {{stats.readUsers}} / {{stats.totalUsers}} 人 ({{stats.readPercent}}%)</text>
             <button size="mini" class="btn-refresh" bindtap="loadStats">刷新</button>
           </view>
+        </view>
+      </view>
+      <view class="nd-stats" wx:elif="{{isStaff && !stats.isImportant}}">
+        <text class="nd-stats-label">📝 非重要公告，不统计已读</text>
+      </view>
+
+      <!-- ---------- 管理员操作 ---------- -->
+      <view class="nd-admin-actions" wx:if="{{isStaff && !editMode}}">
+        <button size="mini" class="act-btn outline" bindtap="toggleEdit">✏️ 编辑</button>
+        <button size="mini" class="act-btn outline-danger" bindtap="doDelete">🗑 删除</button>
+      </view>
+
+      <!-- ---------- 编辑模式 ---------- -->
+      <view class="nd-edit-panel" wx:if="{{editMode}}">
+        <view class="field">
+          <text class="label">标题</text>
+          <input value="{{editForm.title}}" bindinput="onEditTitle" placeholder="公告标题" />
+        </view>
+        <view class="field">
+          <text class="label">内容</text>
+          <textarea value="{{editForm.content}}" bindinput="onEditContent" placeholder="公告内容" />
+        </view>
+        <view class="field-row">
+          <label class="checkbox-label">
+            <switch checked="{{editForm.pinned}}" bindchange="onEditPinned" color="#4caf50" />
+            <text>置顶</text>
+          </label>
+          <label class="checkbox-label">
+            <switch checked="{{editForm.important}}" bindchange="onEditImportant" color="#e74c3c" />
+            <text>重要公告</text>
+          </label>
+        </view>
+        <view class="edit-actions">
+          <button size="mini" class="act-btn fill" loading="{{editing}}" bindtap="doUpdate">保存修改</button>
+          <button size="mini" class="act-btn outline" bindtap="toggleEdit">取消</button>
         </view>
       </view>
     </view>

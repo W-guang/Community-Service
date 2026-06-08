@@ -32,7 +32,7 @@ Page({
   data: {
     user: { openid: '', role: 'resident', nickname: '', phone: '', elderMode: false },
     roleText: '居民', isStaff: false, adminMode: false,
-    form: { nickname: '', phone: '', elderMode: false }, saving: false, stats: null,
+    form: { nickname: '', avatarUrl: '', phone: '', elderMode: false }, saving: false, stats: null,
     showEdit: false,
     adminMenus: [
       { url: '/pages/admin/todo', icon: '📋', name: '待办处理', desc: '报修工单与SOS求助' },
@@ -65,25 +65,83 @@ Page({
   setUser(u) {
     this.setData({ user: u, roleText: roleText(u.role),
       isStaff: u.role === 'staff' || u.role === 'admin',
-      form: { nickname: u.nickname || '', phone: u.phone || '', elderMode: !!u.elderMode } })
+      form: { nickname: u.nickname || '', avatarUrl: u.avatarUrl || '', phone: u.phone || '', elderMode: !!u.elderMode } })
   },
   toggleAdminMode() { const app = getApp(); const n = app.toggleAdminMode(); this.setData({ adminMode: n }); if (n) this.loadStats() },
   async loadStats() { try { this.setData({ stats: await callApi('dashboard.stats') }) } catch (_) {} },
   onNick(e) { this.setData({ 'form.nickname': e.detail.value }) },
+  // 微信 type="nickname" 输入框失焦时自动回填微信昵称
+  onNickBlur(e) {
+    const nick = (e.detail.value || '').trim()
+    if (nick && !this.data.form.nickname) {
+      this.setData({ 'form.nickname': nick })
+    }
+  },
   onPhone(e) { this.setData({ 'form.phone': e.detail.value }) },
   onElder(e) { this.setData({ 'form.elderMode': !!e.detail.value }) },
+  // 微信 chooseAvatar 回调：获取临时路径，上传云存储
+  async onChooseAvatar(e) {
+    const tempPath = e.detail.avatarUrl
+    if (!tempPath) return
+    try {
+      wx.showLoading({ title: '上传头像' })
+      const cloudPath = 'avatars/' + Date.now() + '-' + Math.random().toString(16).slice(2) + '.png'
+      const uploadRes = await wx.cloud.uploadFile({ cloudPath, filePath: tempPath })
+      wx.hideLoading()
+      this.setData({ 'form.avatarUrl': uploadRes.fileID, 'user.avatarUrl': uploadRes.fileID })
+      // 即时保存头像到后端
+      const res = await callApi('user.update', { avatarUrl: uploadRes.fileID })
+      getApp().globalData.user = res.user
+      wx.showToast({ title: '头像已更新', icon: 'success' })
+    } catch (e) {
+      wx.hideLoading()
+      wx.showToast({ title: e.message || '上传失败', icon: 'none' })
+    }
+  },
   async save() {
     if (this.data.saving) return; this.setData({ saving: true })
-    try { const res = await callApi('user.update', { ...this.data.form }); getApp().globalData.user = res.user; this.setUser(res.user); wx.showToast({ title: '已保存' }) }
+    try {
+      const res = await callApi('user.update', { ...this.data.form })
+      getApp().globalData.user = res.user
+      this.setUser(res.user)
+      wx.showToast({ title: '已保存' })
+    }
     catch (e) { wx.showToast({ title: e.message || '保存失败', icon: 'none' }) }
     finally { this.setData({ saving: false }) }
   },
-  async wxLogin() { /* 保持原样 */ },
+  async wxLogin() {
+    try {
+      const profile = await new Promise((resolve, reject) => {
+        wx.getUserProfile({ desc: '用于完善个人资料（昵称、头像）', success: resolve, fail: reject })
+      })
+      const { userInfo } = profile || {}
+      const res = await callApi('user.update', { nickname: (userInfo && userInfo.nickName) || '', avatarUrl: (userInfo && userInfo.avatarUrl) || '' })
+      const app = getApp()
+      app.setUserAndMode(res.user)
+      this.setUser(res.user)
+      wx.showToast({ title: '昵称已同步', icon: 'success' })
+    } catch (e) {
+      wx.showToast({ title: (e && e.errMsg && e.errMsg.includes('cancel')) ? '已取消' : (e.message || '同步失败'), icon: 'none' })
+    }
+  },
   toggleEdit() { this.setData({ showEdit: !this.data.showEdit }) },
   goGift() { wx.navigateTo({ url: '/pages/gift/list' }) },
   goHouses() { wx.navigateTo({ url: '/pages/house/list' }) },
   go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
-  async sos() { /* 保持原样 */ },
+  async sos() {
+    const app = getApp()
+    const boundCount = (app.globalData.bindings && app.globalData.bindings.boundCount) || 0
+    if (boundCount === 0) {
+      wx.showModal({ title: '请先绑定房屋', content: '绑定房屋后才能使用一键求助功能。', confirmText: '去绑定',
+        success: (r) => { if (r.confirm) wx.navigateTo({ url: '/pages/house/bind' }) } })
+      return
+    }
+    try {
+      const loc = await new Promise(resolve => { wx.getLocation({ type: 'gcj02', success: r => resolve({ latitude: r.latitude, longitude: r.longitude }), fail: () => resolve(null) }) })
+      await callApi('sos.create', { location: loc, note: '' })
+      wx.showModal({ title: '已发出求助', content: '物业/网格员将看到求助信息并跟进处理。', showCancel: false })
+    } catch (e) { if (e && e.message) wx.showToast({ title: e.message, icon: 'none' }) }
+  },
 
   // ========== 转盘 (Canvas 2D 同层渲染) ==========
   async openLottery() {

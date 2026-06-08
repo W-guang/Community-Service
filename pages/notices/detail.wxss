@@ -71,3 +71,24 @@
 /* 骨架屏 */
 .skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); }
 .wrap { padding: 18rpx 24rpx; }
+
+/* —— 标签徽章 —— */
+.nd-badge-pin { font-size: 22rpx; padding: 4rpx 12rpx; border-radius: 999rpx; background: #dbeafe; color: #1e40af; font-weight: 600; margin-left: 6rpx; }
+.nd-badge-important { font-size: 22rpx; padding: 4rpx 12rpx; border-radius: 999rpx; background: #fee2e2; color: #dc2626; font-weight: 600; margin-left: 6rpx; }
+
+/* —— 管理员操作按钮 —— */
+.nd-admin-actions { display: flex; gap: 10rpx; margin-top: 24rpx; padding-top: 24rpx; border-top: 1rpx solid #f1f5f9; }
+.act-btn { font-size: 26rpx; font-weight: 600; border-radius: 14rpx; border: none; padding: 12rpx 24rpx; }
+.act-btn.outline { background: #fff; color: #3b82f6; border: 2rpx solid #bfdbfe; }
+.act-btn.outline-danger { background: #fff; color: #ef4444; border: 2rpx solid #fecaca; }
+.act-btn.fill { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; }
+
+/* —— 编辑面板 —— */
+.nd-edit-panel { margin-top: 20rpx; padding: 20rpx; background: #f8fafc; border-radius: 16rpx; }
+.nd-edit-panel .field { margin-bottom: 14rpx; }
+.nd-edit-panel .label { font-size: 26rpx; color: #64748b; display: block; margin-bottom: 6rpx; }
+.nd-edit-panel input, .nd-edit-panel textarea { width: 100%; padding: 14rpx; border-radius: 12rpx; background: #fff; border: 1rpx solid #e2e8f0; box-sizing: border-box; font-size: 28rpx; }
+.nd-edit-panel textarea { height: 200rpx; }
+.field-row { display: flex; gap: 40rpx; margin: 16rpx 0; }
+.checkbox-label { display: flex; align-items: center; gap: 8rpx; font-size: 26rpx; color: #475569; }
+.edit-actions { display: flex; gap: 10rpx; margin-top: 16rpx; }

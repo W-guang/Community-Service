@@ -15,6 +15,21 @@
         <text>{{format(help.createdAt)}}</text>
         <text class="meta-sep">·</text>
         <text class="meta-reward">🪙 {{help.rewardPoints}} 积分</text>
+        <text wx:if="{{help.deadline}}" class="meta-sep">·</text>
+        <text wx:if="{{help.deadline}}" class="meta-deadline">截止 {{format(help.deadline)}}</text>
+      </view>
+
+      <!-- ---------- 联系电话 ---------- -->
+      <view class="uc-section" wx:if="{{showPhone}}">
+        <view class="phone-card" bindtap="callPhone">
+          <text class="phone-icon">📞</text>
+          <view class="phone-info">
+            <text class="phone-label">{{showPhone.label}}</text>
+            <text class="phone-number">{{showPhone.phone || '未填写手机号'}}</text>
+            <text class="phone-name">{{showPhone.name}}</text>
+          </view>
+          <text class="phone-call">拨打</text>
+        </view>
       </view>
 
       <!-- ---------- 任务进度 ---------- -->
@@ -56,7 +71,7 @@
           <button wx:if="{{canDone}}" class="act-btn fill-green" bindtap="setStatus" data-status="done">✓ 确认完成</button>
         </view>
 
-        <!-- 评价（嵌入） -->
+        <!-- 评价 -->
         <view wx:if="{{showRate}}" class="rate-inline">
           <view class="rate-inline-label">⭐ 评价 {{ratingTarget}}</view>
           <view class="stars-row">

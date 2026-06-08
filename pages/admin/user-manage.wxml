@@ -13,6 +13,9 @@
             <text class="sec-sub">共 {{users.length}} 人</text>
           </view>
         </view>
+        <button size="mini" class="btn-toggle-map" bindtap="toggleHouseMap">
+          {{showHouseMap ? '纯列表' : '显示房屋'}}
+        </button>
       </view>
 
       <!-- 筛选 -->
@@ -32,33 +35,34 @@
         <button size="mini" class="um-search-btn" bindtap="onSearch">搜索</button>
       </view>
 
-      <!-- 列表区 -->
-      <view class="um-status" wx:if="{{loadingUsers}}">
-        <text class="muted">加载中...</text>
-      </view>
+      <view class="um-status" wx:if="{{loadingUsers}}"><text class="muted">加载中...</text></view>
       <view class="empty-soft" wx:elif="{{!users.length}}">
         <text class="empty-soft-icon">📭</text>
         <text class="empty-soft-text">{{userFilterRole || userKeyword ? '没有匹配的用户' : '暂无用户数据'}}</text>
       </view>
       <view wx:else class="um-list">
-        <view wx:for="{{users}}" wx:key="_id" class="um-item" bindtap="quickSet" data-user="{{item}}">
-          <view class="um-avatar {{item.role}}">
-            <text>{{item.nickname ? item.nickname[0] : '?'}}</text>
-          </view>
-          <view class="um-info">
-            <view class="um-name-row">
-              <text class="um-name">{{item.nickname || '未设置昵称'}}</text>
-              <view class="um-role-pill {{item.role}}">{{item.roleText}}</view>
+        <view wx:for="{{users}}" wx:key="_id" class="um-item">
+          <view class="um-main" bindtap="onUserTap" data-openid="{{item.openid}}" data-role="{{item.role}}">
+            <view class="um-avatar {{item.role}}"><text>{{item.nickname ? item.nickname[0] : '?'}}</text></view>
+            <view class="um-info">
+              <view class="um-name-row">
+                <text class="um-name">{{item.nickname || '未设置昵称'}}</text>
+                <view class="um-role-pill {{item.role}}">{{item.roleText}}</view>
+              </view>
+              <text class="um-oid">{{item.openid}}</text>
+              <text class="um-time">{{item.timeText}}</text>
+              <text wx:if="{{showHouseMap}}" class="um-houses">🏠 已绑定 {{item.houseCount}} 套</text>
             </view>
-            <text class="um-oid">{{item.openid}}</text>
-            <text class="um-time">{{item.timeText}}</text>
+          </view>
+          <view class="um-detail-btn" wx:if="{{!showHouseMap}}" bindtap="viewUserDetailByOpenid" data-openid="{{item.openid}}">
+            <text>详情</text>
           </view>
         </view>
       </view>
     </view>
 
     <!-- 角色设置 -->
-    <view class="section-card role-card">
+    <view class="section-card role-card" wx:if="{{!showHouseMap}}">
       <view class="sec-head">
         <view class="sec-head-left">
           <view class="sec-icon role-icon">⚙️</view>
@@ -68,13 +72,11 @@
           </view>
         </view>
       </view>
-
       <view class="role-form">
         <view class="role-field">
           <text class="role-label">目标用户 openid</text>
           <input placeholder="点击列表或手动输入" value="{{form.openid}}" bindinput="onInput" data-k="openid" />
         </view>
-
         <view class="role-field">
           <text class="role-label">角色</text>
           <picker mode="selector" range="{{roles}}" value="{{roleIndex}}" bindchange="onPickRole">
@@ -84,13 +86,11 @@
             </view>
           </picker>
         </view>
-
         <view class="role-field" wx:if="{{roles[roleIndex]==='staff'}}">
           <text class="role-label">管辖小区</text>
           <input placeholder="多个小区用逗号分隔" value="{{form.managedCommunities}}" bindinput="onInput" data-k="managedCommunities" />
           <text class="role-hint">网格员只能审批管辖小区内的房屋绑定请求</text>
         </view>
-
         <view class="role-btns">
           <button class="role-btn-save" loading="{{saving}}" bindtap="save">💾 保存角色</button>
           <button class="role-btn-add" wx:if="{{roles[roleIndex]==='admin'}}" bindtap="addAdmin">⭐ 加白名单</button>
@@ -110,7 +110,6 @@
         </view>
       </view>
       <text class="wl-desc">白名单用于系统启动时识别管理员身份，确保关键管理员始终拥有访问权限。</text>
-
       <view wx:if="{{users.length}}" class="wl-tags-wrap">
         <text class="wl-tags-label">当前管理员：</text>
         <view class="wl-tags">
@@ -120,11 +119,35 @@
           </view>
         </view>
       </view>
-      <view wx:else class="wl-empty">
-        <text class="muted">暂无管理员白名单</text>
-      </view>
+      <view wx:else class="wl-empty"><text class="muted">暂无管理员白名单</text></view>
     </view>
   </view>
 
 </scroll-view>
+
+<!-- 用户详情弹窗 -->
+<view class="detail-mask" wx:if="{{showDetail}}" bindtap="closeDetail">
+  <view class="detail-popup" catchtap="nop">
+    <view class="dp-head">
+      <text class="dp-title">用户详情</text>
+      <text class="dp-close" bindtap="closeDetail">✕</text>
+    </view>
+    <view class="dp-body">
+      <view class="dp-row"><text class="dp-label">昵称：</text><text>{{detailUser.nickname || '未设置'}}</text></view>
+      <view class="dp-row"><text class="dp-label">OpenID：</text><text class="dp-oid">{{detailUser.openid}}</text></view>
+      <view class="dp-row"><text class="dp-label">角色：</text><text>{{detailUser.role === 'admin' ? '管理员' : detailUser.role === 'staff' ? '网格员' : '居民'}}</text></view>
+      <view class="dp-row"><text class="dp-label">手机：</text><text>{{detailUser.phone || '未填写'}}</text></view>
+      <view class="dp-row"><text class="dp-label">积分：</text><text>{{detailUser.totalPoints || 0}}</text></view>
+      <view class="dp-row"><text class="dp-label">荣誉分：</text><text>{{detailUser.honorPoints || 0}}</text></view>
+      <view class="dp-divider"></view>
+      <text class="dp-subtitle">房屋绑定记录（{{detailHouses.length}}条）</text>
+      <view wx:if="{{!detailHouses.length}}" class="dp-empty">暂无绑定记录</view>
+      <view wx:for="{{detailHouses}}" wx:key="_id" class="dp-house {{item.status}}">
+        <text class="dp-house-addr">🏠 {{item.community}} {{item.building}}号楼 {{item.unit}}单元 {{item.room}}室</text>
+        <text class="dp-house-name">业主：{{item.name||'-'}}</text>
+        <view class="dp-house-status {{item.status}}">{{item.statusText}}</view>
+      </view>
+    </view>
+  </view>
+</view>
 </view>

@@ -8,10 +8,13 @@
 
       <!-- 1. 个人信息栏 -->
       <view class="m-user-row">
-        <view class="m-avatar">
-          <text>👤</text>
+        <button class="m-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image wx:if="{{user.avatarUrl}}" class="m-avatar-img" src="{{user.avatarUrl}}" mode="aspectFill" />
+          <text wx:else class="m-avatar-placeholder">👤</text>
+        </button>
+        <view class="m-user-info-row">
+          <text class="m-user-name">{{user.nickname || '点击编辑资料'}}</text>
         </view>
-        <text class="m-user-name">{{user.nickname || '登录/注册'}}</text>
       </view>
 
       <!-- 2. 资产数据行 -->
@@ -86,9 +89,16 @@
 
       <!-- 6. 个人信息编辑（展开/折叠） -->
       <view class="m-edit-card" wx:if="{{showEdit}}">
+        <view class="m-edit-avatar-row">
+          <text class="m-edit-label">头像</text>
+          <button class="m-avatar-btn m-avatar-btn-edit" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+            <image wx:if="{{form.avatarUrl}}" class="m-edit-avatar-img" src="{{form.avatarUrl}}" mode="aspectFill" />
+            <text wx:else class="m-edit-avatar-ph">点此选择头像</text>
+          </button>
+        </view>
         <view class="m-edit-field">
           <text class="m-edit-label">昵称</text>
-          <input placeholder="设置你的社区昵称" value="{{form.nickname}}" bindinput="onNick" />
+          <input type="nickname" placeholder="请输入昵称（微信键盘自动填充）" value="{{form.nickname}}" bindinput="onNick" bindblur="onNickBlur" />
         </view>
         <view class="m-edit-field">
           <text class="m-edit-label">手机号</text>
@@ -114,7 +124,8 @@
       <view class="profile-hero">
         <view class="profile-hero-inner">
           <view class="profile-avatar">
-            <text>👤</text>
+            <image wx:if="{{user.avatarUrl}}" src="{{user.avatarUrl}}" mode="aspectFill" style="width:100%;height:100%;border-radius:50%" />
+            <text wx:else>👤</text>
           </view>
           <text class="profile-name">{{user.nickname || '未设置昵称'}}</text>
           <view class="profile-role {{user.role}}">{{roleText}}</view>
@@ -160,34 +171,26 @@
 <!-- ===== 积分转盘弹窗 ===== -->
 <view class="lottery-mask" wx:if="{{lotteryShow}}" bindtap="closeLottery">
   <view class="lottery-popup" catchtap="nop">
-    
-    <!-- 标题 -->
     <text class="lottery-title">🎉 积分幸运转盘</text>
-
     <view class="lw-shell">
       <view class="lw-border">
         <view class="lw-face" style="transform: rotate({{wheelDeg}}deg);">
           <canvas type="2d" id="wheelCanvas" class="lw-canvas" style="width: 100%; height: 100%;"></canvas>
         </view>
       </view>
-      
-      <!-- 更漂亮的指针 -->
       <view class="lw-hub">
         <view class="lw-pointer"></view>
       </view>
     </view>
-
     <view class="lw-btn {{lotterySpinning ? 'disabled' : ''}}" bindtap="doLottery">
       <text>{{lotterySpinning ? '抽奖中...' : '🎯 开始抽奖'}}</text>
     </view>
-
     <view class="lottery-result {{lotteryResult ? 'show' : ''}}">
       <block wx:if="{{lotteryResult}}">
         <text wx:if="{{lotteryResult !== '谢谢惠顾'}}">🎉 恭喜获得 <text class="lottery-score">{{lotteryResult}}</text></text>
         <text wx:else class="lottery-no-win">😅 {{lotteryResult}}，下次一定！</text>
       </block>
     </view>
-
     <view class="lottery-footer">
       <text class="lottery-remain">测试模式 · 不扣积分</text>
       <text class="lottery-close" bindtap="closeLottery">关闭</text>

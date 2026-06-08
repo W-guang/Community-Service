@@ -88,20 +88,21 @@
 .act-btn.fill           { background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4rpx 14rpx rgba(16,185,129,0.25); }
 .act-btn:active { opacity: 0.85; }
 
-/* —— 沟通区 —— */
+/* —— 沟通区（评论区样式，全部左对齐）—— */
 .uc-empty-note { text-align: center; padding: 40rpx 0 20rpx; font-size: 26rpx; color: #b0b7c3; }
-.chat-msg { margin-bottom: 12rpx; }
-.chat-msg.left  { display: flex; justify-content: flex-start; }
-.chat-msg.right { display: flex; justify-content: flex-end; }
-.chat-bubble {
-  max-width: 78%; border-radius: 18rpx; padding: 16rpx 20rpx;
+.comment-item { margin-bottom: 14rpx; }
+.comment-bubble {
+  max-width: 100%; border-radius: 16rpx; padding: 16rpx 20rpx;
   display: flex; flex-direction: column; gap: 4rpx;
 }
 .bub-resident { background: #eff6ff; border-bottom-left-radius: 6rpx; }
-.bub-staff    { background: #ecfdf5; border-bottom-right-radius: 6rpx; }
-.chat-from { font-size: 22rpx; font-weight: 700; color: #64748b; }
-.chat-text { font-size: 28rpx; color: #1e293b; line-height: 1.5; }
-.chat-time { font-size: 20rpx; color: #94a3b8; text-align: right; }
+.bub-staff    { background: #ecfdf5; border-bottom-left-radius: 6rpx; }
+.comment-header {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.comment-from { font-size: 22rpx; font-weight: 700; color: #64748b; }
+.comment-time { font-size: 20rpx; color: #94a3b8; }
+.comment-text { font-size: 28rpx; color: #1e293b; line-height: 1.5; }
 .chat-input-row {
   display: flex; gap: 12rpx; align-items: center; margin-top: 16rpx;
 }
@@ -114,6 +115,9 @@
   flex-shrink: 0; border-radius: 14rpx; font-size: 26rpx;
   padding: 14rpx 24rpx; background: #3b82f6; color: #fff; border: none;
 }
+
+/* —— 房屋信息行 —— */
+.house-info-row { display: flex; align-items: center; gap: 8rpx; padding: 12rpx 18rpx; background: #f0f9ff; border-radius: 12rpx; font-size: 26rpx; color: #1e40af; }
 
 /* 骨架屏 */
 .skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); }

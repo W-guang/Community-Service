@@ -8,33 +8,69 @@
         <view class="sec-head-left">
           <view class="sec-icon"><text>🤝</text></view>
           <view class="sec-head-text">
-            <text class="sec-title">{{adminMode ? '全部互助' : tab==='hall' ? '任务大厅' : tab==='mine' ? '我发布的' : '我接的'}}</text>
-            <text class="sec-sub">共 {{items.length}} 条任务</text>
+            <text class="sec-title">{{adminMode ? '互助管理' : tab==='hall' ? '任务大厅' : tab==='mine' ? '我发布的' : tab==='taken' ? '我接的' : '互助榜'}}</text>
+            <text class="sec-sub">{{leaderboard.length ? leaderboard.length + ' 人上榜' : items.length + ' 条任务'}}</text>
           </view>
         </view>
-        <button class="btn-add" bindtap="goCreate">+ 发布</button>
+        <button class="btn-add" bindtap="goCreate" wx:if="{{!adminMode}}">+ 发布</button>
       </view>
 
-      <!-- Tab切换 -->
+      <!-- Tab切换 - 普通用户 -->
       <view class="seg-row" wx:if="{{!adminMode}}">
         <view class="seg-item {{tab==='hall'?'on':''}}" bindtap="setTab" data-tab="hall">任务大厅</view>
         <view class="seg-item {{tab==='mine'?'on':''}}" bindtap="setTab" data-tab="mine">我发布的</view>
         <view class="seg-item {{tab==='taken'?'on':''}}" bindtap="setTab" data-tab="taken">我接的</view>
+        <view class="seg-item {{tab==='leaderboard'?'on':''}}" bindtap="setTab" data-tab="leaderboard">🏆 互助榜</view>
+      </view>
+
+      <!-- Tab切换 - 管理模式 -->
+      <view class="seg-row" wx:if="{{adminMode}}">
+        <view class="seg-item {{tab==='review'?'on':''}}" bindtap="setTab" data-tab="review">待审核</view>
+        <view class="seg-item {{tab==='hall'?'on':''}}" bindtap="setTab" data-tab="hall">全部任务</view>
       </view>
     </view>
 
+    <!-- 骨架屏 -->
     <view class="skeleton-card" wx:if="{{loading}}">
       <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
     </view>
 
-    <view class="empty-card" wx:elif="{{!items.length}}">
-      <view class="empty-circle yellow">
-        <text class="empty-circle-icon">🤝</text>
+    <!-- 互助榜 -->
+    <view wx:if="{{tab==='leaderboard' && !loading}}" class="leaderboard">
+      <view class="lb-header">
+        <text class="lb-title">🏆 社区互助荣誉榜</text>
+        <text class="lb-desc">荣誉分 = 积分 × 评分 ÷ 5，帮助越多荣誉越高</text>
       </view>
-      <text class="empty-title">暂无互助任务</text>
-      <text class="empty-desc">邻里互助，温暖社区，快来发布第一条任务吧</text>
+      <view class="empty-card" wx:if="{{!leaderboard.length}}">
+        <view class="empty-circle yellow"><text class="empty-circle-icon">🏆</text></view>
+        <text class="empty-title">暂无上榜用户</text>
+        <text class="empty-desc">完成互助任务并获得评价后可上榜</text>
+      </view>
+      <view wx:for="{{leaderboard}}" wx:key="openid" class="lb-item">
+        <view class="lb-rank {{item.rankClass}}">{{item.rankDisplay}}</view>
+        <view class="lb-avatar">
+          <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" mode="aspectFill" class="lb-avatar-img" />
+          <text wx:else class="lb-avatar-text">{{item.nickname ? item.nickname[0] : '?'}}</text>
+        </view>
+        <view class="lb-info">
+          <text class="lb-name">{{item.nickname || '匿名用户'}}</text>
+          <text class="lb-credit">信誉 {{item.creditScore}}</text>
+        </view>
+        <view class="lb-honor">
+          <text class="lb-honor-num">{{item.honorPoints}}</text>
+          <text class="lb-honor-label">荣誉分</text>
+        </view>
+      </view>
     </view>
 
+    <!-- 空状态 -->
+    <view class="empty-card" wx:elif="{{!loading && !items.length}}">
+      <view class="empty-circle yellow"><text class="empty-circle-icon">🤝</text></view>
+      <text class="empty-title">{{adminMode && tab==='review' ? '暂无待审核任务' : '暂无互助任务'}}</text>
+      <text class="empty-desc">{{adminMode && tab==='review' ? '居民提交的互助任务将在此审核' : '邻里互助，温暖社区，快来发布第一条任务吧'}}</text>
+    </view>
+
+    <!-- 任务列表 -->
     <view wx:for="{{items}}" wx:key="_id" class="help-card" bindtap="goDetail" data-id="{{item._id}}">
       <view class="hc-top">
         <view class="hc-info">
@@ -48,8 +84,15 @@
           <text class="hc-type">{{item.type}}</text>
           <text class="hc-sep">·</text>
           <text class="hc-time">{{format(item.createdAt)}}</text>
+          <text wx:if="{{item.deadline}}" class="hc-sep">·</text>
+          <text wx:if="{{item.deadline}}" class="hc-deadline">截止 {{format(item.deadline)}}</text>
         </view>
         <view class="hc-reward">🪙 {{item.rewardPoints}} 积分</view>
+      </view>
+      <!-- 待审核：操作按钮 -->
+      <view wx:if="{{adminMode && tab==='review'}}" class="hc-review-actions">
+        <button size="mini" class="act-btn fill-green" bindtap="review" data-id="{{item._id}}" data-approve="{{true}}">审核通过</button>
+        <button size="mini" class="act-btn outline" bindtap="review" data-id="{{item._id}}" data-approve="{{false}}">拒绝</button>
       </view>
     </view>
 

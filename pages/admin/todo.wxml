@@ -7,25 +7,32 @@
     <view class="banner-bg"></view>
     <view class="banner-inner">
       <view class="banner-stat">
-        <view class="banner-ring repair-ring">
-          <text class="banner-num">{{repairTodos.length}}</text>
-        </view>
+        <view class="banner-ring repair-ring"><text class="banner-num">{{repairTodos.length}}</text></view>
         <text class="banner-label">报修待处理</text>
       </view>
       <view class="banner-divider"></view>
       <view class="banner-stat">
-        <view class="banner-ring sos-ring">
-          <text class="banner-num">{{sosTodos.length}}</text>
-        </view>
+        <view class="banner-ring sos-ring"><text class="banner-num">{{sosTodos.length}}</text></view>
         <text class="banner-label">求助待处理</text>
+      </view>
+      <view class="banner-divider"></view>
+      <view class="banner-stat">
+        <view class="banner-ring help-ring"><text class="banner-num">{{helpReviewTodos.length}}</text></view>
+        <text class="banner-label">互助待审核</text>
       </view>
     </view>
   </view>
 
   <view class="wrap">
+    <!-- Tab切换 -->
+    <view class="seg-row">
+      <view class="seg-item {{tab==='repair'?'on':''}}" bindtap="setTab" data-tab="repair">报修工单</view>
+      <view class="seg-item {{tab==='sos'?'on':''}}" bindtap="setTab" data-tab="sos">紧急求助</view>
+      <view class="seg-item {{tab==='help'?'on':''}}" bindtap="setTab" data-tab="help">互助审核</view>
+    </view>
 
     <!-- 报修待办 -->
-    <view class="section-card">
+    <view class="section-card" wx:if="{{tab==='repair'}}">
       <view class="sec-head">
         <view class="sec-head-left">
           <view class="sec-icon repair-icon">🔧</view>
@@ -34,15 +41,9 @@
             <text class="sec-sub">待受理 · 处理中 · 待确认</text>
           </view>
         </view>
-        <view class="sec-badge repair-badge" wx:if="{{repairTodos.length}}">{{repairTodos.length}}</view>
         <button size="mini" class="btn-mini-ghost" bindtap="load">刷新</button>
       </view>
-
-      <view class="empty-soft" wx:if="{{!repairTodos.length}}">
-        <text class="empty-soft-icon">🎉</text>
-        <text class="empty-soft-text">暂无待办报修，一切安好</text>
-      </view>
-
+      <view class="empty-soft" wx:if="{{!repairTodos.length}}"><text class="empty-soft-icon">🎉</text><text class="empty-soft-text">暂无待办报修</text></view>
       <view class="todo-list" wx:else>
         <view wx:for="{{repairTodos}}" wx:key="_id" class="todo-row" bindtap="goRepair" data-id="{{item._id}}">
           <view class="todo-row-left">
@@ -50,9 +51,7 @@
             <view class="todo-info">
               <text class="todo-row-title">{{item.title || item.category}}</text>
               <view class="todo-row-meta">
-                <text class="meta-tag">{{item.category}}</text>
-                <text class="meta-sep">·</text>
-                <text class="meta-time">{{format(item.createdAt)}}</text>
+                <text class="meta-tag">{{item.category}}</text><text class="meta-sep">·</text><text class="meta-time">{{format(item.createdAt)}}</text>
               </view>
             </view>
           </view>
@@ -62,24 +61,15 @@
     </view>
 
     <!-- 求助待办 -->
-    <view class="section-card sos-section">
+    <view class="section-card sos-section" wx:if="{{tab==='sos'}}">
       <view class="sec-head">
         <view class="sec-head-left">
           <view class="sec-icon sos-icon">🆘</view>
-          <view class="sec-head-text">
-            <text class="sec-title">紧急求助</text>
-            <text class="sec-sub">需立即响应处理</text>
-          </view>
+          <view class="sec-head-text"><text class="sec-title">紧急求助</text><text class="sec-sub">需立即响应处理</text></view>
         </view>
-        <view class="sec-badge sos-badge" wx:if="{{sosTodos.length}}">{{sosTodos.length}}</view>
         <button size="mini" class="btn-mini-ghost" bindtap="load">刷新</button>
       </view>
-
-      <view class="empty-soft" wx:if="{{!sosTodos.length}}">
-        <text class="empty-soft-icon">✅</text>
-        <text class="empty-soft-text">暂无紧急求助</text>
-      </view>
-
+      <view class="empty-soft" wx:if="{{!sosTodos.length}}"><text class="empty-soft-icon">✅</text><text class="empty-soft-text">暂无紧急求助</text></view>
       <view class="sos-list" wx:else>
         <view wx:for="{{sosTodos}}" wx:key="_id" class="sos-card-item">
           <view class="sos-card-top">
@@ -93,6 +83,38 @@
           <view class="sos-card-actions">
             <button size="mini" class="btn-action-outline" bindtap="setSos" data-id="{{item._id}}" data-status="processing">📋 受理</button>
             <button size="mini" class="btn-action-solid" bindtap="setSos" data-id="{{item._id}}" data-status="done">✅ 完成</button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 互助审核 -->
+    <view class="section-card" wx:if="{{tab==='help'}}">
+      <view class="sec-head">
+        <view class="sec-head-left">
+          <view class="sec-icon" style="background:#fffbeb">🤝</view>
+          <view class="sec-head-text"><text class="sec-title">互助任务审核</text><text class="sec-sub">审核居民发布的任务</text></view>
+        </view>
+        <button size="mini" class="btn-mini-ghost" bindtap="load">刷新</button>
+      </view>
+      <view class="empty-soft" wx:if="{{!helpReviewTodos.length}}"><text class="empty-soft-icon">✅</text><text class="empty-soft-text">暂无待审核的互助任务</text></view>
+      <view class="todo-list" wx:else>
+        <view wx:for="{{helpReviewTodos}}" wx:key="_id" class="help-review-item">
+          <view class="hc-top">
+            <view class="hc-info">
+              <text class="hc-title">{{item.title}}</text>
+              <text class="hc-desc">{{item.content || '暂无描述'}}</text>
+            </view>
+            <view class="hc-reward">🪙 {{item.rewardPoints}} 积分</view>
+          </view>
+          <view class="hc-bottom">
+            <text class="hc-type">{{item.type}}</text>
+            <text class="hc-sep">·</text>
+            <text>{{format(item.createdAt)}}</text>
+          </view>
+          <view class="hc-review-actions">
+            <button size="mini" class="act-btn fill-green" bindtap="reviewHelp" data-id="{{item._id}}" data-approve="{{true}}">审核通过</button>
+            <button size="mini" class="act-btn outline" bindtap="reviewHelp" data-id="{{item._id}}" data-approve="{{false}}">拒绝</button>
           </view>
         </view>
       </view>

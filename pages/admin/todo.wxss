@@ -229,3 +229,24 @@
 .wrap {
   padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 18rpx;
 }
+
+/* Tab切换 */
+.seg-row { display: flex; background: #f1f5f9; border-radius: 14rpx; padding: 4rpx; }
+.seg-item { flex: 1; text-align: center; padding: 14rpx 0; font-size: 26rpx; color: #64748b; border-radius: 12rpx; font-weight: 500; }
+.seg-item.on { background: #fff; color: #ea580c; font-weight: 700; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06); }
+
+/* 互助审核 */
+.help-ring { background: rgba(139,92,246,0.7); }
+.help-review-item { padding: 20rpx 18rpx; border-radius: 14rpx; background: #fbfdff; border: 1rpx solid #f1f5f9; margin-bottom: 10rpx; }
+.help-review-item .hc-top { display: flex; gap: 16rpx; align-items: flex-start; }
+.help-review-item .hc-info { flex: 1; overflow: hidden; }
+.help-review-item .hc-title { font-size: 28rpx; font-weight: 700; color: #1e293b; display: block; }
+.help-review-item .hc-desc { font-size: 24rpx; color: #94a3b8; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.help-review-item .hc-reward { flex-shrink: 0; font-size: 24rpx; font-weight: 700; color: #d97706; }
+.help-review-item .hc-bottom { display: flex; gap: 6rpx; margin-top: 8rpx; font-size: 22rpx; color: #94a3b8; }
+.help-review-item .hc-type { color: #d97706; font-weight: 600; }
+.help-review-item .hc-sep { color: #cbd5e1; }
+.hc-review-actions { display: flex; gap: 10rpx; margin-top: 12rpx; }
+.act-btn { font-size: 24rpx; font-weight: 600; border-radius: 12rpx; border: none; padding: 8rpx 20rpx; }
+.act-btn.fill-green  { background: #10b981; color: #fff; }
+.act-btn.outline     { background: #fff; color: #64748b; border: 2rpx solid #e2e8f0; }

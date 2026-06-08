@@ -13,29 +13,43 @@ async function actionHouseBind({ openid, data }) {
   const phone = (data.phone || '').trim()
   if (!community || !building || !unit || !room || !name) throw new Error('请完整填写房屋信息（手机号可选）')
 
-  const houseRes = await db.collection(COL.houses)
-    .where({ community, building, unit, room }).limit(1).get()
-
-  if (houseRes.data && houseRes.data[0]) {
-    const house = houseRes.data[0]
-    const existed = await db.collection(COL.userHouses)
-      .where({ openid, house_id: house._id, status: 'bound' }).limit(1).get()
-    if (existed.data && existed.data[0]) return ok({ status: 'bound', message: '已绑定过该房屋' })
-
-    await db.collection(COL.userHouses).add({
-      data: { openid, house_id: house._id, community, building, unit, room, name, phone,
-        bind_time: now(), status: 'bound', createdAt: now() },
-    })
-    const bindings = await getBindings(openid)
-    return ok({ status: 'bound', bindings })
+  // 检查小区是否存在（至少有一套房屋录入）
+  const communityExists = await db.collection(COL.houses)
+    .where({ community }).limit(1).get()
+  if (!communityExists.data || !communityExists.data[0]) {
+    throw new Error(`小区"${community}"未录入系统，请先联系管理员录入小区信息`)
   }
 
+  // 检查楼栋是否存在
+  const buildingExists = await db.collection(COL.houses)
+    .where({ community, building }).limit(1).get()
+  if (!buildingExists.data || !buildingExists.data[0]) {
+    throw new Error(`"${community}"中不存在"${building}"号楼，请核实后重新填写`)
+  }
+
+  // 检查单元是否存在
+  const unitExists = await db.collection(COL.houses)
+    .where({ community, building, unit }).limit(1).get()
+  if (!unitExists.data || !unitExists.data[0]) {
+    throw new Error(`"${community}"${building}号楼不存在"${unit}"单元，请核实后重新填写`)
+  }
+
+  // 检查是否已有待审核或已绑定的记录
+  const existingReq = await db.collection(COL.userHouses)
+    .where({ openid, community, building, unit, room, status: _.in(['bound', 'pending_verify']) }).limit(1).get()
+  if (existingReq.data && existingReq.data[0]) {
+    const s = existingReq.data[0]
+    if (s.status === 'bound') return ok({ status: 'bound', message: '已绑定过该房屋' })
+    if (s.status === 'pending_verify') return ok({ status: 'pending_verify', message: '已提交过核验申请，请耐心等待审核' })
+  }
+
+  // 所有绑定统一走审核流程 — 提交核验申请
   await db.collection(COL.userHouses).add({
     data: { openid, house_id: '', community, building, unit, room, name, phone,
       bind_time: now(), status: 'pending_verify', createdAt: now() },
   })
   const bindings = await getBindings(openid)
-  return ok({ status: 'pending_verify', message: '房屋不存在或未录入，已提交管理员核验', bindings })
+  return ok({ status: 'pending_verify', message: '已提交核验申请，等待管理员审核', bindings })
 }
 
 async function actionHouseMyList({ openid }) {

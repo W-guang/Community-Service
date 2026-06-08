@@ -3,16 +3,21 @@
 <scroll-view scroll-y="true" class="scroll-content">
   <view class="wrap">
 
-    <view class="section-card" wx:if="{{adminMode || isStaff}}">
+    <view class="section-card">
       <view class="sec-head">
         <view class="sec-head-left">
           <view class="sec-icon"><text>📢</text></view>
           <view class="sec-head-text">
-            <text class="sec-title">{{adminMode ? '公告管理' : '物业通知'}}</text>
-            <text class="sec-sub">发布与管理社区公告</text>
+            <text class="sec-title">{{adminMode ? '公告管理' : '社区公告'}}</text>
+            <text class="sec-sub">{{subTitle}}</text>
           </view>
         </view>
-        <button class="btn-add" bindtap="goManage">发布公告</button>
+        <button class="btn-add" bindtap="goManage" wx:if="{{isStaff || adminMode}}">发布公告</button>
+      </view>
+
+      <view class="seg-row" wx:if="{{!adminMode}}">
+        <view class="seg-item {{tab==='all'?'on':''}}" bindtap="setTab" data-tab="all">全部公告</view>
+        <view class="seg-item {{tab==='pending'?'on':''}}" bindtap="setTab" data-tab="pending">{{pendingTabLabel}}</view>
       </view>
     </view>
 
@@ -20,30 +25,60 @@
       <view class="skeleton-line short"></view><view class="skeleton-line"></view><view class="skeleton-line medium"></view>
     </view>
 
-    <view class="empty-card" wx:elif="{{!items.length}}">
-      <view class="empty-circle blue">
-        <text class="empty-circle-icon">📢</text>
+    <!-- 待办公告 -->
+    <block wx:if="{{tab==='pending' && !loading && !adminMode}}">
+      <view class="empty-card" wx:if="{{!pendingItems.length}}">
+        <view class="empty-circle green"><text class="empty-circle-icon">✅</text></view>
+        <text class="empty-title">所有重要公告已读</text>
+        <text class="empty-desc">暂无待办的重要公告</text>
       </view>
-      <text class="empty-title">暂无公告</text>
-      <text class="empty-desc">社区最新通知会在这里展示</text>
-    </view>
+      <view wx:for="{{pendingItems}}" wx:key="_id" class="notice-card" bindtap="goDetail" data-id="{{item._id}}">
+        <view class="nc-left">
+          <view class="nc-title">
+            <text wx:if="{{item.pinned}}" class="nc-pin">📌 置顶</text>
+            <text wx:if="{{item.important}}" class="nc-dot">●</text>
+            {{item.title}}
+          </view>
+          <view class="nc-meta">
+            <text class="nc-type">{{item.type}}</text>
+            <text class="nc-sep">·</text>
+            <text>{{format(item.createdAt)}}</text>
+          </view>
+        </view>
+        <view class="nc-tag" wx:if="{{item.important}}">重要</view>
+        <text class="nc-arrow">›</text>
+      </view>
+    </block>
 
-    <view wx:for="{{items}}" wx:key="_id" class="notice-card" bindtap="goDetail" data-id="{{item._id}}">
-      <view class="nc-left">
-        <view class="nc-title">
-          <text wx:if="{{item.pinned}}" class="nc-pin">📌 置顶</text>
-          <text wx:if="{{item.important}}" class="nc-dot">●</text>
-          {{item.title}}
-        </view>
-        <view class="nc-meta">
-          <text class="nc-type">{{item.type}}</text>
-          <text class="nc-sep">·</text>
-          <text>{{format(item.createdAt)}}</text>
-        </view>
+    <!-- 全部公告 / 管理模式 -->
+    <block wx:if="{{(tab==='all' && !loading) || adminMode}}">
+      <view class="empty-card" wx:if="{{!items.length}}">
+        <view class="empty-circle blue"><text class="empty-circle-icon">📢</text></view>
+        <text class="empty-title">暂无公告</text>
+        <text class="empty-desc">社区最新通知会在这里展示</text>
       </view>
-      <view class="nc-tag" wx:if="{{item.important}}">重要</view>
-      <text class="nc-arrow">›</text>
-    </view>
+      <view wx:for="{{items}}" wx:key="_id" class="notice-card" bindtap="goDetail" data-id="{{item._id}}">
+        <view class="nc-left">
+          <view class="nc-title">
+            <text wx:if="{{item.pinned}}" class="nc-pin">📌 置顶</text>
+            <text wx:if="{{item.important}}" class="nc-dot">●</text>
+            {{item.title}}
+          </view>
+          <view class="nc-meta">
+            <text class="nc-type">{{item.type}}</text>
+            <text class="nc-sep">·</text>
+            <text>{{format(item.createdAt)}}</text>
+          </view>
+          <!-- 管理模式显示已读进度 -->
+          <view wx:if="{{adminMode && item.important && item.totalUsers > 0}}" class="nc-read-bar">
+            <view class="nc-read-fill" style="width: {{item.readPercent || 0}}%"></view>
+            <text class="nc-read-text">{{item.readCount}}/{{item.totalUsers}} 已读</text>
+          </view>
+        </view>
+        <view class="nc-tag" wx:if="{{item.important}}">重要</view>
+        <text class="nc-arrow">›</text>
+      </view>
+    </block>
 
   </view>
 </scroll-view>

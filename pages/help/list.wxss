@@ -102,3 +102,57 @@
 .skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; }
 
 .wrap { padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 0; }
+
+/* 新增状态样式 */
+.hc-status.pending_review { background: #fef3c7; color: #92400e; }
+.hc-status.rejected       { background: #fee2e2; color: #991b1b; }
+.hc-status.expired        { background: #e2e8f0; color: #64748b; }
+.status-pill.pending_review { background: #fef3c7; color: #92400e; }
+.status-pill.rejected       { background: #fee2e2; color: #991b1b; }
+.status-pill.expired        { background: #e2e8f0; color: #64748b; }
+
+/* 截止时间 */
+.hc-deadline { color: #ef4444; font-weight: 600; }
+
+/* 审核操作按钮 */
+.hc-review-actions { display: flex; gap: 10rpx; margin-top: 14rpx; padding-top: 14rpx; border-top: 1rpx solid #f1f5f9; }
+.act-btn { font-size: 24rpx; font-weight: 600; border-radius: 12rpx; border: none; padding: 8rpx 20rpx; }
+.act-btn.fill-green  { background: #10b981; color: #fff; }
+.act-btn.outline     { background: #fff; color: #64748b; border: 2rpx solid #e2e8f0; }
+.act-btn.fill-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+.act-btn.outline-purple { background: #fff; color: #8b5cf6; border: 2rpx solid #ddd6fe; }
+
+/* ============================================================
+   互助榜
+   ============================================================ */
+.leaderboard { margin-top: 14rpx; }
+.lb-header { text-align: center; padding: 24rpx 0 16rpx; }
+.lb-title { font-size: 34rpx; font-weight: 800; color: #1e293b; display: block; }
+.lb-desc { font-size: 24rpx; color: #94a3b8; display: block; margin-top: 4rpx; }
+.lb-item {
+  display: flex; align-items: center; gap: 14rpx;
+  background: #fff; border-radius: 20rpx; padding: 20rpx 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.03); margin-bottom: 10rpx;
+}
+.lb-rank {
+  width: 56rpx; height: 56rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28rpx; font-weight: 800; color: #64748b;
+  background: #f1f5f9; flex-shrink: 0;
+}
+.lb-rank.top-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; font-size: 36rpx; }
+.lb-rank.top-2 { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: #fff; font-size: 36rpx; }
+.lb-rank.top-3 { background: linear-gradient(135deg, #fb923c, #ea580c); color: #fff; font-size: 36rpx; }
+.lb-avatar {
+  width: 64rpx; height: 64rpx; border-radius: 50%;
+  background: #f1f5f9; display: flex; align-items: center;
+  justify-content: center; flex-shrink: 0;
+}
+.lb-avatar-img { width: 64rpx; height: 64rpx; border-radius: 50%; }
+.lb-avatar-text { font-size: 28rpx; font-weight: 700; color: #64748b; }
+.lb-info { flex: 1; display: flex; flex-direction: column; }
+.lb-name { font-size: 28rpx; font-weight: 600; color: #1e293b; }
+.lb-credit { font-size: 22rpx; color: #94a3b8; }
+.lb-honor { text-align: center; flex-shrink: 0; }
+.lb-honor-num { font-size: 36rpx; font-weight: 800; color: #f59e0b; display: block; }
+.lb-honor-label { font-size: 20rpx; color: #94a3b8; }

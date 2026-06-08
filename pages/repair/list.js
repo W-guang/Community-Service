@@ -20,17 +20,18 @@ Page({
   statusText(s) { return STATUS_TEXT[s] || s },
   setFilter(e) {
     const s = e.currentTarget.dataset.status
-    this.setData({ filterStatus: this.data.filterStatus === s ? '' : s })
+    const newFilter = this.data.filterStatus === s ? '' : s
+    this.setData({ filterStatus: newFilter }, () => this.load())
   },
   async load() {
     this.setData({ loading: true })
     try {
-      const res = await callApi('repair.list', {})
-      let items = res.items || []
+      const params = {}
       if (this.data.adminMode && this.data.filterStatus) {
-        items = items.filter(item => item.status === this.data.filterStatus)
+        params.status = this.data.filterStatus
       }
-      this.setData({ items, loading: false })
+      const res = await callApi('repair.list', params)
+      this.setData({ items: res.items || [], loading: false })
     } catch (e) { this.setData({ loading: false }) }
   },
   goCreate() { wx.navigateTo({ url: '/pages/repair/create' }) },

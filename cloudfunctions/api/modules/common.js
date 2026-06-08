@@ -25,6 +25,7 @@ const COL = {
   adminConfigs: 'admin_configs',
   lotteryLogs: 'lottery_logs',
   lotteryPrizes: 'lottery_prizes',
+  honorPoints: 'honor_points',
 }
 
 let cachedAdminOpenids = null

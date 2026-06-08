@@ -78,3 +78,20 @@
 .skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; }
 
 .wrap { padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 0; }
+
+/* Tab */
+.seg-row { display: flex; background: #f1f5f9; border-radius: 14rpx; padding: 4rpx; margin-top: 16rpx; }
+.seg-item { flex: 1; text-align: center; padding: 14rpx 0; font-size: 26rpx; color: #64748b; border-radius: 12rpx; font-weight: 500; }
+.seg-item.on { background: #fff; color: #8b5cf6; font-weight: 700; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.06); }
+
+/* 公告标签 */
+.nc-tags { display: flex; gap: 6rpx; flex-shrink: 0; }
+.nc-tag-important { font-size: 20rpx; padding: 4rpx 12rpx; border-radius: 999rpx; background: #fee2e2; color: #dc2626; font-weight: 700; }
+.nc-time { color: #94a3b8; }
+
+/* 已读进度条 */
+.nc-read-bar { position: relative; margin-top: 8rpx; height: 20rpx; background: #f1f5f9; border-radius: 10rpx; overflow: hidden; }
+.nc-read-fill { height: 100%; background: linear-gradient(90deg, #8b5cf6, #a78bfa); border-radius: 10rpx; transition: width 0.3s; }
+.nc-read-text { position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 18rpx; color: #fff; line-height: 20rpx; }
+
+.empty-circle.green { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }

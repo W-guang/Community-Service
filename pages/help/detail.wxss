@@ -23,14 +23,18 @@
 .status-pill.taken           { background: #dbeafe; color: #1e40af; }
 .status-pill.waiting_confirm { background: #ede9fe; color: #5b21b6; }
 .status-pill.done            { background: #e2e8f0; color: #475569; }
+.status-pill.pending_review  { background: #fef3c7; color: #92400e; }
+.status-pill.rejected        { background: #fee2e2; color: #991b1b; }
+.status-pill.expired         { background: #e2e8f0; color: #64748b; }
 .uc-meta {
-  display: flex; align-items: center; gap: 6rpx;
+  display: flex; align-items: center; gap: 6rpx; flex-wrap: wrap;
   font-size: 24rpx; color: #94a3b8; padding-bottom: 24rpx;
   border-bottom: 1rpx solid #f1f5f9;
 }
 .meta-tag { color: #f59e0b; font-weight: 600; }
 .meta-sep { color: #cbd5e1; }
 .meta-reward { color: #d97706; font-weight: 700; }
+.meta-deadline { color: #ef4444; font-weight: 600; }
 
 /* —— 分节 —— */
 .uc-section {
@@ -157,3 +161,20 @@
 /* 骨架屏 */
 .skeleton-card { background: #fff; border-radius: 24rpx; padding: 30rpx; box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); }
 .wrap { padding: 18rpx 24rpx; }
+
+/* —— 联系电话卡片 —— */
+.phone-card {
+  display: flex; align-items: center; gap: 14rpx;
+  padding: 20rpx; border-radius: 16rpx;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 2rpx solid #bfdbfe;
+}
+.phone-icon { font-size: 40rpx; }
+.phone-info { flex: 1; display: flex; flex-direction: column; gap: 2rpx; }
+.phone-label { font-size: 22rpx; color: #64748b; }
+.phone-number { font-size: 32rpx; font-weight: 800; color: #1e40af; }
+.phone-name { font-size: 24rpx; color: #64748b; }
+.phone-call {
+  font-size: 26rpx; font-weight: 700; color: #fff;
+  background: #3b82f6; padding: 12rpx 24rpx; border-radius: 12rpx;
+}

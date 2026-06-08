@@ -36,10 +36,16 @@
         </view>
 
         <view class="field">
-          <text class="label">📍 定位</text>
-          <view class="loc-row">
-            <text class="loc-text">{{locationText}}</text>
-            <button size="mini" class="btn-loc" bindtap="pickLocation">{{location ? '重新定位' : '获取定位'}}</button>
+          <text class="label">🏠 选择房屋位置</text>
+          <picker wx:if="{{houses.length > 0}}" mode="selector" range="{{houseDisplayList}}" value="{{selectedHouseIndex}}" bindchange="onPickHouse">
+            <view class="picker">
+              <text wx:if="{{houseDisplayList[selectedHouseIndex]}}">{{houseDisplayList[selectedHouseIndex]}}</text>
+              <text wx:else>请选择房屋</text>
+              <text class="picker-arrow">▾</text>
+            </view>
+          </picker>
+          <view wx:else class="picker">
+            <text style="color:#999">暂无已绑定的房屋，请先绑定房屋</text>
           </view>
         </view>
 

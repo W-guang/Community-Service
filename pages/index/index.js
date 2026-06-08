@@ -84,6 +84,20 @@ Page({
   goGift() { wx.navigateTo({ url: '/pages/gift/list' }) },
   go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
   async sos() {
+    // 检查房屋绑定
+    const app = getApp()
+    const boundCount = (app.globalData.bindings && app.globalData.bindings.boundCount) || 0
+    if (boundCount === 0) {
+      wx.showModal({
+        title: '请先绑定房屋',
+        content: '绑定房屋后才能使用一键求助功能。',
+        confirmText: '去绑定',
+        success: (r) => {
+          if (r.confirm) wx.navigateTo({ url: '/pages/house/bind' })
+        },
+      })
+      return
+    }
     try {
       const loc = await new Promise(resolve => { wx.getLocation({ type: 'gcj02', success: r => resolve({ latitude: r.latitude, longitude: r.longitude }), fail: () => resolve(null) }) })
       await callApi('sos.create', { location: loc, note: '' })

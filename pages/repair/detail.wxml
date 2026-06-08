@@ -15,6 +15,14 @@
         <text>{{format(repair.createdAt)}}</text>
       </view>
 
+      <!-- ---------- 房屋信息 ---------- -->
+      <view class="uc-section" wx:if="{{repair.house}}">
+        <view class="uc-sec-label">报修房屋</view>
+        <view class="house-info-row">
+          <text>🏠 {{repair.house.community}} {{repair.house.building}}号楼 {{repair.house.unit}}单元 {{repair.house.room}}室</text>
+        </view>
+      </view>
+
       <!-- ---------- 进度时间线 ---------- -->
       <view class="uc-section">
         <view class="uc-sec-label">工单进度</view>
@@ -60,11 +68,6 @@
           <image wx:for="{{repair.images}}" wx:key="*this" class="uc-img" mode="aspectFill" src="{{item}}" bindtap="preview" data-src="{{item}}" />
         </view>
 
-        <view wx:if="{{repair.location}}" class="uc-loc">
-          <text>📍</text>
-          <text>{{repair.location.address || repair.location.name || '已定位'}}</text>
-        </view>
-
         <view wx:if="{{isStaff}}" class="uc-actions">
           <button size="mini" class="act-btn outline" bindtap="setStatus" data-status="processing">接单处理</button>
           <button size="mini" class="act-btn outline-purple" bindtap="setStatus" data-status="waiting_confirm">转待确认</button>
@@ -72,15 +75,17 @@
         </view>
       </view>
 
-      <!-- ---------- 沟通记录 ---------- -->
+      <!-- ---------- 沟通记录（评论区样式）---------- -->
       <view class="uc-section uc-section-last">
         <view class="uc-sec-label">沟通记录</view>
         <view wx:if="{{!comments.length}}" class="uc-empty-note">暂无留言，在下方发送第一条</view>
-        <view wx:for="{{comments}}" wx:key="_id" class="chat-msg {{item.fromRole === 'resident' ? 'left' : 'right'}}">
-          <view class="chat-bubble {{item.fromRole === 'resident' ? 'bub-resident' : 'bub-staff'}}">
-            <text class="chat-from">{{item.fromName}}</text>
-            <text class="chat-text">{{item.content}}</text>
-            <text class="chat-time">{{format(item.createdAt)}}</text>
+        <view wx:for="{{comments}}" wx:key="_id" class="comment-item">
+          <view class="comment-bubble {{item.fromRole === 'resident' ? 'bub-resident' : 'bub-staff'}}">
+            <view class="comment-header">
+              <text class="comment-from">{{item.fromName}}</text>
+              <text class="comment-time">{{format(item.createdAt)}}</text>
+            </view>
+            <text class="comment-text">{{item.content}}</text>
           </view>
         </view>
 

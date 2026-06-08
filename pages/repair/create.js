@@ -6,6 +6,7 @@ Page({
   async onShow() {
     const ok = await ensureBoundOrRedirect()
     if (!ok) wx.navigateBack({ delta: 1 })
+    await this.loadHouses()
   },
   data: {
     categories: ['水电', '公共设施', '门禁', '卫生', '其他'],
@@ -13,12 +14,26 @@ Page({
     title: '',
     content: '',
     images: [],
-    location: null,
-    locationText: '未选择（可选）',
+    houses: [],
+    houseDisplayList: [],
+    selectedHouseIndex: -1,
     submitting: false,
+  },
+  async loadHouses() {
+    try {
+      const res = await callApi('house.myList', {})
+      const boundHouses = (res.houses || []).filter(h => h.status === 'bound')
+      const houseDisplayList = boundHouses.map(h =>
+        h.community + ' ' + h.building + '号楼 ' + h.unit + '单元 ' + h.room + '室'
+      )
+      this.setData({ houses: boundHouses, houseDisplayList, selectedHouseIndex: boundHouses.length > 0 ? 0 : -1 })
+    } catch (e) {}
   },
   onPickCategory(e) {
     this.setData({ categoryIndex: Number(e.detail.value || 0) })
+  },
+  onPickHouse(e) {
+    this.setData({ selectedHouseIndex: Number(e.detail.value || 0) })
   },
   onTitle(e) {
     this.setData({ title: e.detail.value })
@@ -41,18 +56,6 @@ Page({
     const idx = Number(e.currentTarget.dataset.idx)
     const next = this.data.images.filter((_, i) => i !== idx)
     this.setData({ images: next })
-  },
-  pickLocation() {
-    wx.getLocation({
-      type: 'gcj02',
-      success: (r) => {
-        const loc = { latitude: r.latitude, longitude: r.longitude }
-        this.setData({ location: loc, locationText: `已获取定位：${loc.latitude.toFixed(4)},${loc.longitude.toFixed(4)}` })
-      },
-      fail: () => {
-        wx.showToast({ title: '定位失败（可跳过）', icon: 'none' })
-      },
-    })
   },
   async uploadImages(paths) {
     const fileIDs = []
@@ -86,12 +89,13 @@ Page({
     try {
       wx.showLoading({ title: '提交中' })
       const images = this.data.images.length ? await this.uploadImages(this.data.images) : []
+      const selectedHouse = this.data.houses[this.data.selectedHouseIndex] || null
       const res = await callApi('repair.create', {
         category,
         title,
         content,
         images,
-        location: this.data.location,
+        houseId: selectedHouse ? selectedHouse._id : '',
       })
       wx.hideLoading()
       wx.showToast({ title: '提交成功' })

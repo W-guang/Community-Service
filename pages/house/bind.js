@@ -64,11 +64,12 @@ Page({
       wx.hideLoading()
       const app = getApp()
       if (res.bindings) app.globalData.bindings = res.bindings
-      if (res.status === 'bound') {
-        wx.showModal({ title: '绑定成功', content: '现在可以使用报修、公告、互助等功能。', showCancel: false })
-      } else {
-        wx.showModal({ title: '已提交核验', content: res.message || '请等待管理员核验通过后使用核心功能。', showCancel: false })
-      }
+      // 所有绑定统一走审核流程
+      wx.showModal({
+        title: '已提交核验申请',
+        content: res.message || '请等待管理员/网格员审核通过后即可使用核心功能。',
+        showCancel: false,
+      })
       await this.refresh()
     } catch (e) {
       wx.hideLoading()
