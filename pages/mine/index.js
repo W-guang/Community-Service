@@ -32,16 +32,10 @@ Page({
   data: {
     user: { openid: '', role: 'resident', nickname: '', phone: '', elderMode: false },
     roleText: '居民', isStaff: false, adminMode: false,
-    form: { nickname: '', avatarUrl: '', phone: '', elderMode: false }, saving: false, stats: null,
-    showEdit: false,
-    adminMenus: [
-      { url: '/pages/admin/todo', icon: '📋', name: '待办处理', desc: '报修工单与SOS求助' },
-      { url: '/pages/admin/notice-manage', icon: '📢', name: '公告管理', desc: '发布与编辑社区公告' },
-      { url: '/pages/admin/user-manage', icon: '👥', name: '用户管理', desc: '角色分配与白名单' },
-      { url: '/pages/admin/house-verify', icon: '✅', name: '房屋核验', desc: '审核绑定申请' },
-      { url: '/pages/admin/house-manage', icon: '🏠', name: '房屋录入', desc: '录入小区房屋信息' },
-      { url: '/pages/admin/dashboard', icon: '📈', name: '数据看板', desc: '详细统计与报表导出' },
-    ],
+    form: { nickname: '', avatarUrl: '', phone: '', elderMode: false }, saving: false,
+    // 今日工作简报
+    maskedOpenid: '', briefRepairs: 0, briefHelps: 0, briefSos: 0, briefHouses: 0,
+    showEdit: false, showEditPopup: false,
     // 转盘相关（从服务端获取真实数据）
     lotteryShow: false, lotterySpinning: false,
     lotteryResult: '', lotteryRemain: 0, wheelDeg: 0,
@@ -57,18 +51,37 @@ Page({
       app.setUserAndMode(res.user)
       app.globalData.bindings = res.bindings || { boundCount: 0, houses: [] }
       const adminMode = app.isAdminMode ? app.isAdminMode() : false
+      const maskedOpenid = (res.user.openid && res.user.openid.length > 10)
+        ? res.user.openid.slice(0, 10) + '…'
+        : (res.user.openid || '加载中…')
       this.setUser(res.user)
-      this.setData({ adminMode })
-      if (adminMode) await this.loadStats()
+      this.setData({ adminMode, maskedOpenid })
+      if (adminMode) this.loadWorkBrief()
     } catch (e) { }
   },
+  async loadWorkBrief() {
+    try {
+      const stats = await callApi('dashboard.stats', {})
+      let housePending = 0
+      try {
+        const hp = await callApi('house.pendingList', {})
+        housePending = (hp.items || []).length
+      } catch (_) {}
+      this.setData({
+        briefRepairs: stats.repairs ? stats.repairs.pending : 0,
+        briefHelps: stats.helps ? stats.helps.open : 0,
+        briefSos: stats.sos ? stats.sos.pending : 0,
+        briefHouses: housePending,
+      })
+    } catch (_) {}
+  },
+  go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
   setUser(u) {
     this.setData({ user: u, roleText: roleText(u.role),
       isStaff: u.role === 'staff' || u.role === 'admin',
       form: { nickname: u.nickname || '', avatarUrl: u.avatarUrl || '', phone: u.phone || '', elderMode: !!u.elderMode } })
   },
-  toggleAdminMode() { const app = getApp(); const n = app.toggleAdminMode(); this.setData({ adminMode: n }); if (n) this.loadStats() },
-  async loadStats() { try { this.setData({ stats: await callApi('dashboard.stats') }) } catch (_) {} },
+  toggleAdminMode() { const app = getApp(); const n = app.toggleAdminMode(); this.setData({ adminMode: n }) },
   onNick(e) { this.setData({ 'form.nickname': e.detail.value }) },
   // 微信 type="nickname" 输入框失焦时自动回填微信昵称
   onNickBlur(e) {
@@ -102,9 +115,9 @@ Page({
     if (this.data.saving) return; this.setData({ saving: true })
     try {
       const res = await callApi('user.update', { ...this.data.form })
-      getApp().globalData.user = res.user
-      this.setUser(res.user)
+      getApp().globalData.user = res.user; this.setUser(res.user)
       wx.showToast({ title: '已保存' })
+      this.setData({ showEditPopup: false })
     }
     catch (e) { wx.showToast({ title: e.message || '保存失败', icon: 'none' }) }
     finally { this.setData({ saving: false }) }
@@ -125,9 +138,11 @@ Page({
     }
   },
   toggleEdit() { this.setData({ showEdit: !this.data.showEdit }) },
+  openEdit() { this.setData({ showEditPopup: true }) },
+  closeEdit() { this.setData({ showEditPopup: false }) },
+  goCoupon() { wx.showToast({ title: '领券中心开发中', icon: 'none' }) },
   goGift() { wx.navigateTo({ url: '/pages/gift/list' }) },
   goHouses() { wx.navigateTo({ url: '/pages/house/list' }) },
-  go(e) { wx.navigateTo({ url: e.currentTarget.dataset.url }) },
   async sos() {
     const app = getApp()
     const boundCount = (app.globalData.bindings && app.globalData.bindings.boundCount) || 0
@@ -141,6 +156,12 @@ Page({
       await callApi('sos.create', { location: loc, note: '' })
       wx.showModal({ title: '已发出求助', content: '物业/网格员将看到求助信息并跟进处理。', showCancel: false })
     } catch (e) { if (e && e.message) wx.showToast({ title: e.message, icon: 'none' }) }
+  },
+  clearCache() {
+    const app = getApp()
+    if (app.globalData) app.globalData.bindings = null
+    wx.showToast({ title: '缓存已清除', icon: 'success' })
+    this.load()
   },
 
   // ========== 转盘 (Canvas 2D 同层渲染) ==========

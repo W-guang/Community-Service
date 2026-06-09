@@ -2,131 +2,177 @@
 <view class="page">
 <scroll-view scroll-y="true" class="scroll-content">
 
-  <!-- 头部 -->
+  <!-- ========== Hero — 深靛蓝数据总览头部 ========== -->
   <view class="dash-hero" wx:if="{{stats}}">
-    <view class="hero-bg"></view>
-    <view class="hero-orb hero-orb-1"></view>
-    <view class="hero-orb hero-orb-2"></view>
-    <view class="hero-content">
-      <text class="hero-label">数据总览</text>
-      <text class="hero-time">更新于 {{format(stats.generatedAt)}}</text>
+    <view class="dh-shine"></view>
+    <view class="dh-accent-ring"></view>
+    <view class="dh-content">
+      <text class="dh-label">DATA OVERVIEW</text>
+      <text class="dh-title">数据总览</text>
+
+      <view class="dh-kpi-row">
+        <view class="dh-kpi">
+          <text class="dh-kpi-val">{{stats.users.total}}</text>
+          <text class="dh-kpi-label">注册用户</text>
+        </view>
+        <view class="dh-kpi">
+          <text class="dh-kpi-val">{{stats.houses.bound}}</text>
+          <text class="dh-kpi-label">已绑房屋</text>
+        </view>
+        <view class="dh-kpi">
+          <text class="dh-kpi-val warn">{{stats.repairs.pending}}</text>
+          <text class="dh-kpi-label">待处理报修</text>
+        </view>
+        <view class="dh-kpi">
+          <text class="dh-kpi-val warn">{{stats.helps.open}}</text>
+          <text class="dh-kpi-label">待接单互助</text>
+        </view>
+        <view class="dh-kpi">
+          <text class="dh-kpi-val danger">{{stats.sos.pending}}</text>
+          <text class="dh-kpi-label">紧急求助</text>
+        </view>
+      </view>
+
+      <view class="dh-pending-strip" wx:if="{{totalPending > 0}}">
+        <view class="dh-ps-left">
+          <view class="dh-ps-pulse"></view>
+          <text class="dh-ps-text">当前共有 <text class="dh-ps-num">{{totalPending}}</text> 项待处理事务</text>
+        </view>
+        <text class="dh-ps-arrow">›</text>
+      </view>
+
+      <text class="dh-time">数据更新于 {{format(stats.generatedAt)}}</text>
     </view>
   </view>
 
   <view class="wrap">
 
-    <!-- 加载态 -->
+    <!-- ========== 加载态 ========== -->
     <view class="load-zone" wx:if="{{loading}}">
-      <view class="load-spinner"></view>
+      <view class="load-ring"></view>
       <text class="load-text">加载数据中...</text>
     </view>
 
-    <block wx:if="{{!loading}}">
-      <!-- 无数据 -->
-      <view class="soft-empty" wx:if="{{!stats}}">
-        <text class="soft-empty-icon">📊</text>
-        <text class="soft-empty-text">暂无统计数据</text>
-        <button size="mini" class="btn-mini-fill" bindtap="load">点击加载</button>
+    <!-- ========== 空态 ========== -->
+    <view class="soft-empty" wx:if="{{!loading && !stats}}">
+      <view class="se-icon-wrap"><text class="se-icon">📊</text></view>
+      <text class="se-title">暂无统计数据</text>
+      <text class="se-desc">系统运行后将自动汇总数据</text>
+      <button size="mini" class="btn-mini-fill" bindtap="load">点击加载</button>
+    </view>
+
+    <block wx:if="{{!loading && stats}}">
+
+      <!-- ========== 完成率双卡 ========== -->
+      <view class="comp-row">
+        <view class="comp-card">
+          <view class="comp-top">
+            <view class="comp-badge repair-badge">报修</view>
+            <text class="comp-rate">{{repairRate}}<text class="comp-rate-unit">%</text></text>
+          </view>
+          <text class="comp-sub">完成率 · {{stats.repairs.done}}/{{stats.repairs.total}}</text>
+          <view class="comp-track">
+            <view class="comp-fill repair-fill" style="width:{{repairRate || 2}}%"></view>
+          </view>
+        </view>
+        <view class="comp-card">
+          <view class="comp-top">
+            <view class="comp-badge help-badge">互助</view>
+            <text class="comp-rate">{{helpRate}}<text class="comp-rate-unit">%</text></text>
+          </view>
+          <text class="comp-sub">完成率 · {{stats.helps.done}}/{{stats.helps.total}}</text>
+          <view class="comp-track">
+            <view class="comp-fill help-fill" style="width:{{helpRate || 2}}%"></view>
+          </view>
+        </view>
       </view>
 
-      <block wx:if="{{stats}}">
-        <!-- 2大KPI -->
-        <view class="kpi-duo">
-          <view class="kpi-duo-card blue-card">
-            <view class="kpi-duo-icon-wrap"><text>👥</text></view>
-            <view class="kpi-duo-body">
-              <text class="kpi-duo-val">{{stats.users.total}}</text>
-              <text class="kpi-duo-label">注册用户</text>
-            </view>
+      <!-- ========== 图1 — 环形图：报修工单状态分布 ========== -->
+      <view class="chart-card">
+        <text class="chart-card-title">报修工单状态分布</text>
+        <view class="donut-row">
+          <view class="donut-canvas-wrap">
+            <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
           </view>
-          <view class="kpi-duo-card green-card">
-            <view class="kpi-duo-icon-wrap"><text>🏠</text></view>
-            <view class="kpi-duo-body">
-              <text class="kpi-duo-val">{{stats.houses.bound}}</text>
-              <text class="kpi-duo-label">已绑定房屋</text>
+          <view class="donut-legend">
+            <view wx:for="{{repairStatusData}}" wx:key="label" class="dl-item">
+              <view class="dl-dot" style="background:{{item.color}}"></view>
+              <text class="dl-label">{{item.label}}</text>
+              <text class="dl-value">{{item.value}}</text>
+              <text class="dl-pct">{{item.pct}}%</text>
             </view>
           </view>
         </view>
+      </view>
 
-        <!-- 报修统计 -->
-        <view class="stat-block repair-block">
-          <view class="stat-block-head">
-            <text class="stat-block-icon">🔧</text>
-            <text class="stat-block-title">物业报修</text>
-          </view>
-          <view class="stat-grid-3">
-            <view class="sg-item">
-              <text class="sg-val">{{stats.repairs.total}}</text>
-              <text class="sg-label">总数</text>
+      <!-- ========== 图2 — 横向柱状图：邻里互助任务类型排行 ========== -->
+      <view class="chart-card">
+        <text class="chart-card-title">邻里互助任务类型排行</text>
+        <view class="hbar-list">
+          <view wx:for="{{helpTypeData}}" wx:key="label" class="hbar-row">
+            <text class="hbar-label">{{item.label}}</text>
+            <view class="hbar-track">
+              <view class="hbar-fill" style="width:{{item.barWidth}}%"></view>
             </view>
-            <view class="sg-item accent-orange">
-              <text class="sg-val">{{stats.repairs.pending}}</text>
-              <text class="sg-label">待受理</text>
-            </view>
-            <view class="sg-item accent-green">
-              <text class="sg-val">{{stats.repairs.done}}</text>
-              <text class="sg-label">已完成</text>
-            </view>
-          </view>
-          <view class="mini-bar-track" wx:if="{{stats.repairs.total > 0}}">
-            <view class="mini-bar-fill" style="width:{{stats.repairs.done / stats.repairs.total * 100}}%"></view>
+            <text class="hbar-val">{{item.value}}</text>
           </view>
         </view>
+      </view>
 
-        <!-- 互助统计 -->
-        <view class="stat-block help-block">
-          <view class="stat-block-head">
-            <text class="stat-block-icon">🤝</text>
-            <text class="stat-block-title">邻里互助</text>
-          </view>
-          <view class="stat-grid-3">
-            <view class="sg-item">
-              <text class="sg-val">{{stats.helps.total}}</text>
-              <text class="sg-label">总数</text>
-            </view>
-            <view class="sg-item accent-orange">
-              <text class="sg-val">{{stats.helps.open}}</text>
-              <text class="sg-label">待接单</text>
-            </view>
-            <view class="sg-item accent-green">
-              <text class="sg-val">{{stats.helps.done || 0}}</text>
-              <text class="sg-label">已完成</text>
-            </view>
-          </view>
+      <!-- ========== 图3 — 折线图：每日新增报修趋势 ========== -->
+      <view class="chart-card">
+        <text class="chart-card-title">每日新增报修趋势</text>
+        <view class="line-canvas-wrap">
+          <canvas type="2d" id="lineCanvas" class="line-canvas"></canvas>
         </view>
+      </view>
 
-        <!-- SOS + 公告 双栏 -->
-        <view class="dual-blocks">
-          <view class="dual-card danger-accent">
-            <text class="dual-icon">🆘</text>
-            <text class="dual-val red">{{stats.sos.pending || 0}}</text>
-            <text class="dual-label">紧急求助 · 待处理</text>
-          </view>
-          <view class="dual-card">
-            <text class="dual-icon">📢</text>
-            <text class="dual-val">{{stats.notices.total || 0}}</text>
-            <text class="dual-label">公告已发布</text>
+      <!-- ========== SOS + 公告 双栏 ========== -->
+      <view class="dual-row">
+        <view class="dual-card sos-card">
+          <view class="dual-icon-ring sos-ring"><text class="dual-icon-emoji">🆘</text></view>
+          <text class="dual-val danger">{{stats.sos.pending || 0}}</text>
+          <text class="dual-lbl">紧急求助待处理</text>
+          <view class="dual-strip sos-strip" wx:if="{{stats.sos.pending > 0}}">
+            <text class="dual-strip-text">需立即响应</text>
           </view>
         </view>
+        <view class="dual-card notice-card">
+          <view class="dual-icon-ring notice-ring"><text class="dual-icon-emoji">📢</text></view>
+          <text class="dual-val">{{stats.notices.total || 0}}</text>
+          <text class="dual-lbl">公告已发布</text>
+          <view class="dual-strip notice-strip"><text class="dual-strip-text">社区通知</text></view>
+        </view>
+      </view>
 
-        <!-- 导出 -->
-        <view class="stat-block export-block">
-          <view class="stat-block-head">
-            <text class="stat-block-icon">📥</text>
-            <text class="stat-block-title">报表导出</text>
+      <!-- ========== 报表导出 ========== -->
+      <view class="export-card">
+        <view class="ec-head">
+          <view class="ec-head-left">
+            <text class="ec-icon">📥</text>
+            <text class="ec-title">报表导出</text>
           </view>
-          <text class="export-desc">导出为 JSON 格式，可用于数据分析与存档</text>
-          <view class="export-btns">
-            <button size="mini" class="btn-export" bindtap="exportData" data-type="all">📦 全部</button>
-            <button size="mini" class="btn-export" bindtap="exportData" data-type="repairs">🔧 报修</button>
-            <button size="mini" class="btn-export" bindtap="exportData" data-type="helps">🤝 互助</button>
-            <button size="mini" class="btn-export" bindtap="exportData" data-type="sos">🆘 SOS</button>
+          <text class="ec-desc">JSON 格式，可用于数据分析与存档</text>
+        </view>
+        <view class="ec-btns">
+          <view class="ec-btn {{exporting ? 'disabled' : ''}}" bindtap="exportData" data-type="all">
+            <text class="ec-btn-icon">📦</text><text class="ec-btn-text">全部数据</text>
           </view>
-          <view wx:if="{{exportResult}}" class="export-box">
-            <text class="export-text">{{exportResult}}</text>
+          <view class="ec-btn {{exporting ? 'disabled' : ''}}" bindtap="exportData" data-type="repairs">
+            <text class="ec-btn-icon">🔧</text><text class="ec-btn-text">报修</text>
+          </view>
+          <view class="ec-btn {{exporting ? 'disabled' : ''}}" bindtap="exportData" data-type="helps">
+            <text class="ec-btn-icon">🤝</text><text class="ec-btn-text">互助</text>
+          </view>
+          <view class="ec-btn {{exporting ? 'disabled' : ''}}" bindtap="exportData" data-type="sos">
+            <text class="ec-btn-icon">🆘</text><text class="ec-btn-text">SOS</text>
           </view>
         </view>
-      </block>
+        <view wx:if="{{exportResult}}" class="ec-result">
+          <text class="ec-result-text">{{exportResult}}</text>
+        </view>
+      </view>
+
     </block>
   </view>
 

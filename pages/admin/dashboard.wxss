@@ -1,188 +1,304 @@
 /* ============================================================
-   头部 Hero
+   治理数据看板 — Premium Analytics Suite
+   深靛蓝主题 · 层次卡片 · 数据可视化
+   内置三张图表：环形图 · 横向柱状图 · 折线图
+   ============================================================ */
+
+.page {
+  background: linear-gradient(180deg, #f0f2f8 0%, #f7f8fc 100%);
+}
+
+/* ============================================================
+   1. Hero — 深靛蓝数据总览头部
    ============================================================ */
 .dash-hero {
-  position: relative; margin: 16rpx 24rpx 0; border-radius: 24rpx; overflow: hidden;
+  position: relative;
+  margin: 16rpx 24rpx 0;
+  border-radius: 28rpx;
+  overflow: hidden;
+  background: linear-gradient(160deg, #0f0a2e 0%, #1e1b4b 25%, #312e81 55%, #3730a3 100%);
 }
-.hero-bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, #6d28d9, #7c3aed, #8b5cf6, #a78bfa);
-  background-size: 300% 300%;
-  animation: heroPurpleFlow 14s ease-in-out infinite alternate;
+.dh-shine {
+  position: absolute;
+  top: -80rpx; right: -60rpx;
+  width: 320rpx; height: 320rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(129,140,248,0.18) 0%, transparent 70%);
 }
-@keyframes heroPurpleFlow {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
+.dh-accent-ring {
+  position: absolute;
+  bottom: -100rpx; left: -80rpx;
+  width: 280rpx; height: 280rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(255,255,255,0.06);
 }
-.hero-orb {
-  position: absolute; border-radius: 50%;
+.dh-content {
+  position: relative; z-index: 1;
+  padding: 36rpx 32rpx 32rpx;
 }
-.hero-orb-1 {
-  width: 240rpx; height: 240rpx; right: -60rpx; top: -70rpx;
-  background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 65%);
-  animation: orbFloat1 11s ease-in-out infinite alternate;
+.dh-label {
+  display: block;
+  font-size: 20rpx; font-weight: 600; color: rgba(255,255,255,0.35);
+  letter-spacing: 4rpx; text-transform: uppercase;
+  margin-bottom: 4rpx;
 }
-@keyframes orbFloat1 {
-  0%   { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(30rpx, 20rpx) scale(1.1); }
+.dh-title {
+  display: block;
+  font-size: 44rpx; font-weight: 800; color: #fff;
+  letter-spacing: 2rpx; margin-bottom: 28rpx;
+  text-shadow: 0 2rpx 12rpx rgba(0,0,0,0.15);
 }
-.hero-orb-2 {
-  width: 140rpx; height: 140rpx; left: 10rpx; bottom: -30rpx;
-  background: radial-gradient(circle, rgba(253,224,71,0.2), transparent 65%);
-  animation: orbFloat2 9s ease-in-out infinite alternate;
+.dh-kpi-row {
+  display: flex; justify-content: space-between;
+  gap: 4rpx;
 }
-@keyframes orbFloat2 {
-  0%   { transform: translate(0, 0); }
-  100% { transform: translate(-15rpx, -20rpx); }
+.dh-kpi { flex: 1; text-align: center; }
+.dh-kpi-val {
+  display: block; font-size: 42rpx; font-weight: 800;
+  color: #fff; line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
-.hero-content {
-  position: relative; z-index: 1; padding: 36rpx 32rpx;
+.dh-kpi-val.warn   { color: #fbbf24; }
+.dh-kpi-val.danger { color: #f87171; }
+.dh-kpi-label {
+  display: block; font-size: 20rpx; color: rgba(255,255,255,0.55);
+  margin-top: 6rpx; font-weight: 500;
 }
-.hero-label {
-  display: block; font-size: 36rpx; font-weight: 800; color: #fff;
-  letter-spacing: 2rpx; text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.12);
+.dh-pending-strip {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 24rpx; padding: 16rpx 20rpx;
+  border-radius: 16rpx;
+  background: rgba(255,255,255,0.08);
+  border: 1rpx solid rgba(255,255,255,0.1);
 }
-.hero-time {
-  display: block; font-size: 22rpx; color: rgba(255,255,255,0.85); margin-top: 6rpx;
-  text-shadow: 0 1rpx 4rpx rgba(0,0,0,0.08);
+.dh-ps-left { display: flex; align-items: center; gap: 12rpx; }
+.dh-ps-pulse {
+  width: 14rpx; height: 14rpx; border-radius: 50%;
+  background: #f87171;
+  box-shadow: 0 0 10rpx rgba(248,113,113,0.5);
+}
+.dh-ps-text { font-size: 24rpx; color: rgba(255,255,255,0.85); }
+.dh-ps-num { font-size: 28rpx; font-weight: 800; color: #fbbf24; }
+.dh-ps-arrow { font-size: 32rpx; color: rgba(255,255,255,0.35); }
+.dh-time {
+  display: block; margin-top: 20rpx;
+  font-size: 20rpx; color: rgba(255,255,255,0.4); text-align: right;
 }
 
 /* ============================================================
-   KPI 双卡
+   2. 完成率双卡
    ============================================================ */
-.kpi-duo {
+.comp-row {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx;
 }
-.kpi-duo-card {
-  display: flex; align-items: center; gap: 18rpx;
-  border-radius: 20rpx; padding: 28rpx 24rpx;
+.comp-card {
+  background: #fff; border-radius: 24rpx; padding: 28rpx 24rpx 24rpx;
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
 }
-.blue-card  { background: linear-gradient(135deg, #eff6ff, #dbeafe); }
-.green-card { background: linear-gradient(135deg, #ecfdf5, #d1fae5); }
-.kpi-duo-icon-wrap {
-  width: 72rpx; height: 72rpx; border-radius: 18rpx;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36rpx; flex-shrink: 0;
+.comp-top {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 8rpx;
 }
-.blue-card  .kpi-duo-icon-wrap { background: rgba(59,130,246,0.15); }
-.green-card .kpi-duo-icon-wrap { background: rgba(16,185,129,0.15); }
-.kpi-duo-body { display: flex; flex-direction: column; }
-.kpi-duo-val {
-  font-size: 48rpx; font-weight: 800; color: #0f172a; line-height: 1.1;
+.comp-badge {
+  font-size: 22rpx; font-weight: 700; padding: 6rpx 16rpx;
+  border-radius: 8rpx; color: #fff;
 }
-.kpi-duo-label { font-size: 24rpx; color: #64748b; margin-top: 4rpx; }
+.comp-badge.repair-badge { background: #3b82f6; }
+.comp-badge.help-badge   { background: #f59e0b; }
+.comp-rate {
+  font-size: 56rpx; font-weight: 800; color: #0f172a;
+  line-height: 1; font-variant-numeric: tabular-nums;
+}
+.comp-rate-unit {
+  font-size: 28rpx; font-weight: 600; color: #94a3b8; margin-left: 2rpx;
+}
+.comp-sub {
+  display: block; font-size: 22rpx; color: #94a3b8; margin-bottom: 14rpx;
+}
+.comp-track {
+  height: 8rpx; background: #f1f5f9; border-radius: 4rpx; overflow: hidden;
+}
+.comp-fill { height: 100%; border-radius: 4rpx; }
+.comp-fill.repair-fill { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.comp-fill.help-fill   { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 
 /* ============================================================
-   统计块
+   3. 图表卡片通用样式
    ============================================================ */
-.stat-block {
-  background: #fff; border-radius: 24rpx; padding: 28rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+.chart-card {
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.05);
 }
-.stat-block.repair-block { border-top: 6rpx solid #3b82f6; }
-.stat-block.help-block  { border-top: 6rpx solid #f59e0b; }
-.stat-block-head {
-  display: flex; align-items: center; gap: 10rpx; margin-bottom: 18rpx;
-}
-.stat-block-icon { font-size: 32rpx; }
-.stat-block-title {
-  font-size: 28rpx; font-weight: 700; color: #1e293b;
-}
-.stat-grid-3 {
-  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8rpx;
-}
-.sg-item {
-  text-align: center; padding: 18rpx 8rpx;
-  background: #f8fafc; border-radius: 14rpx;
-}
-.sg-item.accent-orange { background: #fff7ed; }
-.sg-item.accent-green  { background: #f0fdf4; }
-.sg-val {
-  display: block; font-size: 38rpx; font-weight: 800; color: #1e293b; line-height: 1.2;
-}
-.sg-item.accent-orange .sg-val { color: #f59e0b; }
-.sg-item.accent-green  .sg-val { color: #10b981; }
-.sg-label {
-  font-size: 22rpx; color: #94a3b8; margin-top: 2rpx;
+.chart-card-title {
+  display: block;
+  font-size: 30rpx; font-weight: 700; color: #1e293b;
+  margin-bottom: 24rpx;
 }
 
-/* 进度条 */
-.mini-bar-track {
-  height: 8rpx; background: #e2e8f0; border-radius: 4rpx;
-  margin-top: 14rpx; overflow: hidden;
+/* ---- 3a. 环形图 + Legend ---- */
+.donut-row {
+  display: flex; align-items: center; gap: 28rpx;
 }
-.mini-bar-fill {
-  height: 100%; border-radius: 4rpx;
-  background: linear-gradient(90deg, #10b981, #34d399);
+.donut-canvas-wrap {
+  width: 260rpx; height: 260rpx; flex-shrink: 0;
+}
+.donut-canvas { width: 260rpx; height: 260rpx; }
+
+.donut-legend {
+  flex: 1; display: flex; flex-direction: column; gap: 16rpx;
+}
+.dl-item { display: flex; align-items: center; gap: 12rpx; }
+.dl-dot {
+  width: 14rpx; height: 14rpx; border-radius: 4rpx; flex-shrink: 0;
+}
+.dl-label {
+  font-size: 26rpx; color: #475569; min-width: 80rpx; font-weight: 500;
+}
+.dl-value {
+  font-size: 26rpx; font-weight: 700; color: #1e293b;
+  min-width: 50rpx; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.dl-pct {
+  font-size: 24rpx; color: #94a3b8;
+  min-width: 72rpx; text-align: right;
 }
 
-/* 双栏 */
-.dual-blocks {
+/* ---- 3b. 横向柱状图 ---- */
+.hbar-list { display: flex; flex-direction: column; gap: 18rpx; }
+.hbar-row { display: flex; align-items: center; gap: 16rpx; }
+.hbar-label {
+  font-size: 26rpx; font-weight: 600; color: #475569;
+  min-width: 108rpx; flex-shrink: 0;
+}
+.hbar-track {
+  flex: 1; height: 36rpx; background: #f1f5f9;
+  border-radius: 18rpx; overflow: hidden;
+}
+.hbar-fill {
+  height: 100%; border-radius: 18rpx;
+  background: linear-gradient(90deg, #1296db, #38bdf8);
+}
+.hbar-val {
+  font-size: 24rpx; font-weight: 800; color: #1e293b;
+  min-width: 48rpx; text-align: right; flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- 3c. 折线图 ---- */
+.line-canvas-wrap { width: 100%; height: 420rpx; }
+.line-canvas { width: 100%; height: 420rpx; }
+
+/* ============================================================
+   4. SOS + 公告 双栏卡片
+   ============================================================ */
+.dual-row {
   display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx;
 }
 .dual-card {
-  background: #fff; border-radius: 24rpx; padding: 32rpx 24rpx;
-  display: flex; flex-direction: column; align-items: center; gap: 8rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04); text-align: center;
+  background: #fff; border-radius: 24rpx; padding: 32rpx 24rpx 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
+  display: flex; flex-direction: column; align-items: center; gap: 12rpx;
 }
-.dual-card.danger-accent {
-  border: 2rpx solid #fee2e2;
+.dual-card.sos-card {
+  border-left: 6rpx solid #ef4444;
+  border-radius: 6rpx 24rpx 24rpx 6rpx;
 }
-.dual-icon { font-size: 40rpx; }
+.dual-icon-ring {
+  width: 72rpx; height: 72rpx; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.dual-icon-ring.sos-ring    { background: #fef2f2; }
+.dual-icon-ring.notice-ring  { background: #f5f3ff; }
+.dual-icon-emoji { font-size: 36rpx; }
 .dual-val {
-  font-size: 52rpx; font-weight: 800; color: #1e293b; line-height: 1.1;
+  font-size: 56rpx; font-weight: 800; color: #0f172a;
+  line-height: 1; font-variant-numeric: tabular-nums;
 }
-.dual-val.red { color: #ef4444; }
-.dual-label { font-size: 24rpx; color: #94a3b8; }
+.dual-val.danger { color: #ef4444; }
+.dual-lbl { font-size: 24rpx; color: #94a3b8; font-weight: 500; }
+.dual-strip {
+  margin-top: 4rpx; padding: 8rpx 20rpx; border-radius: 999rpx;
+}
+.dual-strip.sos-strip    { background: #fef2f2; }
+.dual-strip.notice-strip { background: #f5f3ff; }
+.dual-strip-text { font-size: 20rpx; font-weight: 600; }
+.dual-strip.sos-strip .dual-strip-text    { color: #ef4444; }
+.dual-strip.notice-strip .dual-strip-text { color: #7c3aed; }
 
 /* ============================================================
-   导出块
+   5. 报表导出卡片
    ============================================================ */
-.export-block { border-top: 6rpx solid #8b5cf6; }
-.export-desc {
-  font-size: 24rpx; color: #94a3b8; line-height: 1.5; margin-bottom: 14rpx;
+.export-card {
+  background: #fff; border-radius: 24rpx; padding: 28rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.04);
 }
-.export-btns {
-  display: flex; flex-wrap: wrap; gap: 10rpx;
+.ec-head { margin-bottom: 20rpx; }
+.ec-head-left {
+  display: flex; align-items: center; gap: 10rpx; margin-bottom: 6rpx;
 }
-.btn-export {
-  padding: 12rpx 22rpx; border-radius: 14rpx;
-  font-size: 24rpx; font-weight: 500;
-  background: #f8fafc; color: #475569;
-  border: 1rpx solid #e2e8f0;
+.ec-icon { font-size: 32rpx; }
+.ec-title { font-size: 28rpx; font-weight: 700; color: #0f172a; }
+.ec-desc { font-size: 22rpx; color: #94a3b8; margin-left: 42rpx; display: block; }
+.ec-btns { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.ec-btn {
+  display: flex; align-items: center; gap: 8rpx;
+  padding: 16rpx 24rpx; border-radius: 16rpx;
+  background: #f8fafc; border: 1rpx solid #e2e8f0;
 }
-.btn-export:active { background: #e0e7ff; border-color: #a5b4fc; }
-.export-box {
-  margin-top: 16rpx; padding: 18rpx; border-radius: 14rpx;
+.ec-btn:active { background: #eef2ff; border-color: #a5b4fc; }
+.ec-btn.disabled { opacity: 0.5; pointer-events: none; }
+.ec-btn-icon { font-size: 26rpx; }
+.ec-btn-text { font-size: 24rpx; font-weight: 600; color: #334155; }
+.ec-result {
+  margin-top: 20rpx; padding: 20rpx; border-radius: 16rpx;
   background: #f0f9ff; border: 1rpx solid #bae6fd;
 }
-.export-text {
-  font-size: 22rpx; color: #0369a1; white-space: pre-wrap; word-break: break-all;
+.ec-result-text {
+  font-size: 22rpx; color: #0369a1; white-space: pre-wrap;
+  word-break: break-all; font-family: monospace;
 }
 
 /* ============================================================
-   加载 & 空状态
+   6. 加载 & 空状态
    ============================================================ */
 .load-zone {
-  display: flex; flex-direction: column; align-items: center; padding: 80rpx 0; gap: 16rpx;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 80rpx 0; gap: 20rpx;
 }
-.load-spinner {
-  width: 52rpx; height: 52rpx; border: 4rpx solid #e2e8f0;
-  border-top-color: #3b82f6; border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.load-ring {
+  width: 56rpx; height: 56rpx; border-radius: 50%;
+  border: 4rpx solid #e2e8f0;
+  border-top-color: #3b82f6;
+  animation: lr-spin 0.8s linear infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes lr-spin { to { transform: rotate(360deg); } }
 .load-text { font-size: 26rpx; color: #94a3b8; }
 
 .soft-empty {
-  display: flex; flex-direction: column; align-items: center; padding: 80rpx 0; gap: 12rpx;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 80rpx 0; gap: 14rpx;
 }
-.soft-empty-icon { font-size: 72rpx; }
-.soft-empty-text { font-size: 28rpx; color: #94a3b8; }
+.se-icon-wrap {
+  width: 100rpx; height: 100rpx; border-radius: 50%;
+  background: #f1f5f9; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 6rpx;
+}
+.se-icon { font-size: 48rpx; }
+.se-title { font-size: 28rpx; font-weight: 700; color: #334155; }
+.se-desc  { font-size: 24rpx; color: #94a3b8; }
 .btn-mini-fill {
   margin-top: 12rpx; border-radius: 14rpx; font-size: 26rpx;
   padding: 14rpx 32rpx; background: #3b82f6; color: #fff; border: none;
 }
+.btn-mini-fill:active { opacity: 0.85; }
 
-.wrap { padding: 18rpx 24rpx; display: flex; flex-direction: column; gap: 18rpx; }
+/* ============================================================
+   7. 布局工具
+   ============================================================ */
+.wrap {
+  padding: 18rpx 24rpx 30rpx;
+  display: flex; flex-direction: column; gap: 18rpx;
+}
