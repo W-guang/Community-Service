@@ -1,17 +1,17 @@
 /**
  * 一键求助（SOS）模块
  */
-const { db, COL, now, ok, getOrCreateUser, requireRole, requireBoundHouse } = require('./common')
+const { db, COL, now, ok, getOrCreateUser, requireRole } = require('./common')
 
 async function actionSosCreate({ openid, data }) {
   const user = await getOrCreateUser(openid)
-  await requireBoundHouse(openid, user) // 必须绑定房屋才能发送SOS
   const doc = {
     openid,
     fromName: user.nickname || '求助人',
     phone: user.phone || '',
     location: data.location || null,
     note: (data.note || '').slice(0, 200),
+    presetInfo: (data.presetInfo || '').slice(0, 200),
     status: 'pending',
     handlerOpenid: '',
     createdAt: now(),

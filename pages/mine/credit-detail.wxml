@@ -1,0 +1,55 @@
+<navigation-bar title="积分与信誉" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
+  <view class="wrap">
+
+    <!-- Tab 切换 -->
+    <view class="cd-tabs">
+      <view class="cd-tab {{tab==='points'?'on':''}}" bindtap="setTab" data-tab="points">积分流水</view>
+      <view class="cd-tab {{tab==='credit'?'on':''}}" bindtap="setTab" data-tab="credit">信誉记录</view>
+    </view>
+
+    <!-- 积分流水 -->
+    <view class="cd-list" wx:if="{{tab==='points'}}">
+      <view class="cd-empty" wx:if="{{!pointLogs.length}}">
+        <text class="cd-empty-icon">📭</text>
+        <text class="cd-empty-text">暂无积分记录</text>
+      </view>
+      <view wx:for="{{pointLogs}}" wx:key="_id" class="cd-item">
+        <view class="cdi-left">
+          <view class="cdi-dot {{item.type==='earn'?'earn':'spend'}}">{{item.type==='earn'?'+':'-'}}</view>
+          <view class="cdi-info">
+            <text class="cdi-source">{{item.source || '积分变动'}}</text>
+            <text class="cdi-time">{{format(item.createdAt)}}</text>
+          </view>
+        </view>
+        <text class="cdi-amount {{item.type==='earn'?'earn':'spend'}}">
+          {{item.type==='earn'?'+':''}}{{item.amount}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 信誉记录 -->
+    <view class="cd-list" wx:if="{{tab==='credit'}}">
+      <view class="cd-empty" wx:if="{{!creditLogs.length}}">
+        <text class="cd-empty-icon">🛡️</text>
+        <text class="cd-empty-text">暂无信誉记录</text>
+      </view>
+      <view wx:for="{{creditLogs}}" wx:key="_id" class="cd-item">
+        <view class="cdi-left">
+          <view class="cdi-dot {{item.change>=0?'earn':'spend'}}">{{item.change>=0?'+':''}}</view>
+          <view class="cdi-info">
+            <text class="cdi-source">{{item.reason || '信誉变动'}}</text>
+            <text class="cdi-time">{{format(item.createdAt)}}</text>
+          </view>
+        </view>
+        <view class="cdi-right">
+          <text class="cdi-change {{item.change>=0?'earn':'spend'}}">{{item.change>=0?'+':''}}{{item.change}}</text>
+          <text class="cdi-balance">余额 {{item.balance}}</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</scroll-view>
+</view>

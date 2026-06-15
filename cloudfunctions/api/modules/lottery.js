@@ -3,24 +3,27 @@
  */
 const { db, COL, now, ok, getOrCreateUser } = require('./common')
 
-// 与前端保持一致的奖品配置（含权重）
+// 服务端权重配置（前端视觉等大，但概率暗中分配）
+// 总权重 1000，谢谢惠顾占 842(≈84%)，中奖总概率约 16%
+// 5元抵扣券 5% | 一袋口罩 3.5% | 食盐1袋 2.5% | 抽纸套装 1.8%
+// 洗衣液3kg 1.2% | 蒸汽眼罩 0.8% | 大米5kg 0.6% | 5L花生油 0.4%
 const WHEEL_ITEMS = [
-  { name: '5L花生油',   w: 1,  color: '#d63031' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '大米5kg',     w: 2,  color: '#e67e22' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '蒸汽眼罩',   w: 3,  color: '#9b59b6' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '洗衣液3kg',  w: 3,  color: '#2ecc71' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '抽纸套装',   w: 4,  color: '#3498db' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '10元抵扣券', w: 4,  color: '#f1c40f' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '口罩50只',    w: 6,  color: '#1abc9c' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
-  { name: '5元抵扣券',   w: 8,  color: '#3498db' },
-  { name: '谢谢惠顾',   w: 5,  color: '#95a5a6' },
+  { name: '5L花生油',   w: 4,   color: '#ff3b3b' },
+  { name: '谢谢惠顾',   w: 105, color: '#ffffff' },
+  { name: '大米5kg',     w: 6,   color: '#ffd700' },
+  { name: '谢谢惠顾',   w: 105, color: '#ffffff' },
+  { name: '蒸汽眼罩',   w: 8,   color: '#3bff6f' },
+  { name: '谢谢惠顾',   w: 106, color: '#ffffff' },
+  { name: '洗衣液3kg',  w: 12,  color: '#3b9fff' },
+  { name: '谢谢惠顾',   w: 105, color: '#ffffff' },
+  { name: '抽纸套装',   w: 18,  color: '#ff3b3b' },
+  { name: '谢谢惠顾',   w: 106, color: '#ffffff' },
+  { name: '食盐1袋',    w: 25,  color: '#ffd700' },
+  { name: '谢谢惠顾',   w: 105, color: '#ffffff' },
+  { name: '一袋口罩',    w: 35,  color: '#3bff6f' },
+  { name: '谢谢惠顾',   w: 105, color: '#ffffff' },
+  { name: '5元抵扣券',   w: 50,  color: '#3b9fff' },
+  { name: '谢谢惠顾',   w: 105, color: '#ffffff' },
 ]
 const TOTAL_W = WHEEL_ITEMS.reduce((s, p) => s + p.w, 0)
 

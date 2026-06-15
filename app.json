@@ -18,7 +18,11 @@
     "pages/admin/house-verify"
     ,"pages/admin/user-manage",
     "pages/admin/house-manage",
-    "pages/gift/list"
+    "pages/admin/analytics",
+    "pages/gift/list",
+    "pages/mine/credit-detail",
+    "pages/mine/redemptions",
+    "pages/coupon/list"
   ],
   "window": {
     "navigationBarTextStyle": "black",

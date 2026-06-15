@@ -1,7 +1,7 @@
 {
   "usingComponents": {
-    "navigation-bar": "/components/navigation-bar/navigation-bar"
+    "navigation-bar": "/components/navigation-bar/navigation-bar",
+    "lucky-wheel": "/miniprogram_npm/@lucky-canvas/mini/lucky-wheel/index"
   },
   "navigationStyle": "custom"
 }
-

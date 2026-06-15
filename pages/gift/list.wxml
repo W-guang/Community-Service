@@ -31,6 +31,7 @@
             <text class="g-card-points">❤️ {{item.points}} 积分</text>
             <text class="g-card-price">¥{{item.price}}</text>
           </view>
+          <view class="g-card-btn" catchtap="onRedeem" data-item="{{item}}">立即兑换</view>
         </view>
       </view>
     </view>

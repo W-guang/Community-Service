@@ -15,6 +15,8 @@ const notice = require('./modules/notice')
 const sos = require('./modules/sos')
 const dashboard = require('./modules/dashboard')
 const lottery = require('./modules/lottery')
+const gift = require('./modules/gift')
+const coupon = require('./modules/coupon')
 
 const ROUTES = {
   auth: auth.actionAuth,
@@ -23,8 +25,8 @@ const ROUTES = {
   'admin.add': auth.actionAdminAdd,
   'admin.remove': auth.actionAdminRemove,
   'admin.userList': auth.actionAdminUserList,
-  'admin.userDetail': auth.actionAdminUserDetail,
-  'admin.userHouseMap': auth.actionAdminUserHouseMap,
+  'user.pointLogs': auth.actionUserPointLogs,
+  'user.creditLogs': auth.actionUserCreditLogs,
 
   'house.bind': house.actionHouseBind,
   'house.myList': house.actionHouseMyList,
@@ -48,18 +50,13 @@ const ROUTES = {
   'help.addProgress': help.actionHelpAddProgress,
   'help.updateStatus': help.actionHelpUpdateStatus,
   'help.rate': help.actionHelpRate,
-  'help.review': help.actionHelpReview,
-  'help.leaderboard': help.actionHelpLeaderboard,
 
   'notice.create': notice.actionNoticeCreate,
   'notice.list': notice.actionNoticeList,
   'notice.detail': notice.actionNoticeDetail,
   'notice.markRead': notice.actionNoticeMarkRead,
   'notice.stats': notice.actionNoticeStats,
-  'notice.pending': notice.actionNoticePending,
-  'notice.update': notice.actionNoticeUpdate,
   'notice.delete': notice.actionNoticeDelete,
-  'notice.listAll': notice.actionNoticeListAll,
 
   'sos.create': sos.actionSosCreate,
   'sos.list': sos.actionSosList,
@@ -72,6 +69,12 @@ const ROUTES = {
   'lottery.remain': lottery.actionLotteryRemain,
   'lottery.history': lottery.actionLotteryHistory,
   'lottery.prizes': lottery.actionLotteryPrizes,
+
+  'gift.redeem': gift.actionGiftRedeem,
+  'gift.myRedeems': gift.actionGiftMyRedeems,
+
+  'coupon.claim': coupon.actionCouponClaim,
+  'coupon.myClaims': coupon.actionCouponMyClaims,
 }
 
 exports.main = async (event) => {

@@ -1,0 +1,61 @@
+<navigation-bar title="领券中心" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
+
+  <!-- 顶部横幅 -->
+  <view class="c-banner">
+    <image class="c-banner-img" src="/lingquan.jpg" mode="aspectFill" />
+    <view class="c-banner-mask">
+      <text class="c-banner-title">🎫 领券中心</text>
+      <text class="c-banner-sub">积分兑好券，省钱又省心</text>
+    </view>
+  </view>
+
+  <!-- 分类 Tab -->
+  <view class="c-cat-scroll">
+    <scroll-view scroll-x="true" show-scrollbar="{{false}}" class="c-cat-row">
+      <view wx:for="{{categories}}" wx:key="*this"
+            class="c-cat-item {{activeCategory === item ? 'on' : ''}}"
+            bindtap="onTab" data-cat="{{item}}">{{item}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 我的积分 -->
+  <view class="c-points-bar">
+    <text class="cpb-label">我的积分</text>
+    <text class="cpb-num">❤️ {{userPoints}}</text>
+  </view>
+
+  <!-- 优惠券网格 -->
+  <view class="wrap">
+    <view wx:if="{{!filtered.length}}" class="c-empty">
+      <text class="c-empty-icon">🎫</text>
+      <text class="c-empty-text">该分类暂无优惠券</text>
+    </view>
+
+    <view wx:else class="c-grid">
+      <view wx:for="{{filtered}}" wx:key="id" class="c-card">
+        <!-- 券面金额区 -->
+        <view class="cc-left" style="background: {{item.color}};">
+          <text class="ccl-value">{{item.value}}</text>
+          <text class="ccl-unit">{{item.unit}}</text>
+          <text class="ccl-label">{{item.label}}</text>
+        </view>
+        <!-- 券面信息区 -->
+        <view class="cc-right">
+          <text class="ccr-name">{{item.name}}</text>
+          <text class="ccr-expire">有效期至 {{item.expire}}</text>
+          <text class="ccr-points">❤️ {{item.points}} 积分兑换</text>
+        </view>
+        <!-- 领取按钮 -->
+        <view class="ccr-btn {{item.claimed ? 'claimed' : ''}}" catchtap="onClaim" data-item="{{item}}">
+          <text>{{item.claimed ? '已领取' : '立即兑换'}}</text>
+        </view>
+        <!-- 已领取角标 -->
+        <view wx:if="{{item.claimed}}" class="cc-claimed-tag">✓ 已领</view>
+      </view>
+    </view>
+  </view>
+
+</scroll-view>
+</view>

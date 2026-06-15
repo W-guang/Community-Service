@@ -1,0 +1,56 @@
+<navigation-bar title="数据可视化" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<view class="page">
+<scroll-view scroll-y="true" class="scroll-content">
+  <view class="wrap">
+
+    <!-- ================================================================
+         Card 1 — 环形图：报修工单状态分布
+         ================================================================ -->
+    <view class="chart-card">
+      <text class="chart-card-title">报修工单状态分布</text>
+      <view class="donut-row">
+        <!-- 左侧 Canvas 环形图 -->
+        <view class="donut-canvas-wrap">
+          <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
+        </view>
+        <!-- 右侧 Legend -->
+        <view class="donut-legend">
+          <view wx:for="{{repairStatusData}}" wx:key="label" class="dl-item">
+            <view class="dl-dot" style="background:{{item.color}}"></view>
+            <text class="dl-label">{{item.label}}</text>
+            <text class="dl-value">{{item.value}}</text>
+            <text class="dl-pct">{{item.pct}}%</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- ================================================================
+         Card 2 — 横向柱状图：邻里互助任务类型排行
+         ================================================================ -->
+    <view class="chart-card">
+      <text class="chart-card-title">邻里互助任务类型排行</text>
+      <view class="hbar-list">
+        <view wx:for="{{helpTypeData}}" wx:key="label" class="hbar-row">
+          <text class="hbar-label">{{item.label}}</text>
+          <view class="hbar-track">
+            <view class="hbar-fill" style="width:{{item.barWidth}}%"></view>
+          </view>
+          <text class="hbar-val">{{item.value}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ================================================================
+         Card 3 — 折线图：每日新增报修趋势
+         ================================================================ -->
+    <view class="chart-card">
+      <text class="chart-card-title">每日新增报修趋势</text>
+      <view class="line-canvas-wrap">
+        <canvas type="2d" id="lineCanvas" class="line-canvas"></canvas>
+      </view>
+    </view>
+
+  </view>
+</scroll-view>
+</view>
